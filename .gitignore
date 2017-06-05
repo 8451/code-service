@@ -1,0 +1,24 @@
+*.log
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+# .idea
+# *.iml
+target
+
+# 84.51° ignores
+*.iws
+.idea/uiDesigner.xml
+.idea/workspace.xml
+.idea/libraries
+.idea/shelf
+
+application-*.properties
+
+# Ignore any user created dictionaries, but include the 'shared' dictionary
+.idea/dictionaries/*
+!.idea/dictionaries/shared.xml
