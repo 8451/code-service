@@ -2,7 +2,6 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
-import com.e451.rest.repositories.QuestionRepository;
 import com.e451.rest.services.QuestionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
 import java.util.Arrays;
 
 /**
@@ -19,16 +17,16 @@ import java.util.Arrays;
  */
 @RestController
 @RequestMapping("/questions")
-public class QuestionController {
+public class QuestionsController {
 
     private QuestionService questionService;
 
     @Autowired
-    public QuestionController(QuestionService questionService) {
+    public QuestionsController(QuestionService questionService) {
         this.questionService = questionService;
     }
 
-    private final Logger logger = LoggerFactory.getLogger(QuestionController.class);
+    private final Logger logger = LoggerFactory.getLogger(QuestionsController.class);
 
     @GetMapping()
     public ResponseEntity<QuestionResponse> getQuestions() {

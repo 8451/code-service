@@ -23,9 +23,9 @@ import static org.mockito.Mockito.when;
  * Created by e384873 on 6/9/2017.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class QuestionControllerTest {
+public class QuestionsControllerTest {
 
-    private QuestionController questionController;
+    private QuestionsController questionsController;
 
     @Mock
     private QuestionService questionService;
@@ -35,7 +35,7 @@ public class QuestionControllerTest {
     @Before
     public void setup() {
 
-        this.questionController = new QuestionController(questionService);
+        this.questionsController = new QuestionsController(questionService);
         questions = Arrays.asList(
                 new Question("1", "q1", "a1", "t1", 1),
                 new Question("2", "q2", "a2", "t2", 2),
@@ -46,7 +46,7 @@ public class QuestionControllerTest {
     public void whenGetQuestions_returnListOfQuestions() {
         when(questionService.getQuestions()).thenReturn(questions);
 
-        ResponseEntity<QuestionResponse> response = questionController.getQuestions();
+        ResponseEntity<QuestionResponse> response = questionsController.getQuestions();
 
         Assert.assertEquals(3, response.getBody().getQuestions().size());
     }
@@ -55,7 +55,7 @@ public class QuestionControllerTest {
     public void whenGetQuestionException_returnsInternalServerError() {
         when(questionService.getQuestions()).thenThrow(new RecoverableDataAccessException("error"));
 
-        ResponseEntity<QuestionResponse> response = questionController.getQuestions();
+        ResponseEntity<QuestionResponse> response = questionsController.getQuestions();
 
         Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -66,7 +66,7 @@ public class QuestionControllerTest {
 
         when(questionService.getQuestion(id)).thenReturn(questions.get(0));
 
-        ResponseEntity<QuestionResponse> response = questionController.getQuestion(id);
+        ResponseEntity<QuestionResponse> response = questionsController.getQuestion(id);
 
         Assert.assertEquals(1, response.getBody().getQuestions().size());
         Assert.assertEquals(questions.get(0), response.getBody().getQuestions().get(0));
@@ -76,7 +76,7 @@ public class QuestionControllerTest {
     public void whenGetSingleQuestion_returnInternalServerError() {
         when(questionService.getQuestion("1")).thenThrow(new RecoverableDataAccessException("error"));
 
-        ResponseEntity<QuestionResponse> response = questionController.getQuestion("1");
+        ResponseEntity<QuestionResponse> response = questionsController.getQuestion("1");
 
         Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -88,7 +88,7 @@ public class QuestionControllerTest {
 
         when(questionService.updateQuestion(updatedQuestion)).thenReturn(updatedQuestion);
 
-        ResponseEntity response = questionController.updateQuestion(updatedQuestion);
+        ResponseEntity response = questionsController.updateQuestion(updatedQuestion);
 
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -97,7 +97,7 @@ public class QuestionControllerTest {
     public void whenUpdateQuestion_InternalServerError() {
         when(questionService.updateQuestion(null)).thenThrow(new RecoverableDataAccessException("error"));
 
-        ResponseEntity<QuestionResponse> response = questionController.updateQuestion(null);
+        ResponseEntity<QuestionResponse> response = questionsController.updateQuestion(null);
 
         Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -108,7 +108,7 @@ public class QuestionControllerTest {
 
         when(questionService.createQuestion(newQuestion)).thenReturn(newQuestion);
 
-        ResponseEntity<QuestionResponse> response = questionController.createQuestion(newQuestion);
+        ResponseEntity<QuestionResponse> response = questionsController.createQuestion(newQuestion);
 
         Assert.assertEquals(1, response.getBody().getQuestions().size());
     }
@@ -119,7 +119,7 @@ public class QuestionControllerTest {
 
         when(questionService.createQuestion(newQuestion)).thenThrow(new RecoverableDataAccessException("error"));
 
-        ResponseEntity<QuestionResponse> response = questionController.createQuestion(newQuestion);
+        ResponseEntity<QuestionResponse> response = questionsController.createQuestion(newQuestion);
 
         Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -129,7 +129,7 @@ public class QuestionControllerTest {
 
         Mockito.doNothing().when(questionService).deleteQuestion("1");
 
-        ResponseEntity response = questionController.deleteQuestion("1");
+        ResponseEntity response = questionsController.deleteQuestion("1");
 
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -138,7 +138,7 @@ public class QuestionControllerTest {
     public void whenDeleteQuestion_returnsInternalServerError() {
         Mockito.doThrow(new RecoverableDataAccessException("error")).when(questionService).deleteQuestion("1");
 
-        ResponseEntity response = questionController.deleteQuestion("1");
+        ResponseEntity response = questionsController.deleteQuestion("1");
 
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
