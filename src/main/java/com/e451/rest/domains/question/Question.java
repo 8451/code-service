@@ -13,7 +13,7 @@ public class Question {
 
     private String question;
 
-    private String suggestionBody;
+    private String suggestedAnswer;
 
     private String title;
 
@@ -26,6 +26,18 @@ public class Question {
     private Date modifiedDate;
 
     private Integer difficulty;
+
+    public Question() {
+
+    }
+
+    public Question(String id, String question, String suggestedAnswer, String title, Integer difficulty) {
+        this.id = id;
+        this.question = question;
+        this.suggestedAnswer = suggestedAnswer;
+        this.title = title;
+        this.difficulty = difficulty;
+    }
 
     public String getId() {
         return id;
@@ -43,12 +55,12 @@ public class Question {
         this.question = question;
     }
 
-    public String getSuggestionBody() {
-        return suggestionBody;
+    public String getSuggestedAnswer() {
+        return suggestedAnswer;
     }
 
-    public void setSuggestionBody(String suggestionBody) {
-        this.suggestionBody = suggestionBody;
+    public void setSuggestedAnswer(String suggestedAnswer) {
+        this.suggestedAnswer = suggestedAnswer;
     }
 
     public String getTitle() {
@@ -97,5 +109,26 @@ public class Question {
 
     public void setDifficulty(Integer difficulty) {
         this.difficulty = difficulty;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Question question1 = (Question) o;
+
+        if (!id.equals(question1.id)) return false;
+        if (!question.equals(question1.question)) return false;
+        if (!suggestedAnswer.equals(question1.suggestedAnswer)) return false;
+        if (!title.equals(question1.title)) return false;
+        if (createdBy != null ? !createdBy.equals(question1.createdBy) : question1.createdBy != null) return false;
+        if (createdDate != null ? !createdDate.equals(question1.createdDate) : question1.createdDate != null)
+            return false;
+        if (modifiedBy != null ? !modifiedBy.equals(question1.modifiedBy) : question1.modifiedBy != null) return false;
+        if (modifiedDate != null ? !modifiedDate.equals(question1.modifiedDate) : question1.modifiedDate != null)
+            return false;
+        return difficulty.equals(question1.difficulty);
     }
 }

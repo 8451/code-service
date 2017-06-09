@@ -50,8 +50,8 @@
               "$ref": "#/definitions/QuestionResponse"
             }
           },
-          "400": {
-            "description": "Bad Request"
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -82,8 +82,8 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request"
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -104,8 +104,8 @@
               "$ref": "#/definitions/QuestionResponse"
             }
           },
-          "400": {
-            "description": "bad request"
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -138,8 +138,8 @@
               "$ref": "#/definitions/QuestionResponse"
             }
           },
-          "400": {
-            "description": "Bad Request"
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -162,8 +162,8 @@
           "200": {
             "description": "successful delete"
           },
-          "400": {
-            "description": "bad request"
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

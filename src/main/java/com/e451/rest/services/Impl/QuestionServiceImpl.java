@@ -17,6 +17,10 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private QuestionRepository questionRepository;
 
+    public QuestionServiceImpl(QuestionRepository questionRepository) {
+        this.questionRepository = questionRepository;
+    }
+
     @Override
     public List<Question> getQuestions() {
         return questionRepository.findAll();
