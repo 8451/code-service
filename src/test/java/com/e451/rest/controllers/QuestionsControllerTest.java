@@ -53,7 +53,7 @@ public class QuestionsControllerTest {
     }
 
     @Test
-    public void whenGetQuestionException_returnsInternalServerError() {
+    public void whenGetQuestionException_QuestionServiceThrowsException_returnsInternalServerError() {
         when(questionService.getQuestions()).thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<QuestionResponse> response = questionsController.getQuestions();
@@ -75,7 +75,7 @@ public class QuestionsControllerTest {
     }
 
     @Test
-    public void whenGetSingleQuestion_returnInternalServerError() {
+    public void whenGetSingleQuestion_QuestionServiceThrowsException_returnsInternalServerError() {
         when(questionService.getQuestion("1")).thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<QuestionResponse> response = questionsController.getQuestion("1");
@@ -90,13 +90,15 @@ public class QuestionsControllerTest {
 
         when(questionService.updateQuestion(updatedQuestion)).thenReturn(updatedQuestion);
 
-        ResponseEntity response = questionsController.updateQuestion(updatedQuestion);
+        ResponseEntity<QuestionResponse> response = questionsController.updateQuestion(updatedQuestion);
 
+        Assert.assertEquals(1, response.getBody().getQuestions().size());
+        Assert.assertEquals(questions.get(0), response.getBody().getQuestions().get(0));
         Assert.assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
     }
 
     @Test
-    public void whenUpdateQuestion_InternalServerError() {
+    public void whenUpdateQuestion_QuestionServiceThrowsException_returnsInternalServerError() {
         when(questionService.updateQuestion(null)).thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<QuestionResponse> response = questionsController.updateQuestion(null);
@@ -117,7 +119,7 @@ public class QuestionsControllerTest {
     }
 
     @Test
-    public void whenCreateQuestion_returnsInternalServerError() {
+    public void whenCreateQuestion_QuestionServiceThrowsException_returnsInternalServerError() {
         Question newQuestion = new Question("4", "q4", "a4", "t4", 1);
 
         when(questionService.createQuestion(newQuestion)).thenThrow(new RecoverableDataAccessException("error"));
@@ -138,7 +140,7 @@ public class QuestionsControllerTest {
     }
 
     @Test
-    public void whenDeleteQuestion_returnsInternalServerError() {
+    public void whenDeleteQuestion_QuestionServiceThrowsException_returnsInternalServerError() {
         Mockito.doThrow(new RecoverableDataAccessException("error")).when(questionService).deleteQuestion("1");
 
         ResponseEntity response = questionsController.deleteQuestion("1");
