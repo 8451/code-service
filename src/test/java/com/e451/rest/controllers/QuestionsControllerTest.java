@@ -75,6 +75,17 @@ public class QuestionsControllerTest {
     }
 
     @Test
+    public void whenGetNonExistentQuestion_ReturnNotFound() {
+        final String id = "1";
+        when(questionService.getQuestion(id)).thenReturn(null);
+
+        ResponseEntity<QuestionResponse> response = questionsController.getQuestion(id);
+
+        Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+
+    @Test
     public void whenGetSingleQuestion_QuestionServiceThrowsException_returnsInternalServerError() {
         when(questionService.getQuestion("1")).thenThrow(new RecoverableDataAccessException("error"));
 

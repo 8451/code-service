@@ -48,10 +48,11 @@ public class QuestionsController {
     @GetMapping("/{id}")
     public ResponseEntity<QuestionResponse> getQuestion(@PathVariable String id) {
         QuestionResponse questionResponse = new QuestionResponse();
-
+        Question q = null;
         logger.info("getQuestion request received");
 
         try {
+            q = questionService.getQuestion(id);
             questionResponse.setQuestions(Arrays.asList(questionService.getQuestion(id)));
             logger.info("getQuestion request processed");
         } catch (Exception ex) {
@@ -59,7 +60,7 @@ public class QuestionsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        return ResponseEntity.ok(questionResponse);
+        return q != null ? ResponseEntity.ok(questionResponse) : ResponseEntity.notFound().build();
     }
 
     @PostMapping()

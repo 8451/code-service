@@ -70,6 +70,10 @@ public class QuestionServiceImplTest {
         Question result = questionService.createQuestion(q);
 
         Assert.assertEquals(q, result);
+        Assert.assertNotNull(q.getCreatedDate());
+        Assert.assertNotNull(q.getModifiedDate());
+
+        // TODO: make sure the user is not null.
     }
 
     @Test
@@ -81,6 +85,9 @@ public class QuestionServiceImplTest {
         Question result = questionService.updateQuestion(q);
 
         Assert.assertEquals(q, result);
+        Assert.assertNotNull(q.getModifiedDate());
+
+        // TODO: make sure the user is not null.
     }
 
 }

@@ -6,6 +6,7 @@ import com.e451.rest.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,11 +34,15 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question createQuestion(Question question) {
+        question.setCreatedDate(new Date());
+        question.setModifiedDate(new Date());
+
         return questionRepository.insert(question);
     }
 
     @Override
     public Question updateQuestion(Question question) {
+        question.setModifiedDate(new Date());
         return questionRepository.save(question);
     }
 
