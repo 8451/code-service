@@ -44,14 +44,14 @@
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/QuestionResponse"
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Bad Request"
           }
         }
       },
@@ -82,8 +82,11 @@
           }
         ],
         "responses": {
+          "203": {
+            "description": "Accepted"
+          },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Bad Request"
           }
         }
       },
@@ -98,14 +101,14 @@
           "application/xml"
         ],
         "responses": {
-          "200": {
+          "202": {
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/QuestionResponse"
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "bad request"
           }
         }
       }
@@ -138,8 +141,8 @@
               "$ref": "#/definitions/QuestionResponse"
             }
           },
-          "500": {
-            "description": "Internal Server Error"
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
@@ -159,11 +162,11 @@
           }
         ],
         "responses": {
-          "200": {
+          "204": {
             "description": "successful delete"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "bad request"
           }
         }
       }
