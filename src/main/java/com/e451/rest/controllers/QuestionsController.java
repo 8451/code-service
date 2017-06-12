@@ -76,11 +76,11 @@ public class QuestionsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        return ResponseEntity.ok(questionResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(questionResponse);
     }
 
     @PutMapping()
-    public ResponseEntity updateQuestion(@RequestBody Question question) {
+    public ResponseEntity<QuestionResponse> updateQuestion(@RequestBody Question question) {
         QuestionResponse questionResponse = new QuestionResponse();
 
         logger.info("updateQuestion request received");
@@ -93,7 +93,7 @@ public class QuestionsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.accepted().body(questionResponse);
     }
 
     @DeleteMapping("/{id}")
@@ -108,6 +108,6 @@ public class QuestionsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

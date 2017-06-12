@@ -49,6 +49,7 @@ public class QuestionsControllerTest {
         ResponseEntity<QuestionResponse> response = questionsController.getQuestions();
 
         Assert.assertEquals(3, response.getBody().getQuestions().size());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -70,6 +71,7 @@ public class QuestionsControllerTest {
 
         Assert.assertEquals(1, response.getBody().getQuestions().size());
         Assert.assertEquals(questions.get(0), response.getBody().getQuestions().get(0));
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -90,7 +92,7 @@ public class QuestionsControllerTest {
 
         ResponseEntity response = questionsController.updateQuestion(updatedQuestion);
 
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assert.assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
     }
 
     @Test
@@ -111,6 +113,7 @@ public class QuestionsControllerTest {
         ResponseEntity<QuestionResponse> response = questionsController.createQuestion(newQuestion);
 
         Assert.assertEquals(1, response.getBody().getQuestions().size());
+        Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @Test
@@ -131,7 +134,7 @@ public class QuestionsControllerTest {
 
         ResponseEntity response = questionsController.deleteQuestion("1");
 
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
