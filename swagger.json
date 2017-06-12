@@ -178,7 +178,7 @@
       "required": [
         "title",
         "question",
-        "suggestedSolution",
+        "suggestedAnswer",
         "difficulty"
       ],
       "properties": {
@@ -191,7 +191,7 @@
         "question": {
           "type": "string"
         },
-        "suggestedSolution": {
+        "suggestedAnswer": {
           "type": "string"
         },
         "difficulty": {
