@@ -97,7 +97,7 @@ public class QuestionsControllerTest {
     @Test
     public void whenUpdateQuestion_returnUpdatedQuestion() {
         Question updatedQuestion = questions.get(0);
-        updatedQuestion.setQuestion("is this a real question?");
+        updatedQuestion.setBody("is this a real question?");
 
         when(questionService.updateQuestion(updatedQuestion)).thenReturn(updatedQuestion);
 

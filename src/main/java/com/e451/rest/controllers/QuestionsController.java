@@ -49,14 +49,14 @@ public class QuestionsController {
     public ResponseEntity<QuestionResponse> getQuestion(@PathVariable String id) {
         QuestionResponse questionResponse = new QuestionResponse();
         Question q = null;
-        logger.info("getQuestion request received");
+        logger.info("getBody request received");
 
         try {
             q = questionService.getQuestion(id);
             questionResponse.setQuestions(Arrays.asList(questionService.getQuestion(id)));
-            logger.info("getQuestion request processed");
+            logger.info("getBody request processed");
         } catch (Exception ex) {
-            logger.error("getQuestion encountered error", ex);
+            logger.error("getBody encountered error", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 

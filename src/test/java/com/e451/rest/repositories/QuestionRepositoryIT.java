@@ -62,7 +62,7 @@ public class QuestionRepositoryIT {
     public void updateQuestion_returnsUpdatedQuestion() {
         Question question = questions.get(1);
 
-        question.setQuestion("Does this work?");
+        question.setBody("Does this work?");
 
         Question updatedQuestion = questionRepository.save(question);
 

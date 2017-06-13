@@ -11,7 +11,7 @@ public class Question {
     @Id
     private String id;
 
-    private String question;
+    private String body;
 
     private String suggestedAnswer;
 
@@ -31,9 +31,9 @@ public class Question {
 
     }
 
-    public Question(String id, String question, String suggestedAnswer, String title, Integer difficulty) {
+    public Question(String id, String body, String suggestedAnswer, String title, Integer difficulty) {
         this.id = id;
-        this.question = question;
+        this.body = body;
         this.suggestedAnswer = suggestedAnswer;
         this.title = title;
         this.difficulty = difficulty;
@@ -47,12 +47,12 @@ public class Question {
         this.id = id;
     }
 
-    public String getQuestion() {
-        return question;
+    public String getBody() {
+        return body;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getSuggestedAnswer() {
@@ -120,7 +120,7 @@ public class Question {
         Question question1 = (Question) o;
 
         if (!id.equals(question1.id)) return false;
-        if (!question.equals(question1.question)) return false;
+        if (!body.equals(question1.body)) return false;
         if (!suggestedAnswer.equals(question1.suggestedAnswer)) return false;
         if (!title.equals(question1.title)) return false;
         if (createdBy != null ? !createdBy.equals(question1.createdBy) : question1.createdBy != null) return false;
