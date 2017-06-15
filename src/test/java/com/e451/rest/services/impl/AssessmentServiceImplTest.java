@@ -55,6 +55,10 @@ public class AssessmentServiceImplTest {
         Assessment result = assessmentService.createAssessment(assessment);
 
         Assert.assertEquals(assessment, result);
+        Assert.assertNotNull(assessment.getCreatedDate());
+        Assert.assertNotNull(assessment.getModifiedDate());
+
+        // TODO: add user properties.
     }
 
 }

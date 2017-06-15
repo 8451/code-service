@@ -6,6 +6,7 @@ import com.e451.rest.services.AssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +29,12 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public Assessment createAssessment(Assessment assessment) {
+
+        assessment.setCreatedDate(new Date());
+        assessment.setModifiedDate(new Date());
+
+        // TODO: populate user property.
+
         return assessmentRepository.insert(assessment);
     }
 }
