@@ -2,14 +2,12 @@ package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.repositories.QuestionRepository;
-import com.e451.rest.services.Impl.QuestionServiceImpl;
 import com.e451.rest.services.QuestionService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
