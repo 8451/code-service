@@ -7,9 +7,8 @@ applications:
   disk_quota: 2048M
   instances: 1
   services:
-      - codeMongo
-  optionalServices:
+    - codeMongo
   env:
-      JAVA_OPTS: ''
-      JBP_CONFIG_APP_DYNAMICS_AGENT: '{ default_application_name: "%space%-AGILE-FACTORY",  default_tier_name: "%space%_%org%_code-service",  default_node_name: "%space%_%org%_code-service:$CF_INSTANCE_INDEX" }'
-      CODE_SPACE: '%space%'
+    JAVA_OPTS: ''
+    JBP_CONFIG_APP_DYNAMICS_AGENT: '{ default_application_name: "%space%-AGILE-FACTORY",  default_tier_name: "%space%_%org%_code-service",  default_node_name: "%space%_%org%_code-service:$CF_INSTANCE_INDEX" }'
+    CODE_SPACE: '%space%'
