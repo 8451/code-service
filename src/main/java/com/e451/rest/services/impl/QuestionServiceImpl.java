@@ -1,4 +1,4 @@
-package com.e451.rest.services.Impl;
+package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.repositories.QuestionRepository;

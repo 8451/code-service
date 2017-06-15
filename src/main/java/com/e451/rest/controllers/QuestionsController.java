@@ -17,6 +17,7 @@ import java.util.Arrays;
  */
 @RestController
 @RequestMapping("/questions")
+@CrossOrigin
 public class QuestionsController {
 
     private QuestionService questionService;
