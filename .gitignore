@@ -18,6 +18,7 @@ target
 .idea/shelf
 
 application-*.properties
+!application-local.properties
 
 # Ignore any user created dictionaries, but include the 'shared' dictionary
 .idea/dictionaries/*
