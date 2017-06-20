@@ -2,7 +2,6 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
-import com.e451.rest.repositories.UserRepository;
 import com.e451.rest.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

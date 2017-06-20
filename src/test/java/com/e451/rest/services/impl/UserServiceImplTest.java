@@ -12,6 +12,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,12 +36,16 @@ public class UserServiceImplTest {
     @Mock
     private MailService mailService;
 
+    @Mock
+    private PasswordEncoder encoder;
+
     @Before
     public void setup() {
-        this.userService = new UserServiceImpl(userRepository, mailService, "test/api/v1");
+        this.userService = new UserServiceImpl(userRepository, mailService, "test/api/v1", new BCryptPasswordEncoder());
+
         users = Arrays.asList(
-                new User("id1", "Liz", "Conrad", "liz@conrad.com", "passw0rd", true),
-                new User("id2","Jacob", "Tucker", "jacob@tucker.com", "dr0wssap", true)
+                new User("id1", "Liz", "Conrad", "liz@conrad.com", "passw0rd"),
+                new User("id2","Jacob", "Tucker", "jacob@tucker.com", "dr0wssap")
         );
     }
 
@@ -49,6 +55,7 @@ public class UserServiceImplTest {
 
         Mockito.doNothing().when(mailService).sendEmail(any(DirectEmailMessage.class));
         when(userRepository.insert(user)).thenReturn(user);
+        when(encoder.encode(user.getPassword())).thenReturn(user.getPassword());
 
         User result = userService.createUser(user);
 

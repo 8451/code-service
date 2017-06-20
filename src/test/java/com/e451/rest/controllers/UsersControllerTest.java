@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +31,7 @@ public class UsersControllerTest {
     @Mock
     private UserService userService;
 
+
     private List<User> users;
 
     @Before
@@ -37,8 +39,8 @@ public class UsersControllerTest {
         this.usersController = new UsersController(userService);
 
         users = Arrays.asList(
-                new User("id1","Liz", "Conrad", "liz@conrad.com", "passw0rd", true),
-                new User("id2","Jacob", "Tucker", "jacob@tucker.com", "dr0wssap", true)
+                new User("id1","Liz", "Conrad", "liz@conrad.com", "passw0rd"),
+                new User("id2","Jacob", "Tucker", "jacob@tucker.com", "dr0wssap")
         );
     }
 
