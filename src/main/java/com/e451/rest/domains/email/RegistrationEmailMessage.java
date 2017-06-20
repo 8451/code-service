@@ -44,4 +44,12 @@ public class RegistrationEmailMessage extends DirectEmailMessage {
         this.user = user;
         this.body = null; // force regeneration when text is done.
     }
+
+    public String getCodeWebAddress() {
+        return codeWebAddress;
+    }
+
+    public void setCodeWebAddress(String codeWebAddress) {
+        this.codeWebAddress = codeWebAddress;
+    }
 }

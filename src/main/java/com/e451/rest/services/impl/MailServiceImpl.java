@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -36,8 +35,24 @@ public class MailServiceImpl implements MailService {
     @Value("${code.mail.from}")
     private String fromMailAddress;
 
+    private String getFromMailAddress() {
+        if(fromMailAddress == null) {
+            fromMailAddress = "code@8451.com";
+        }
+
+        return fromMailAddress;
+    }
+
     @Value("${code.mail.alias}")
     private String fromAlias;
+
+    private String getFromAlias() {
+        if(fromAlias == null) {
+            fromAlias = "Code";
+        }
+
+        return fromAlias;
+    }
 
     @Override
     public void sendEmail(DirectEmailMessage directEmailMessage) {
@@ -50,7 +65,7 @@ public class MailServiceImpl implements MailService {
 
         try {
             helper = new MimeMessageHelper(mimeMessage, false);
-            helper.setFrom(fromMailAddress, fromAlias);
+            helper.setFrom(getFromMailAddress(), getFromAlias());
             helper.setTo(directEmailMessage.getTo());
             helper.setSubject(directEmailMessage.getSubject());
             helper.setText(directEmailMessage.getBody(), directEmailMessage.isHtml());
