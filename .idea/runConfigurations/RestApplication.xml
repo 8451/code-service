@@ -3,6 +3,7 @@
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.e451.rest.RestApplication" />
     <option name="ACTIVE_PROFILES" value="local" />
+    <option name="PROGRAM_PARAMETERS" value="-Dspring.profiles.active=local" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <module name="rest" />
     <envs />

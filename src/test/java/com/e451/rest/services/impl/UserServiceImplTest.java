@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,12 +28,15 @@ public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PasswordEncoder encoder;
+
     @Before
     public void setup() {
-        this.userService = new UserServiceImpl(userRepository);
+        this.userService = new UserServiceImpl(userRepository, encoder);
         users = Arrays.asList(
-                new User("id1", "Liz", "Conrad", "liz@conrad.com", "passw0rd", true),
-                new User("id2","Jacob", "Tucker", "jacob@tucker.com", "dr0wssap", true)
+                new User("id1", "Liz", "Conrad", "liz@conrad.com", "passw0rd"),
+                new User("id2","Jacob", "Tucker", "jacob@tucker.com", "dr0wssap")
         );
     }
 
@@ -41,6 +45,7 @@ public class UserServiceImplTest {
         User user =  users.get(0);
 
         when(userRepository.insert(user)).thenReturn(user);
+        when(encoder.encode(user.getPassword())).thenReturn(user.getPassword());
 
         User result = userService.createUser(user);
 
