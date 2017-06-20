@@ -6,6 +6,7 @@ import com.e451.rest.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,9 @@ public class UsersController {
         try {
             userResponse.setUsers(Arrays.asList(userService.createUser(user)));
             logger.info("createUser request processed");
+        } catch (DuplicateKeyException dkex) {
+            logger.error("createdUser encountered duplication error", dkex);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         } catch (Exception ex) {
             logger.error("createUser encountered error", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -1,21 +1,15 @@
 package com.e451.rest.domains.user;
 
-import com.e451.rest.services.impl.UserServiceImpl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 /**
  * Created by l659598 on 6/19/2017.
