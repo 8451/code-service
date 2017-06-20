@@ -1,18 +1,22 @@
 package com.e451.rest.services.impl;
 
+import com.e451.rest.domains.email.DirectEmailMessage;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.repositories.UserRepository;
+import com.e451.rest.services.MailService;
 import com.e451.rest.services.UserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -27,9 +31,12 @@ public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private MailService mailService;
+
     @Before
     public void setup() {
-        this.userService = new UserServiceImpl(userRepository);
+        this.userService = new UserServiceImpl(userRepository, mailService, "test/api/v1");
         users = Arrays.asList(
                 new User("id1", "Liz", "Conrad", "liz@conrad.com", "passw0rd", true),
                 new User("id2","Jacob", "Tucker", "jacob@tucker.com", "dr0wssap", true)
@@ -40,6 +47,7 @@ public class UserServiceImplTest {
     public void whenCreateUser_returnNewUser() {
         User user =  users.get(0);
 
+        Mockito.doNothing().when(mailService).sendEmail(any(DirectEmailMessage.class));
         when(userRepository.insert(user)).thenReturn(user);
 
         User result = userService.createUser(user);

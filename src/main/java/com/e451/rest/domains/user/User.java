@@ -37,6 +37,10 @@ public class User implements UserDetails {
         this.activationGuid = UUID.randomUUID();
     }
 
+    public User() {
+        this.activationGuid = UUID.randomUUID();
+    }
+
     public String getId() {
         return id;
     }
