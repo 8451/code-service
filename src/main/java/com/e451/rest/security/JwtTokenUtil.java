@@ -4,11 +4,19 @@ import com.e451.rest.domains.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,23 +28,19 @@ public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -3301605591108950415L;
 
-    static final String CLAIM_KEY_USERNAME = "sub";
-    static final String CLAIM_KEY_AUDIENCE = "audience";
-    static final String CLAIM_KEY_CREATED = "created";
+    private static final String CLAIM_KEY_USERNAME = "sub";
+    private static final String CLAIM_KEY_CREATED = "created";
 
-    private static final String AUDIENCE_UNKNOWN = "unknown";
-    private static final String AUDIENCE_WEB = "web";
-    private static final String AUDIENCE_MOBILE = "mobile";
-    private static final String AUDIENCE_TABLET = "tablet";
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
     private String secret;
     private Long expiration;
+    private KeyStore keyStore;
 
     public JwtTokenUtil(@Value("${jwt.secret}") String secret, @Value("${jwt.expiration}") Long expiration) {
         this.secret = secret;
         this.expiration = expiration;
     }
-
 
     public String getUsernameFromToken(String token) {
         String username;
@@ -71,22 +75,11 @@ public class JwtTokenUtil implements Serializable {
         return expiration;
     }
 
-    public String getAudienceFromToken(String token) {
-        String audience;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            audience = (String) claims.get(CLAIM_KEY_AUDIENCE);
-        } catch (Exception e) {
-            audience = null;
-        }
-        return audience;
-    }
-
     private Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(getPublicKey())
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
@@ -108,11 +101,6 @@ public class JwtTokenUtil implements Serializable {
         return (lastPasswordReset != null && created.before(lastPasswordReset));
     }
 
-    private Boolean ignoreTokenExpiration(String token) {
-        String audience = getAudienceFromToken(token);
-        return (AUDIENCE_TABLET.equals(audience) || AUDIENCE_MOBILE.equals(audience));
-    }
-
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
@@ -120,16 +108,21 @@ public class JwtTokenUtil implements Serializable {
         return generateToken(claims);
     }
 
-    String generateToken(Map<String, Object> claims) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
+    private String generateToken(Map<String, Object> claims) {
+        try {
+            return Jwts.builder()
+                    .setClaims(claims)
+                    .setExpiration(generateExpirationDate())
+                    .signWith(SignatureAlgorithm.RS256, getPrivateKey())
+                    .compact();
+        } catch (Exception e) {
+            logger.error("Error generating token", e);
+            return null;
+        }
     }
 
     public Boolean canTokenBeRefreshed(String token) {
-        return (!isTokenExpired(token) || ignoreTokenExpiration(token));
+        return !isTokenExpired(token);
     }
 
     public String refreshToken(String token) {
@@ -152,5 +145,27 @@ public class JwtTokenUtil implements Serializable {
         return (
                 username.equals(user.getUsername())
                         && !isTokenExpired(token));
+    }
+
+    private KeyStore getKeyStore() throws Exception {
+        if (keyStore == null) {
+            ClassPathResource resource = new ClassPathResource("/security/codekeystore.jks");
+            keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(resource.getInputStream(), secret.toCharArray());
+        }
+        return keyStore;
+    }
+
+    private Certificate getCertificate() throws Exception {
+        return getKeyStore().getCertificate("codekeystore");
+    }
+
+
+    private PublicKey getPublicKey() throws Exception{
+        return getCertificate().getPublicKey();
+    }
+
+    private Key getPrivateKey() throws Exception {
+        return getKeyStore().getKey("codekeystore", secret.toCharArray());
     }
 }

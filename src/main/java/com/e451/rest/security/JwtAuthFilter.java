@@ -1,6 +1,5 @@
 package com.e451.rest.security;
 
-import org.apache.juli.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import sun.plugin.liveconnect.SecurityContextHelper;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
