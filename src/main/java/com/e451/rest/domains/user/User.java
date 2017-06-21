@@ -33,10 +33,11 @@ public class User implements UserDetails {
     private boolean enabled;
 
     @JsonIgnore
-    private UUID activationGuid;
+    @Indexed
+    private String activationGuid;
 
     public User() {
-        this.activationGuid = UUID.randomUUID();
+        this.activationGuid = UUID.randomUUID().toString();
     }
 
     public User(String id, String firstName, String lastName, String email, String password) {
@@ -46,7 +47,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.enabled = false;
-        this.activationGuid = UUID.randomUUID();
+        this.activationGuid = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -97,11 +98,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public UUID getActivationGuid() {
+    public String getActivationGuid() {
         return activationGuid;
     }
 
-    public void setActivationGuid(UUID activationGuid) {
+    public void setActivationGuid(String activationGuid) {
         this.activationGuid = activationGuid;
     }
 

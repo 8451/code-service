@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * Created by l659598 on 6/19/2017.
@@ -47,6 +48,17 @@ public class UsersController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
+    }
+
+    @GetMapping("/activate/{guid}")
+    public ResponseEntity activateUser(@PathVariable("guid") String guid) {
+        try {
+            userService.activateUser(guid);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok().build();
     }
 
 }

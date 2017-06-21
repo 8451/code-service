@@ -44,21 +44,25 @@ public class UserServiceImplTest {
         this.userService = new UserServiceImpl(userRepository, mailService, "test/api/v1", new BCryptPasswordEncoder());
 
         users = Arrays.asList(
-                new User("id1", "Liz", "Conrad", "liz@conrad.com", "passw0rd"),
-                new User("id2","Jacob", "Tucker", "jacob@tucker.com", "dr0wssap")
+                new User("id1", "Liz", "Conrad", "liz@conrad.com", "passw0rd!"),
+                new User("id2", "Jacob", "Tucker", "jacob@tucker.com", "dr0wssap!")
         );
     }
 
     @Test
     public void whenCreateUser_returnNewUser() {
-        User user =  users.get(0);
+        User user = users.get(0);
+        User result = null;
 
         Mockito.doNothing().when(mailService).sendEmail(any(DirectEmailMessage.class));
         when(userRepository.insert(user)).thenReturn(user);
         when(encoder.encode(user.getPassword())).thenReturn(user.getPassword());
 
-        User result = userService.createUser(user);
-
+        try {
+            result = userService.createUser(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Assert.assertEquals(user, result);
         Assert.assertNotNull(user.getId());
         Assert.assertNotNull(user.getFirstName());
@@ -66,9 +70,22 @@ public class UserServiceImplTest {
         Assert.assertNotNull(user.getEmail());
         Assert.assertNotNull(user.getPassword());
         Assert.assertNotNull(user.getActivationGuid());
+    }
 
-        // TODO: add user properties.
+    @Test
+    public void whenActivateUser_enabledIsTrue() {
+        User user = users.get(0);
+
+        when(userRepository.findByActivationGuid(user.getActivationGuid())).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
+
+        try {
+            userService.activateUser(user.getActivationGuid());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Assert.assertTrue(user.isEnabled());
     }
 
 }
-

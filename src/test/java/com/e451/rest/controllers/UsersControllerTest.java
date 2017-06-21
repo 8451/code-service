@@ -9,12 +9,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.validation.constraints.AssertTrue;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +50,13 @@ public class UsersControllerTest {
     public void whenCreateUser_returnsListOfSingleUser() {
         User user = users.get(0);
 
-        when(userService.createUser(user)).thenReturn(user);
+        try {
+            when(userService.createUser(user)).thenReturn(user);
+        }
+        catch (Exception ex) {
+            Assert.assertTrue(false);
+        }
+
 
         ResponseEntity<UserResponse> response = usersController.createUser(user);
 
@@ -60,9 +68,44 @@ public class UsersControllerTest {
     public void whenCreateUser_UserServiceThrowsException_returnInternalServerError() {
         User user = users.get(1);
 
-        when(userService.createUser(user)).thenThrow(new RecoverableDataAccessException("error"));
+        try {
+            when(userService.createUser(user)).thenThrow(new RecoverableDataAccessException("error"));
+        } catch (Exception ex) {
+            Assert.assertTrue(false);
+        }
+
 
         ResponseEntity<UserResponse> responseEntity = usersController.createUser(user);
+
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void whenActivateUser_returnOK() {
+        User user = users.get(0);
+
+        try {
+            Mockito.doNothing().when(userService).activateUser(user.getActivationGuid());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ResponseEntity response = usersController.activateUser(user.getActivationGuid());
+
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenActivateUser_UserServiceThrowsException_returnInternalServerError() {
+        User user = users.get(0);
+
+        try {
+            Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).activateUser(user.getActivationGuid());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ResponseEntity responseEntity = usersController.activateUser(user.getActivationGuid());
 
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
     }
