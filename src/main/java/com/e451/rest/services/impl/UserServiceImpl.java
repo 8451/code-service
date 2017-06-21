@@ -8,9 +8,11 @@ import com.e451.rest.services.MailService;
 import com.e451.rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,16 +29,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private MailService mailService;
     private String codeWebAddress;
 
-    private PasswordEncoder encoder;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder;
+    }
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, MailService mailService,
-                           @Value("${code.web-ui-address}") String codeWebAddress,
-                           PasswordEncoder encoder) {
+                           @Value("${code.web-ui-address}") String codeWebAddress) {
         this.userRepository = userRepository;
         this.mailService = mailService;
         this.codeWebAddress = codeWebAddress;
-        this.encoder = encoder;
     }
 
     @Override
@@ -44,6 +48,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         DirectEmailMessage message = new RegistrationEmailMessage(user, codeWebAddress);
         if (!isPasswordValid(user.getPassword()))
             throw new Exception();
+
+        user.setPassword(passwordEncoder().encode(user.getPassword()));
+
         mailService.sendEmail(message);
 
         return userRepository.insert(user);

@@ -26,7 +26,7 @@ public class User implements UserDetails {
     private String lastName;
 
     @Indexed(unique = true)
-    private String email;
+    private String username;
 
     private String password;
 
@@ -44,7 +44,7 @@ public class User implements UserDetails {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
+        this.username = email;
         this.password = password;
         this.enabled = false;
         this.activationGuid = UUID.randomUUID().toString();
@@ -59,11 +59,11 @@ public class User implements UserDetails {
     }
 
     public String getUsername() {
-        return email;
+        return username;
     }
 
     public void setUsername(String username) {
-        this.email = username;
+        this.username = username;
     }
 
     public String getFirstName() {
@@ -83,11 +83,11 @@ public class User implements UserDetails {
     }
 
     public String getEmail() {
-        return email;
+        return username;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.username = email;
     }
 
     public String getPassword() {

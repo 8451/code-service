@@ -41,7 +41,7 @@ public class UserServiceImplTest {
 
     @Before
     public void setup() {
-        this.userService = new UserServiceImpl(userRepository, mailService, "test/api/v1", new BCryptPasswordEncoder());
+        this.userService = new UserServiceImpl(userRepository, mailService, "test/api/v1");
 
         users = Arrays.asList(
                 new User("id1", "Liz", "Conrad", "liz@conrad.com", "passw0rd!"),
