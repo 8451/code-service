@@ -17,7 +17,7 @@ public class RegistrationEmailMessage extends DirectEmailMessage {
         this.codeWebAddress = codeWebAddress;
         super.setHtml(false);
         super.setPriority(1);
-        super.setTo(new String[] {user.getEmail()});
+        super.setTo(new String[] {user.getUsername()});
         super.setSubject("Activate your account");
     }
 

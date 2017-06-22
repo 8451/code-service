@@ -27,7 +27,7 @@ public class User implements UserDetails {
     private String lastName;
 
     @Indexed(unique = true)
-    private String email;
+    private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
@@ -42,11 +42,11 @@ public class User implements UserDetails {
         this.activationGuid = UUID.randomUUID().toString();
     }
 
-    public User(String id, String firstName, String lastName, String email, String password) {
+    public User(String id, String firstName, String lastName, String username, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.enabled = false;
         this.activationGuid = UUID.randomUUID().toString();
@@ -61,11 +61,11 @@ public class User implements UserDetails {
     }
 
     public String getUsername() {
-        return email;
+        return username;
     }
 
     public void setUsername(String username) {
-        this.email = username;
+        this.username = username;
     }
 
     public String getFirstName() {
@@ -84,13 +84,13 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
 
     public String getPassword() {
         return password;
