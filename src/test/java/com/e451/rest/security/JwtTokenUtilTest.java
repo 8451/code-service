@@ -39,7 +39,7 @@ public class JwtTokenUtilTest {
     public void getUserNameFromToken_ReturnsUserName() {
         String username = tokenUtil.getUsernameFromToken(token);
         Assert.assertNotNull(username);
-        Assert.assertEquals(user.getEmail(), username);
+        Assert.assertEquals(user.getUsername(), username);
     }
 
     @Test
