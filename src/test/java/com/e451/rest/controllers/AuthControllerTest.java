@@ -46,6 +46,6 @@ public class AuthControllerTest {
 
         authenticationRequest.setEmail("email@gmail.com");
         authenticationRequest.setPassword("Password1");
-        
+
     }
 }
