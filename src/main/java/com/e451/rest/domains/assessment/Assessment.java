@@ -108,6 +108,7 @@ public class Assessment {
     }
 
     public Assessment() {
+        this.interviewGuid = UUID.randomUUID().toString();
     }
 
     @Override

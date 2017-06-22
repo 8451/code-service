@@ -48,7 +48,7 @@ public class AssessmentsController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{guid}")
     public ResponseEntity<AssessmentResponse> getAssessmentByGuid(@PathVariable String guid) {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         Assessment assessment = null;

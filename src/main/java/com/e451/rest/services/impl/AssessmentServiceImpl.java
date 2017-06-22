@@ -29,7 +29,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public Assessment getAssessmentByGuid(String guid) {
-        return assessmentRepository.findOne(guid);
+        return assessmentRepository.findByInterviewGuid(guid);
     }
 
     @Override
