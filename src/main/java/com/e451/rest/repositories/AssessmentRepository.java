@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AssessmentRepository extends MongoRepository<Assessment, String> {
+    Assessment findByInterviewGuid(String guid);
 }

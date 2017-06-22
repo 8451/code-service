@@ -39,19 +39,19 @@ public class AssessmentRepositoryIT {
         assessmentRepository.deleteAll();
     }
 
-//    @Test
-//    public void getAllAssessments_returnsAllAssessments() {
-//        List<Assessment> assessments = assessmentRepository.findAll();
-//
-//        Assert.assertEquals(assessments.size(), 3);
-//    }
-//
-//    @Test
-//    public void getAssessment_returnSingleAssessment() {
-//        Assessment assessment = assessmentRepository.findOne(assessments.get(0).getId());
-//
-//        Assert.assertEquals(assessment, assessments.get(0));
-//    }
+    @Test
+    public void getAllAssessments_returnsAllAssessments() {
+        List<Assessment> assessments = assessmentRepository.findAll();
+
+        Assert.assertEquals(assessments.size(), 3);
+    }
+
+    @Test
+    public void getAssessmentByGuid_returnSingleAssessment() {
+        Assessment assessment = assessmentRepository.findByInterviewGuid(assessments.get(0).getInterviewGuid());
+
+        Assert.assertEquals(assessment, assessments.get(0));
+    }
 //
 //    @Test
 //    public void deleteAssessment_deletesAssessment() {

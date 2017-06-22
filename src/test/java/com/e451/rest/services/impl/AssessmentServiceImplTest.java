@@ -47,6 +47,18 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
+    public void whenGetAssessment_returnListOfSingleAssessment() {
+        String guid = "1";
+
+        when(assessmentRepository.findOne(guid)).thenReturn(this.assessments.get(0));
+
+        Assessment result = assessmentService.getAssessmentByGuid(guid);
+
+        Assert.assertEquals(result, assessments.get(0));
+
+    }
+
+    @Test
     public void whenCreateAssessment_returnNewAssessment() {
         Assessment assessment = new Assessment("1", "f1", "l1", "test1@test.com");
 

@@ -53,6 +53,15 @@ public class AssessmentsControllerTest {
     }
 
     @Test
+    public void whenGetSingleAssessment_AssessmentServiceThrowsException_returnsInternalServerError() {
+        when(assessmentService.getAssessmentByGuid("1")).thenThrow(new RecoverableDataAccessException("error"));
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.getAssessmentByGuid("1");
+
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
     public void whenGetAssessments_AssessmentServiceThrowsException_returnInternalServerError() {
         when(assessmentService.getAssessments()).thenThrow(new RecoverableDataAccessException("error"));
 

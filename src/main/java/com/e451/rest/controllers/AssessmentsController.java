@@ -48,6 +48,24 @@ public class AssessmentsController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<AssessmentResponse> getAssessmentByGuid(@PathVariable String guid) {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        Assessment assessment = null;
+        logger.info("getBody request received");
+
+        try {
+            assessment = assessmentService.getAssessmentByGuid(guid);
+            assessmentResponse.setAssessments(Arrays.asList(assessmentService.getAssessmentByGuid(guid)));
+            logger.info("getBody request processed");
+        } catch (Exception ex) {
+            logger.error("getBody encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return assessment != null ? ResponseEntity.ok(assessmentResponse) : ResponseEntity.notFound().build();
+    }
+
     @PostMapping
     public ResponseEntity<AssessmentResponse> createAssessment(@RequestBody Assessment assessment) {
         AssessmentResponse response = new AssessmentResponse();

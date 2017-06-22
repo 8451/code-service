@@ -28,6 +28,11 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public Assessment getAssessmentByGuid(String guid) {
+        return assessmentRepository.findOne(guid);
+    }
+
+    @Override
     public Assessment createAssessment(Assessment assessment) {
 
         assessment.setCreatedDate(new Date());
