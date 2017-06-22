@@ -67,7 +67,7 @@ public class UserServiceImplTest {
         Assert.assertNotNull(user.getId());
         Assert.assertNotNull(user.getFirstName());
         Assert.assertNotNull(user.getLastName());
-        Assert.assertNotNull(user.getEmail());
+        Assert.assertNotNull(user.getUsername());
         Assert.assertNotNull(user.getPassword());
         Assert.assertNotNull(user.getActivationGuid());
     }
