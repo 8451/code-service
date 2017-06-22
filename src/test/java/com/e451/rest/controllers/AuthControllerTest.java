@@ -1,5 +1,6 @@
 package com.e451.rest.controllers;
 
+import com.e451.rest.domains.auth.AuthenticationRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.security.JwtTokenUtil;
 import org.junit.Before;
@@ -7,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,11 +37,15 @@ public class AuthControllerTest {
     public void setup() {
         tokenHeader = "header";
         authController = new AuthController(tokenHeader, userDetailsService, authenticationManager, jwtTokenUtil);
-        user = new User("id1", "fname", "lname", "email", "Password1");
+        user = new User("id1", "fname", "lname", "email@gmail.com", "Password1");
     }
 
     @Test
     public void whenCreateAuthenticationToken_ReturnsValidToken() {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
 
+        authenticationRequest.setEmail("email@gmail.com");
+        authenticationRequest.setPassword("Password1");
+        
     }
 }
