@@ -6,10 +6,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.AuthenticationException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static org.mockito.Mockito.verify;
+
 
 /**
  * Created by j747951 on 6/21/2017.
@@ -34,6 +36,7 @@ public class AuthEntryPointTest {
     public void commence_throwsExceptionWhenUnauthorized() {
         try {
             authEntryPoint.commence(request, response, new AuthenticationCredentialsNotFoundException("error"));
+            verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         } catch(Exception ex) {
             // do nothing
         } finally {
