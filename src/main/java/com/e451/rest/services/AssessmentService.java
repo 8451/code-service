@@ -10,4 +10,5 @@ import java.util.List;
 public interface AssessmentService {
     List<Assessment> getAssessments();
     Assessment createAssessment(Assessment assessment);
+    Assessment updateAssessment(Assessment assessment);
 }

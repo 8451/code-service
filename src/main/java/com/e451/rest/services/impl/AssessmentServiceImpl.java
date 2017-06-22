@@ -37,4 +37,10 @@ public class AssessmentServiceImpl implements AssessmentService {
 
         return assessmentRepository.insert(assessment);
     }
+
+    @Override
+    public Assessment updateAssessment(Assessment assessment) {
+        assessment.setModifiedDate(new Date());
+        return assessmentRepository.save(assessment);
+    }
 }

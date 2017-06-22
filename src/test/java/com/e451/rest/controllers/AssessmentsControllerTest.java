@@ -83,4 +83,27 @@ public class AssessmentsControllerTest {
 
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
     }
+
+    @Test
+    public void whenUpdateAssessment_returnUpdatedAssessment() {
+        Assessment updatedAssessment = assessments.get(0);
+        updatedAssessment.setFirstName("FirstName");
+
+        when(assessmentService.updateAssessment(updatedAssessment)).thenReturn(updatedAssessment);
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.updateAssessment(updatedAssessment);
+
+        Assert.assertEquals(1, response.getBody().getAssessments().size());
+        Assert.assertEquals(assessments.get(0), response.getBody().getAssessments().get(0));
+        Assert.assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+    }
+
+    @Test
+    public void whenUpdateAssessment_AssessmentServiceThrowsException_returnsInternalServerError() {
+        when(assessmentService.updateAssessment(null)).thenThrow(new RecoverableDataAccessException("error"));
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.updateAssessment(null);
+
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

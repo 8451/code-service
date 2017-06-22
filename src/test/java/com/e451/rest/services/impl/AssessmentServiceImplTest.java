@@ -61,4 +61,18 @@ public class AssessmentServiceImplTest {
         // TODO: add user properties.
     }
 
+    @Test
+    public void whenUpdateQuestion_returnUpdatedQuestion()  {
+        Assessment assessment = new Assessment("1", "f11", "l11", "test11@test.com");
+
+        when(assessmentRepository.save(assessment)).thenReturn(assessment);
+
+        Assessment result = assessmentService.updateAssessment(assessment);
+
+        Assert.assertEquals(assessment, result);
+        Assert.assertNotNull(assessment.getModifiedDate());
+
+        // TODO: make sure the user is not null.
+    }
+
 }
