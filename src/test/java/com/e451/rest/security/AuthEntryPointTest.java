@@ -37,7 +37,6 @@ public class AuthEntryPointTest {
         } catch(Exception ex) {
             // do nothing
         } finally {
-            verify();
         }
     }
 }

@@ -44,7 +44,7 @@ public class AuthControllerTest {
     public void whenCreateAuthenticationToken_ReturnsValidToken() {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
 
-        authenticationRequest.setEmail("email@gmail.com");
+        authenticationRequest.setUsername("email@gmail.com");
         authenticationRequest.setPassword("Password1");
 
     }
