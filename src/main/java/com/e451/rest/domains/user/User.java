@@ -1,6 +1,7 @@
 package com.e451.rest.domains.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -28,11 +29,12 @@ public class User implements UserDetails {
     @Indexed(unique = true)
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private boolean enabled;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Indexed
     private String activationGuid;
 
@@ -40,11 +42,11 @@ public class User implements UserDetails {
         this.activationGuid = UUID.randomUUID().toString();
     }
 
-    public User(String id, String firstName, String lastName, String email, String password) {
+    public User(String id, String firstName, String lastName, String username, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = email;
+        this.username = username;
         this.password = password;
         this.enabled = false;
         this.activationGuid = UUID.randomUUID().toString();
@@ -80,14 +82,6 @@ public class User implements UserDetails {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return username;
-    }
-
-    public void setEmail(String email) {
-        this.username = email;
     }
 
     public String getPassword() {

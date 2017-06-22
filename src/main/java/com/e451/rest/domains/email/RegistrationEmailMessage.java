@@ -17,7 +17,7 @@ public class RegistrationEmailMessage extends DirectEmailMessage {
         this.codeWebAddress = codeWebAddress;
         super.setHtml(false);
         super.setPriority(1);
-        super.setTo(new String[] {user.getEmail()});
+        super.setTo(new String[] {user.getUsername()});
         super.setSubject("Activate your account");
     }
 
@@ -29,7 +29,7 @@ public class RegistrationEmailMessage extends DirectEmailMessage {
             builder.append("We've created your account, just go to the activate page at the link below:\n");
             builder.append(String.format("%s/activate/%s\n", codeWebAddress, user.getActivationGuid().toString()));
             builder.append(String.format("Or use the activation code: %s\n\n", user.getActivationGuid().toString()));
-            builder.append("We hope you enjoy using Code!");
+            builder.append("We hope you enjoy using CoDE!");
             this.body = builder.toString();
         }
 
