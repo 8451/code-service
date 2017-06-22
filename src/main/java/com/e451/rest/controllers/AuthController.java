@@ -43,12 +43,12 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationRequest request) {
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getUsername(),
                         request.getPassword()
                 )
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
