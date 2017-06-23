@@ -48,13 +48,11 @@ public class AssessmentServiceImplTest {
 
     @Test
     public void whenGetAssessment_returnListOfSingleAssessment() {
-        String guid = "1";
+        when(assessmentRepository.findByInterviewGuid(assessments.get(0).getInterviewGuid())).thenReturn(this.assessments.get(0));
 
-        when(assessmentRepository.findOne(guid)).thenReturn(this.assessments.get(0));
+        Assessment result = assessmentService.getAssessmentByGuid(assessments.get(0).getInterviewGuid());
 
-        Assessment result = assessmentService.getAssessmentByGuid(guid);
-
-        Assert.assertEquals(result, assessments.get(0));
+        Assert.assertEquals(assessments.get(0), result);
 
     }
 
