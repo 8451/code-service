@@ -28,6 +28,11 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public Assessment getAssessmentByGuid(String guid) {
+        return assessmentRepository.findByInterviewGuid(guid);
+    }
+
+    @Override
     public Assessment createAssessment(Assessment assessment) {
 
         assessment.setCreatedDate(new Date());
@@ -36,5 +41,11 @@ public class AssessmentServiceImpl implements AssessmentService {
         // TODO: populate user property.
 
         return assessmentRepository.insert(assessment);
+    }
+
+    @Override
+    public Assessment updateAssessment(Assessment assessment) {
+        assessment.setModifiedDate(new Date());
+        return assessmentRepository.save(assessment);
     }
 }
