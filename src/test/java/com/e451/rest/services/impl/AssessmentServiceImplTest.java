@@ -47,6 +47,16 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
+    public void whenGetAssessment_returnListOfSingleAssessment() {
+        when(assessmentRepository.findByInterviewGuid(assessments.get(0).getInterviewGuid())).thenReturn(this.assessments.get(0));
+
+        Assessment result = assessmentService.getAssessmentByGuid(assessments.get(0).getInterviewGuid());
+
+        Assert.assertEquals(assessments.get(0), result);
+
+    }
+
+    @Test
     public void whenCreateAssessment_returnNewAssessment() {
         Assessment assessment = new Assessment("1", "f1", "l1", "test1@test.com");
 
@@ -59,6 +69,20 @@ public class AssessmentServiceImplTest {
         Assert.assertNotNull(assessment.getModifiedDate());
 
         // TODO: add user properties.
+    }
+
+    @Test
+    public void whenUpdateQuestion_returnUpdatedQuestion()  {
+        Assessment assessment = new Assessment("1", "f11", "l11", "test11@test.com");
+
+        when(assessmentRepository.save(assessment)).thenReturn(assessment);
+
+        Assessment result = assessmentService.updateAssessment(assessment);
+
+        Assert.assertEquals(assessment, result);
+        Assert.assertNotNull(assessment.getModifiedDate());
+
+        // TODO: make sure the user is not null.
     }
 
 }

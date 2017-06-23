@@ -9,5 +9,7 @@ import java.util.List;
  */
 public interface AssessmentService {
     List<Assessment> getAssessments();
+    Assessment getAssessmentByGuid(String guid);
     Assessment createAssessment(Assessment assessment);
+    Assessment updateAssessment(Assessment assessment);
 }

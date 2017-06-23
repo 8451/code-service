@@ -48,6 +48,24 @@ public class AssessmentsController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{guid}")
+    public ResponseEntity<AssessmentResponse> getAssessmentByGuid(@PathVariable String guid) {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        Assessment assessment = null;
+        logger.info("getBody request received");
+
+        try {
+            assessment = assessmentService.getAssessmentByGuid(guid);
+            assessmentResponse.setAssessments(Arrays.asList(assessmentService.getAssessmentByGuid(guid)));
+            logger.info("getBody request processed");
+        } catch (Exception ex) {
+            logger.error("getBody encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return assessment != null ? ResponseEntity.ok(assessmentResponse) : ResponseEntity.notFound().build();
+    }
+
     @PostMapping
     public ResponseEntity<AssessmentResponse> createAssessment(@RequestBody Assessment assessment) {
         AssessmentResponse response = new AssessmentResponse();
@@ -63,5 +81,22 @@ public class AssessmentsController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping()
+    public ResponseEntity<AssessmentResponse> updateAssessment(@RequestBody Assessment assessment) {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+
+        logger.info("updateAssessment request received");
+
+        try {
+            assessmentResponse.setAssessments(Arrays.asList(assessmentService.updateAssessment(assessment)));
+            logger.info("updateAssessment request processed");
+        } catch (Exception ex) {
+            logger.error("updateAssessment encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.accepted().body(assessmentResponse);
     }
 }

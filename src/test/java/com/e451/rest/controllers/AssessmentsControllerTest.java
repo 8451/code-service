@@ -53,6 +53,15 @@ public class AssessmentsControllerTest {
     }
 
     @Test
+    public void whenGetSingleAssessment_AssessmentServiceThrowsException_returnsInternalServerError() {
+        when(assessmentService.getAssessmentByGuid("1")).thenThrow(new RecoverableDataAccessException("error"));
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.getAssessmentByGuid("1");
+
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
     public void whenGetAssessments_AssessmentServiceThrowsException_returnInternalServerError() {
         when(assessmentService.getAssessments()).thenThrow(new RecoverableDataAccessException("error"));
 
@@ -82,5 +91,28 @@ public class AssessmentsControllerTest {
         ResponseEntity<AssessmentResponse> responseEntity = assessmentsController.createAssessment(assessment);
 
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void whenUpdateAssessment_returnUpdatedAssessment() {
+        Assessment updatedAssessment = assessments.get(0);
+        updatedAssessment.setFirstName("FirstName");
+
+        when(assessmentService.updateAssessment(updatedAssessment)).thenReturn(updatedAssessment);
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.updateAssessment(updatedAssessment);
+
+        Assert.assertEquals(1, response.getBody().getAssessments().size());
+        Assert.assertEquals(assessments.get(0), response.getBody().getAssessments().get(0));
+        Assert.assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+    }
+
+    @Test
+    public void whenUpdateAssessment_AssessmentServiceThrowsException_returnsInternalServerError() {
+        when(assessmentService.updateAssessment(null)).thenThrow(new RecoverableDataAccessException("error"));
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.updateAssessment(null);
+
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

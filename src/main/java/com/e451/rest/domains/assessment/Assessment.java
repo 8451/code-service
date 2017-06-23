@@ -1,9 +1,11 @@
 package com.e451.rest.domains.assessment;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by j747951 on 6/15/2017.
@@ -20,6 +22,9 @@ public class Assessment {
     private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
+
+    @Indexed
+    private String interviewGuid;
 
     public String getId() {
         return id;
@@ -86,14 +91,24 @@ public class Assessment {
         this.modifiedDate = modifiedDate;
     }
 
+    public String getInterviewGuid() {
+        return interviewGuid;
+    }
+
+    public void setInterviewGuid(String interviewGuid) {
+        this.interviewGuid = interviewGuid;
+    }
+
     public Assessment(String id, String firstName, String lastName, String email) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.interviewGuid = UUID.randomUUID().toString();
     }
 
     public Assessment() {
+        this.interviewGuid = UUID.randomUUID().toString();
     }
 
     @Override
