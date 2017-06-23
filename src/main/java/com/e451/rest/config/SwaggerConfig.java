@@ -24,10 +24,10 @@ import static com.google.common.base.Predicates.not;
  */
 @Configuration
 @EnableSwagger2
+@Profile("local")
 public class SwaggerConfig {
 
     @Bean
-    @Profile("local")
     public Docket codeApi() {
     return new Docket(DocumentationType.SWAGGER_2)
             .select()
