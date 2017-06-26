@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  * Created by l659598 on 6/19/2017.
  */
 @Service
-public class UserServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private MailService mailService;

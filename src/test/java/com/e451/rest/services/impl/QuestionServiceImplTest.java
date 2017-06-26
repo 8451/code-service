@@ -1,7 +1,9 @@
 package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.question.Question;
+import com.e451.rest.domains.user.User;
 import com.e451.rest.repositories.QuestionRepository;
+import com.e451.rest.services.AuthService;
 import com.e451.rest.services.QuestionService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,19 +27,25 @@ public class QuestionServiceImplTest {
 
     private QuestionService questionService;
     private List<Question> questions;
+    private User testUser;
 
     @Mock
     private QuestionRepository questionRepository;
 
+    @Mock
+    private AuthService authService;
+
     @Before
     public void setup() {
-        this.questionService = new QuestionServiceImpl(questionRepository);
+        this.questionService = new QuestionServiceImpl(questionRepository, authService);
 
         questions = Arrays.asList(
                 new Question("1", "What is OOP?", "fun!", "OOP", 5),
                 new Question("2", "What is fxnl programming?", "more fun!", "Functional", 1),
                 new Question("3", "What is scrum?", "even MORE fun!", "Agile", 3)
         );
+
+        testUser = new User("id1", "fname", "lname", "email", "Password1!");
     }
 
     @Test
@@ -66,14 +74,15 @@ public class QuestionServiceImplTest {
         Question q = new Question("4", "What is agile?", "super fun!", "More Agile", 3);
 
         when(questionRepository.insert(q)).thenReturn(q);
+        when(authService.getActiveUser()).thenReturn(testUser);
 
         Question result = questionService.createQuestion(q);
 
         Assert.assertEquals(q, result);
+        Assert.assertEquals(testUser.getUsername(), q.getCreatedBy());
+        Assert.assertEquals(testUser.getUsername(), q.getModifiedBy());
         Assert.assertNotNull(q.getCreatedDate());
         Assert.assertNotNull(q.getModifiedDate());
-
-        // TODO: make sure the user is not null.
     }
 
     @Test
@@ -81,13 +90,14 @@ public class QuestionServiceImplTest {
         Question q = new Question("3", "What is agile?", "even more fun!", "", 4);
 
         when(questionRepository.save(q)).thenReturn(q);
+        when(authService.getActiveUser()).thenReturn(testUser);
 
         Question result = questionService.updateQuestion(q);
 
         Assert.assertEquals(q, result);
         Assert.assertNotNull(q.getModifiedDate());
+        Assert.assertEquals(testUser.getUsername(), q.getModifiedBy());
 
-        // TODO: make sure the user is not null.
     }
 
     @Test

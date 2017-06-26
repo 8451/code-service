@@ -3,6 +3,8 @@ package com.e451.rest.services.impl;
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.repositories.AssessmentRepository;
 import com.e451.rest.services.AssessmentService;
+import com.e451.rest.services.AuthService;
+import com.e451.rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +18,12 @@ import java.util.List;
 public class AssessmentServiceImpl implements AssessmentService {
 
     private AssessmentRepository assessmentRepository;
+    private AuthService authService;
 
     @Autowired
-    public AssessmentServiceImpl(AssessmentRepository assessmentRepository) {
+    public AssessmentServiceImpl(AssessmentRepository assessmentRepository, AuthService authService) {
         this.assessmentRepository = assessmentRepository;
+        this.authService = authService;
     }
 
     @Override
@@ -33,12 +37,14 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    @SuppressWarnings("Duplicates")
     public Assessment createAssessment(Assessment assessment) {
 
         assessment.setCreatedDate(new Date());
         assessment.setModifiedDate(new Date());
 
-        // TODO: populate user property.
+        assessment.setCreatedBy(authService.getActiveUser().getUsername());
+        assessment.setModifiedBy(authService.getActiveUser().getUsername());
 
         return assessmentRepository.insert(assessment);
     }
@@ -46,6 +52,8 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public Assessment updateAssessment(Assessment assessment) {
         assessment.setModifiedDate(new Date());
+        assessment.setModifiedBy(authService.getActiveUser().getUsername());
+
         return assessmentRepository.save(assessment);
     }
 }

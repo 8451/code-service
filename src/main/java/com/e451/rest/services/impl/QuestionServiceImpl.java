@@ -2,6 +2,7 @@ package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.repositories.QuestionRepository;
+import com.e451.rest.services.AuthService;
 import com.e451.rest.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,13 @@ import java.util.List;
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
-    @Autowired
     private QuestionRepository questionRepository;
+    private AuthService authService;
 
-    public QuestionServiceImpl(QuestionRepository questionRepository) {
+    @Autowired
+    public QuestionServiceImpl(QuestionRepository questionRepository, AuthService authService) {
         this.questionRepository = questionRepository;
+        this.authService = authService;
     }
 
     @Override
@@ -33,9 +36,13 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @SuppressWarnings("Duplicates")
     public Question createQuestion(Question question) {
         question.setCreatedDate(new Date());
         question.setModifiedDate(new Date());
+
+        question.setCreatedBy(authService.getActiveUser().getUsername());
+        question.setModifiedBy(authService.getActiveUser().getUsername());
 
         return questionRepository.insert(question);
     }
@@ -43,6 +50,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Question updateQuestion(Question question) {
         question.setModifiedDate(new Date());
+        question.setModifiedBy(authService.getActiveUser().getUsername());
         return questionRepository.save(question);
     }
 

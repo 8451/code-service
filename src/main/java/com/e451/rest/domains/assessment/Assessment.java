@@ -1,5 +1,6 @@
 package com.e451.rest.domains.assessment;
 
+import com.e451.rest.domains.user.User;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -57,7 +58,6 @@ public class Assessment {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
     public String getModifiedBy() {
         return modifiedBy;
