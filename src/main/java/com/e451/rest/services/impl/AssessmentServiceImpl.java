@@ -37,13 +37,14 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    @SuppressWarnings("Duplicates")
     public Assessment createAssessment(Assessment assessment) {
 
         assessment.setCreatedDate(new Date());
         assessment.setModifiedDate(new Date());
 
-        assessment.setCreatedBy(authService.getActiveUser());
-        assessment.setModifiedBy(authService.getActiveUser());
+        assessment.setCreatedBy(authService.getActiveUser().getUsername());
+        assessment.setModifiedBy(authService.getActiveUser().getUsername());
 
         return assessmentRepository.insert(assessment);
     }
@@ -51,7 +52,7 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public Assessment updateAssessment(Assessment assessment) {
         assessment.setModifiedDate(new Date());
-        assessment.setModifiedBy(authService.getActiveUser());
+        assessment.setModifiedBy(authService.getActiveUser().getUsername());
 
         return assessmentRepository.save(assessment);
     }

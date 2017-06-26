@@ -74,8 +74,8 @@ public class AssessmentServiceImplTest {
         Assessment result = assessmentService.createAssessment(assessment);
 
         Assert.assertEquals(assessment, result);
-        Assert.assertEquals(testUser, result.getCreatedBy());
-        Assert.assertEquals(testUser, result.getModifiedBy());
+        Assert.assertEquals(testUser.getUsername(), result.getCreatedBy());
+        Assert.assertEquals(testUser.getUsername(), result.getModifiedBy());
         Assert.assertNotNull(assessment.getCreatedDate());
         Assert.assertNotNull(assessment.getModifiedDate());
 
@@ -91,7 +91,7 @@ public class AssessmentServiceImplTest {
         Assessment result = assessmentService.updateAssessment(assessment);
 
         Assert.assertEquals(assessment, result);
-        Assert.assertEquals(testUser, result.getModifiedBy());
+        Assert.assertEquals(testUser.getUsername(), result.getModifiedBy());
         Assert.assertNotNull(assessment.getModifiedDate());
     }
 

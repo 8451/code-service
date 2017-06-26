@@ -79,8 +79,8 @@ public class QuestionServiceImplTest {
         Question result = questionService.createQuestion(q);
 
         Assert.assertEquals(q, result);
-        Assert.assertEquals(testUser, q.getCreatedBy());
-        Assert.assertEquals(testUser, q.getModifiedBy());
+        Assert.assertEquals(testUser.getUsername(), q.getCreatedBy());
+        Assert.assertEquals(testUser.getUsername(), q.getModifiedBy());
         Assert.assertNotNull(q.getCreatedDate());
         Assert.assertNotNull(q.getModifiedDate());
     }
@@ -96,7 +96,7 @@ public class QuestionServiceImplTest {
 
         Assert.assertEquals(q, result);
         Assert.assertNotNull(q.getModifiedDate());
-        Assert.assertEquals(testUser, q.getModifiedBy());
+        Assert.assertEquals(testUser.getUsername(), q.getModifiedBy());
 
     }
 

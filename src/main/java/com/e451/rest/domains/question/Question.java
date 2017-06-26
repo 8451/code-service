@@ -14,8 +14,8 @@ public class Question {
     private String body;
     private String suggestedAnswer;
     private String title;
-    private User createdBy;
-    private User modifiedBy;
+    private String createdBy;
+    private String modifiedBy;
     private Date createdDate;
 
     private Date modifiedDate;
@@ -66,19 +66,19 @@ public class Question {
         this.title = title;
     }
 
-    public User getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public User getModifiedBy() {
+    public String getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(User modifiedBy) {
+    public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 

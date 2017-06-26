@@ -19,8 +19,8 @@ public class Assessment {
     private String firstName;
     private String lastName;
     private String email;
-    private User modifiedBy;
-    private User createdBy;
+    private String modifiedBy;
+    private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
 
@@ -59,19 +59,19 @@ public class Assessment {
         this.email = email;
     }
 
-    public User getModifiedBy() {
+    public String getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(User modifiedBy) {
+    public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
-    public User getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 

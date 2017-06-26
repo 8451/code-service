@@ -41,8 +41,8 @@ public class QuestionServiceImpl implements QuestionService {
         question.setCreatedDate(new Date());
         question.setModifiedDate(new Date());
 
-        question.setCreatedBy(authService.getActiveUser());
-        question.setModifiedBy(authService.getActiveUser());
+        question.setCreatedBy(authService.getActiveUser().getUsername());
+        question.setModifiedBy(authService.getActiveUser().getUsername());
 
         return questionRepository.insert(question);
     }
@@ -50,7 +50,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Question updateQuestion(Question question) {
         question.setModifiedDate(new Date());
-        question.setModifiedBy(authService.getActiveUser());
+        question.setModifiedBy(authService.getActiveUser().getUsername());
         return questionRepository.save(question);
     }
 
