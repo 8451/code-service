@@ -1,5 +1,6 @@
 package com.e451.rest.domains.assessment;
 
+import com.e451.rest.domains.user.User;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,8 +19,8 @@ public class Assessment {
     private String firstName;
     private String lastName;
     private String email;
-    private String modifiedBy;
-    private String createdBy;
+    private User modifiedBy;
+    private User createdBy;
     private Date createdDate;
     private Date modifiedDate;
 
@@ -58,20 +59,19 @@ public class Assessment {
         this.email = email;
     }
 
-
-    public String getModifiedBy() {
+    public User getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(String modifiedBy) {
+    public void setModifiedBy(User modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
-    public String getCreatedBy() {
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 
