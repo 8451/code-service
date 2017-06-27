@@ -38,9 +38,10 @@ public class UsersController {
 
         try {
             userResponse.setUsers(Arrays.asList(userService.createUser(user)));
+            userService.notifyUser(user);
             logger.info("createUser request processed");
         } catch (DuplicateKeyException dkex) {
-            logger.error("createdUser encountered duplication error", dkex);
+            logger.error("createUser encountered duplication error", dkex);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         } catch (Exception ex) {
             logger.error("createUser encountered error", ex);

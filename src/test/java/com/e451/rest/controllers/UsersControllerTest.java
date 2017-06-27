@@ -20,6 +20,8 @@ import javax.validation.constraints.AssertTrue;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -65,6 +67,19 @@ public class UsersControllerTest {
     }
 
     @Test
+    public void whenCreateUser_notifyUser() throws Exception {
+        User user = users.get(0);
+
+        when(userService.createUser(user)).thenReturn(user);
+        Mockito.doNothing().when(userService).notifyUser(user);
+
+        usersController.createUser(user);
+
+        verify(userService).notifyUser(user);
+
+    }
+
+    @Test
     public void whenCreateUser_UserServiceThrowsException_returnInternalServerError() {
         User user = users.get(1);
 
@@ -78,6 +93,18 @@ public class UsersControllerTest {
         ResponseEntity<UserResponse> responseEntity = usersController.createUser(user);
 
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void whenCreateUser_UserServiceThrowsException_noEmailSent() throws Exception {
+        User user = users.get(0);
+
+        when(userService.createUser(user)).thenThrow(new Exception());
+        Mockito.doNothing().when(userService).notifyUser(user);
+
+        usersController.createUser(user);
+
+        verify(userService, never()).notifyUser(user);
     }
 
     @Test

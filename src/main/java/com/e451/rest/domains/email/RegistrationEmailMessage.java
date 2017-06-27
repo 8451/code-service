@@ -52,4 +52,20 @@ public class RegistrationEmailMessage extends DirectEmailMessage {
     public void setCodeWebAddress(String codeWebAddress) {
         this.codeWebAddress = codeWebAddress;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RegistrationEmailMessage that = (RegistrationEmailMessage) o;
+
+        if (!user.equals(that.user)) return false;
+        return codeWebAddress.equals(that.codeWebAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }
