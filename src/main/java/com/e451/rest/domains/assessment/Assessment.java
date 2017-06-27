@@ -23,6 +23,19 @@ public class Assessment {
     private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
+    private Boolean active;
+
+    public Assessment() {
+        this.interviewGuid = UUID.randomUUID().toString();
+    }
+
+    public Assessment(String id, String firstName, String lastName, String email) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.interviewGuid = UUID.randomUUID().toString();
+    }
 
     @Indexed
     private String interviewGuid;
@@ -99,16 +112,12 @@ public class Assessment {
         this.interviewGuid = interviewGuid;
     }
 
-    public Assessment(String id, String firstName, String lastName, String email) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.interviewGuid = UUID.randomUUID().toString();
+    public Boolean getActive() {
+        return active;
     }
 
-    public Assessment() {
-        this.interviewGuid = UUID.randomUUID().toString();
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     @Override
