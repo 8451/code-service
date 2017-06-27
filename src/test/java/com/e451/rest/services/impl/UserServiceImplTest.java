@@ -1,6 +1,7 @@
 package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.email.DirectEmailMessage;
+import com.e451.rest.domains.email.RegistrationEmailMessage;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.repositories.UserRepository;
 import com.e451.rest.services.MailService;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -86,6 +88,17 @@ public class UserServiceImplTest {
         }
 
         Assert.assertTrue(user.isEnabled());
+    }
+
+    @Test
+    public void whenNotifyUser_mailServiceSendsMessage() {
+        User user = users.get(0);
+
+        Mockito.doNothing().when(mailService).sendEmail(any());
+
+        userService.notifyUser(user);
+
+        verify(mailService).sendEmail(any());
     }
 
 }

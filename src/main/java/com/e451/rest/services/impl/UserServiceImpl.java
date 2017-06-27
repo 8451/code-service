@@ -45,13 +45,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) throws Exception {
-        DirectEmailMessage message = new RegistrationEmailMessage(user, codeWebAddress);
         if (!isPasswordValid(user.getPassword()))
             throw new Exception();
 
         user.setPassword(passwordEncoder().encode(user.getPassword()));
-
-        mailService.sendEmail(message);
 
         return userRepository.insert(user);
     }
@@ -73,6 +70,12 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
 
         userRepository.save(user);
+    }
+
+    @Override
+    public void notifyUser(User user) {
+        DirectEmailMessage message = new RegistrationEmailMessage(user, codeWebAddress);
+        mailService.sendEmail(message);
     }
 
     private boolean isPasswordValid(String password) {
