@@ -16,7 +16,9 @@
     <option name="TEST_SEARCH_SCOPE">
       <value defaultName="singleModule" />
     </option>
-    <envs />
+    <envs>
+      <env name="SPRING_PROFILES_ACTIVE" value="local" />
+    </envs>
     <patterns>
       <pattern testClass="com.e451.rest.*IT" />
     </patterns>

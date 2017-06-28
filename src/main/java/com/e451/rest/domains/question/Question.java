@@ -1,5 +1,6 @@
 package com.e451.rest.domains.question;
 
+import com.e451.rest.domains.user.User;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
@@ -10,18 +11,12 @@ import java.util.Date;
 public class Question {
     @Id
     private String id;
-
     private String body;
-
     private String suggestedAnswer;
-
     private String title;
-
     private String createdBy;
-
-    private Date createdDate;
-
     private String modifiedBy;
+    private Date createdDate;
 
     private Date modifiedDate;
 
@@ -79,20 +74,20 @@ public class Question {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
     public String getModifiedBy() {
         return modifiedBy;
     }
 
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Date getModifiedDate() {
