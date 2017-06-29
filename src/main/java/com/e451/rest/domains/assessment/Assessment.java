@@ -113,7 +113,7 @@ public class Assessment {
     }
 
     public Boolean getActive() {
-        return active;
+        return active != null ? active : false;
     }
 
     public void setActive(Boolean active) {
