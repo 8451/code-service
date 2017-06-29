@@ -5,7 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -24,6 +26,7 @@ public class Assessment {
     private Date createdDate;
     private Date modifiedDate;
     private Boolean active;
+    private List<QuestionAnswer> questionAnswers;
 
     public Assessment() {
         this.interviewGuid = UUID.randomUUID().toString();
@@ -118,6 +121,15 @@ public class Assessment {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public List<QuestionAnswer> getQuestionAnswers() {
+        if(questionAnswers == null) questionAnswers = new ArrayList<>();
+        return questionAnswers;
+    }
+
+    public void setQuestionAnswers(List<QuestionAnswer> questionAnswers) {
+        this.questionAnswers = questionAnswers;
     }
 
     @Override
