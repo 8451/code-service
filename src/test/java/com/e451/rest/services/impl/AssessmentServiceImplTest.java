@@ -1,20 +1,28 @@
 package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.assessment.Assessment;
+import com.e451.rest.domains.email.AssessmentStartEmailMessage;
+import com.e451.rest.domains.email.DirectEmailMessage;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.repositories.AssessmentRepository;
 import com.e451.rest.services.AssessmentService;
 import com.e451.rest.services.AuthService;
+import com.e451.rest.services.MailService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.longThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -33,9 +41,13 @@ public class AssessmentServiceImplTest {
     @Mock
     private AuthService authService;
 
+    @Mock
+    private MailService mailService;
+
     @Before
     public void setup() {
-        this.assessmentService = new AssessmentServiceImpl(assessmentRepository, authService);
+        this.assessmentService = new AssessmentServiceImpl(assessmentRepository, authService, mailService,
+                "code/web/ui");
         assessments = Arrays.asList(
                 new Assessment("1", "fn1", "ln1", "test1@test.com"),
                 new Assessment("2", "fn2", "ln2", "test2@test.com"),
@@ -43,6 +55,8 @@ public class AssessmentServiceImplTest {
         );
 
         testUser = new User("id1", "fname", "lname", "email", "Password1!");
+
+        when(authService.getActiveUser()).thenReturn(testUser);
     }
 
     @Test
@@ -82,7 +96,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenUpdateQuestion_returnUpdatedQuestion()  {
+    public void whenUpdateAssessment_returnUpdatedAssessment()  {
         Assessment assessment = new Assessment("1", "f11", "l11", "test11@test.com");
 
         when(assessmentRepository.save(assessment)).thenReturn(assessment);
@@ -93,6 +107,26 @@ public class AssessmentServiceImplTest {
         Assert.assertEquals(assessment, result);
         Assert.assertEquals(testUser.getUsername(), result.getModifiedBy());
         Assert.assertNotNull(assessment.getModifiedDate());
+    }
+
+    @Test
+    public void whenUpdateAssessmentNotActive_DoesNotCallMailService() {
+        Assessment assessment = new Assessment("1", "f1", "l1", "test@test.com");
+        assessment.setActive(false);
+
+        Assessment result = assessmentService.updateAssessment(assessment);
+
+        verify(mailService, times(0)).sendEmail(any(DirectEmailMessage.class));
+    }
+
+    @Test
+    public void whenUpdateAssessmentActive_CallsMailServiceWithAssessmentStartEmail() {
+        Assessment assessment = new Assessment("1", "f1", "f2", "test@test.com");
+        assessment.setActive(true);
+
+        Assessment result = assessmentService.updateAssessment(assessment);
+
+        verify(mailService, times(1)).sendEmail(any(AssessmentStartEmailMessage.class));
     }
 
 }
