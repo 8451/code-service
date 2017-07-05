@@ -15,4 +15,9 @@ public class AuthServiceImpl implements AuthService {
     public User getActiveUser() {
         return (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
+    @Override
+    public boolean isAuthenticated() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof User;
+    }
 }

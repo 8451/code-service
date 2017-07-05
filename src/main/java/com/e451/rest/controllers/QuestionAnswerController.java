@@ -17,7 +17,7 @@ import java.util.Arrays;
  * Created by j747951 on 6/29/2017.
  */
 @Controller
-@RequestMapping("/assessments/{guid}/answer")
+@RequestMapping("/assessments/{guid}/answers")
 public class QuestionAnswerController {
 
     private QuestionAnswerService questionAnswerService;
@@ -30,7 +30,7 @@ public class QuestionAnswerController {
 
     @PostMapping
     public ResponseEntity<QuestionAnswerResponse> createQuestionAnswer(@RequestBody QuestionAnswer questionAnswer,
-                                                                       @PathVariable String assessmentGuid) {
+                                                                       @PathVariable("guid") String assessmentGuid) {
         QuestionAnswerResponse response = new QuestionAnswerResponse();
 
         LOG.info("createQuestionAnswer request received");

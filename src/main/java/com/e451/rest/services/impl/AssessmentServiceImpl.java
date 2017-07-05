@@ -1,6 +1,7 @@
 package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.assessment.Assessment;
+import com.e451.rest.domains.assessment.AssessmentState;
 import com.e451.rest.domains.email.AssessmentStartEmailMessage;
 import com.e451.rest.repositories.AssessmentRepository;
 import com.e451.rest.services.AssessmentService;
@@ -60,10 +61,14 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public Assessment updateAssessment(Assessment assessment) {
         assessment.setModifiedDate(new Date());
-        assessment.setModifiedBy(authService.getActiveUser().getUsername());
 
-        if(assessment.getActive()) {
+        if(authService.isAuthenticated()) {
+            assessment.setModifiedBy(authService.getActiveUser().getUsername());
+        }
+
+        if(assessment.getAssessmentState() == AssessmentState.AWAIT_EMAIL) {
             mailService.sendEmail(new AssessmentStartEmailMessage(assessment, codeWebAddress));
+            assessment.setAssessmentState(AssessmentState.IN_PROGRESS);
         }
 
         return assessmentRepository.save(assessment);
