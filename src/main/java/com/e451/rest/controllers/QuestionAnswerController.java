@@ -49,7 +49,7 @@ public class QuestionAnswerController {
 
     @PutMapping
     public ResponseEntity<QuestionAnswerResponse> updateQuestionAnswer(@RequestBody QuestionAnswer questionAnswer,
-                                                                       @PathVariable String assessmentGuid) {
+                                                                       @PathVariable("guid") String assessmentGuid) {
         QuestionAnswerResponse response = new QuestionAnswerResponse();
 
         LOG.info("createQuestionAnswer request received");
