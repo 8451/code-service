@@ -14,14 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.longThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -114,7 +112,7 @@ public class AssessmentServiceImplTest {
     @Test
     public void whenUpdateAssessmentNotActive_DoesNotCallMailService() {
         Assessment assessment = new Assessment("1", "f1", "l1", "test@test.com");
-        assessment.setAssessmentState(AssessmentState.IN_PROGRESS);
+        assessment.setState(AssessmentState.IN_PROGRESS);
 
         Assessment result = assessmentService.updateAssessment(assessment);
 
@@ -124,7 +122,7 @@ public class AssessmentServiceImplTest {
     @Test
     public void whenUpdateAssessmentActive_CallsMailServiceWithAssessmentStartEmail() {
         Assessment assessment = new Assessment("1", "f1", "f2", "test@test.com");
-        assessment.setAssessmentState(AssessmentState.AWAIT_EMAIL);
+        assessment.setState(AssessmentState.AWAIT_EMAIL);
 
         Assessment result = assessmentService.updateAssessment(assessment);
 

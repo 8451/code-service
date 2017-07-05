@@ -7,7 +7,6 @@ import com.e451.rest.repositories.AssessmentRepository;
 import com.e451.rest.services.AssessmentService;
 import com.e451.rest.services.AuthService;
 import com.e451.rest.services.MailService;
-import com.e451.rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -66,9 +65,9 @@ public class AssessmentServiceImpl implements AssessmentService {
             assessment.setModifiedBy(authService.getActiveUser().getUsername());
         }
 
-        if(assessment.getAssessmentState() == AssessmentState.AWAIT_EMAIL) {
+        if(assessment.getState() == AssessmentState.AWAIT_EMAIL) {
             mailService.sendEmail(new AssessmentStartEmailMessage(assessment, codeWebAddress));
-            assessment.setAssessmentState(AssessmentState.IN_PROGRESS);
+            assessment.setState(AssessmentState.IN_PROGRESS);
         }
 
         return assessmentRepository.save(assessment);

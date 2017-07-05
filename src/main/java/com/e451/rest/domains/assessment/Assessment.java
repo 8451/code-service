@@ -1,8 +1,5 @@
 package com.e451.rest.domains.assessment;
 
-import com.e451.rest.domains.user.User;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -28,12 +25,12 @@ public class Assessment {
     private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
-    private AssessmentState assessmentState;
+    private AssessmentState state;
     private List<QuestionAnswer> questionAnswers;
 
     public Assessment() {
         this.interviewGuid = UUID.randomUUID().toString();
-        this.assessmentState = AssessmentState.NOT_STARTED;
+        this.state = AssessmentState.NOT_STARTED;
     }
 
     public Assessment(String id, String firstName, String lastName, String email) {
@@ -42,7 +39,7 @@ public class Assessment {
         this.lastName = lastName;
         this.email = email;
         this.interviewGuid = UUID.randomUUID().toString();
-        this.assessmentState =  AssessmentState.NOT_STARTED;
+        this.state =  AssessmentState.NOT_STARTED;
     }
 
     @Indexed
@@ -120,12 +117,12 @@ public class Assessment {
         this.interviewGuid = interviewGuid;
     }
 
-    public AssessmentState getAssessmentState() {
-        return assessmentState;
+    public AssessmentState getState() {
+        return state;
     }
 
-    public void setAssessmentState(AssessmentState assessmentState) {
-        this.assessmentState = assessmentState;
+    public void setState(AssessmentState state) {
+        this.state = state;
     }
 
     public List<QuestionAnswer> getQuestionAnswers() {
