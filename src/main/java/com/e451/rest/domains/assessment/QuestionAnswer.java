@@ -1,5 +1,7 @@
 package com.e451.rest.domains.assessment;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.UUID;
 
 /**

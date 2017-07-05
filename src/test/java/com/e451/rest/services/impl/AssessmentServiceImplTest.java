@@ -1,6 +1,7 @@
 package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.assessment.Assessment;
+import com.e451.rest.domains.assessment.AssessmentState;
 import com.e451.rest.domains.email.AssessmentStartEmailMessage;
 import com.e451.rest.domains.email.DirectEmailMessage;
 import com.e451.rest.domains.user.User;
@@ -101,6 +102,7 @@ public class AssessmentServiceImplTest {
 
         when(assessmentRepository.save(assessment)).thenReturn(assessment);
         when(authService.getActiveUser()).thenReturn(testUser);
+        when(authService.isAuthenticated()).thenReturn(true);
 
         Assessment result = assessmentService.updateAssessment(assessment);
 
@@ -112,7 +114,7 @@ public class AssessmentServiceImplTest {
     @Test
     public void whenUpdateAssessmentNotActive_DoesNotCallMailService() {
         Assessment assessment = new Assessment("1", "f1", "l1", "test@test.com");
-        assessment.setActive(false);
+        assessment.setAssessmentState(AssessmentState.IN_PROGRESS);
 
         Assessment result = assessmentService.updateAssessment(assessment);
 
@@ -122,7 +124,7 @@ public class AssessmentServiceImplTest {
     @Test
     public void whenUpdateAssessmentActive_CallsMailServiceWithAssessmentStartEmail() {
         Assessment assessment = new Assessment("1", "f1", "f2", "test@test.com");
-        assessment.setActive(true);
+        assessment.setAssessmentState(AssessmentState.AWAIT_EMAIL);
 
         Assessment result = assessmentService.updateAssessment(assessment);
 
