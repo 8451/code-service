@@ -67,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth").permitAll()
                 // Allows anonymous users (candidates) to answer questions.
                 .antMatchers("/assessments/*/answers").permitAll()
+                .antMatchers("/assessments/*/status").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/activate/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/v2/api-docs", "/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()

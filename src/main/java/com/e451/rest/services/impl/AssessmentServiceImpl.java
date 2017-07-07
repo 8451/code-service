@@ -45,6 +45,9 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public AssessmentState getAssessmentStateByGuid(String guid) { return getAssessmentByGuid(guid).getState(); }
+
+    @Override
     @SuppressWarnings("Duplicates")
     public Assessment createAssessment(Assessment assessment) {
 

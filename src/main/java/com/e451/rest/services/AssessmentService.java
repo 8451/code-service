@@ -1,6 +1,7 @@
 package com.e451.rest.services;
 
 import com.e451.rest.domains.assessment.Assessment;
+import com.e451.rest.domains.assessment.AssessmentState;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public interface AssessmentService {
     List<Assessment> getAssessments();
     Assessment getAssessmentByGuid(String guid);
+    AssessmentState getAssessmentStateByGuid(String guid);
     Assessment createAssessment(Assessment assessment);
     Assessment updateAssessment(Assessment assessment);
 }

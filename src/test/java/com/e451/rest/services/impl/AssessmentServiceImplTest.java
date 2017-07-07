@@ -78,6 +78,15 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
+    public void whenGetAssessmentState_returnAssessmentState() {
+        when(assessmentRepository.findByInterviewGuid(assessments.get(0).getInterviewGuid())).thenReturn(this.assessments.get(0));
+
+        AssessmentState result = assessmentService.getAssessmentStateByGuid(assessments.get(0).getInterviewGuid());
+
+        Assert.assertEquals(assessments.get(0).getState(), result);
+    }
+
+    @Test
     public void whenCreateAssessment_returnNewAssessment() {
         Assessment assessment = new Assessment("1", "f1", "l1", "test1@test.com");
 
