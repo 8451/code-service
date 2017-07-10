@@ -62,7 +62,7 @@ public class QuestionsController {
             logger.info("getQuestions request processed");
             Page<Question> questions = questionService.getQuestions(pageable);
             questionResponse.setQuestions(questions.getContent());
-            questionResponse.setTotalElements(questions.getTotalElements());
+            questionResponse.setPaginationTotalElements(questions.getTotalElements());
         } catch (Exception e) {
             logger.error("getQuestions encountered error ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

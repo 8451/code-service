@@ -10,12 +10,17 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.RecoverableDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -50,6 +55,18 @@ public class AssessmentsControllerTest {
 
         Assert.assertEquals(3, response.getBody().getAssessments().size());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetQuestionsPageable_returnListOfQuestions() {
+        Pageable page = new PageRequest(0, 20);
+        Page pageResponse = new PageImpl<Assessment>(this.assessments);
+        when(assessmentService.getAssessments(any())).thenReturn(pageResponse);
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.getAssessments(0, 20, "lastName");
+
+        Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
+        Assert.assertEquals(pageResponse.getTotalElements(), (long) response.getBody().getPaginationTotalElements());
     }
 
     @Test

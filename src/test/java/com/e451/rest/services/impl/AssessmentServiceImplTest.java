@@ -15,6 +15,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +69,18 @@ public class AssessmentServiceImplTest {
         List<Assessment> result = assessmentService.getAssessments();
 
         Assert.assertEquals(assessments.size(), result.size());
+    }
+
+    @Test
+    public void whenGetAssessmentsPageable_returnListOfAssessments() {
+        Pageable pageable = new PageRequest(0, 20);
+        Page<Assessment> assessments = new PageImpl(this.assessments);
+        when(assessmentRepository.findAll(pageable)).thenReturn(assessments);
+
+        Page<Assessment> actualAssessments = assessmentService.getAssessments(pageable);
+
+        Assert.assertEquals(assessments.getTotalElements(), actualAssessments.getTotalElements());
+        Assert.assertEquals(assessments.getContent().size(), actualAssessments.getContent().size());
     }
 
     @Test

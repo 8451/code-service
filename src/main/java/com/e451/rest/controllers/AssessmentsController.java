@@ -8,6 +8,10 @@ import com.e451.rest.services.AssessmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -43,7 +47,27 @@ public class AssessmentsController {
             response.setAssessments(assessmentService.getAssessments());
             logger.info("getAssessments request processed");
         } catch (Exception ex) {
-            logger.error("getAssessments encountered error", error);
+            logger.error("getAssessments encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(params = {"page", "size", "property"})
+    public ResponseEntity<AssessmentResponse> getAssessments(int page, int size, String property) {
+        AssessmentResponse response = new AssessmentResponse();
+
+        logger.info("getAssessments pageable request received");
+
+        try {
+            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
+            Page<Assessment> assessments = assessmentService.getAssessments(pageable);
+            response.setAssessments(assessments.getContent());
+            response.setPaginationTotalElements(assessments.getTotalElements());
+            logger.info("getAsessments pageable request processed");
+        } catch (Exception ex) {
+            logger.error("getAssessments pageable encountered error", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 

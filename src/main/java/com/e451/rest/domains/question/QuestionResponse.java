@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class QuestionResponse {
     private List<Question> questions;
-    private Long totalElements = (long) 0;
+    private Long paginationTotalElements = (long) 0;
 
     public List<Question> getQuestions() {
         return questions;
@@ -17,11 +17,11 @@ public class QuestionResponse {
         this.questions = questions;
     }
 
-    public Long getTotalElements() {
-        return totalElements;
+    public Long getPaginationTotalElements() {
+        return paginationTotalElements;
     }
 
-    public void setTotalElements(Long totalElements) {
-        this.totalElements = totalElements;
+    public void setPaginationTotalElements(Long paginationTotalElements) {
+        this.paginationTotalElements = paginationTotalElements;
     }
 }

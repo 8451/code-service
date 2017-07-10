@@ -2,6 +2,8 @@ package com.e451.rest.services;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentState;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
  */
 public interface AssessmentService {
     List<Assessment> getAssessments();
+    Page<Assessment> getAssessments(Pageable pageable);
     Assessment getAssessmentByGuid(String guid);
     AssessmentState getAssessmentStateByGuid(String guid);
     Assessment createAssessment(Assessment assessment);

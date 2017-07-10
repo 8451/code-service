@@ -9,6 +9,8 @@ import com.e451.rest.services.AuthService;
 import com.e451.rest.services.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -38,6 +40,9 @@ public class AssessmentServiceImpl implements AssessmentService {
     public List<Assessment> getAssessments() {
         return assessmentRepository.findAll();
     }
+
+    @Override
+    public Page<Assessment> getAssessments(Pageable pageable) { return assessmentRepository.findAll(pageable); }
 
     @Override
     public Assessment getAssessmentByGuid(String guid) {

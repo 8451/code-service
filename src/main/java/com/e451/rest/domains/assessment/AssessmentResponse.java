@@ -8,6 +8,15 @@ import java.util.List;
 public class AssessmentResponse {
 
     private List<Assessment> assessments;
+    private Long paginationTotalElements;
+
+    public Long getPaginationTotalElements() {
+        return paginationTotalElements;
+    }
+
+    public void setPaginationTotalElements(Long paginationTotalElements) {
+        this.paginationTotalElements = paginationTotalElements;
+    }
 
     public List<Assessment> getAssessments() {
         return assessments;

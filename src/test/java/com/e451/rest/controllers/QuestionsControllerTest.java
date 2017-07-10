@@ -66,7 +66,7 @@ public class QuestionsControllerTest {
         ResponseEntity<QuestionResponse> response = questionsController.getQuestions(0, 20, "title");
 
         Assert.assertEquals(this.questions.size(), response.getBody().getQuestions().size());
-        Assert.assertEquals(pageResponse.getTotalElements(), (long) response.getBody().getTotalElements());
+        Assert.assertEquals(pageResponse.getTotalElements(), (long) response.getBody().getPaginationTotalElements());
     }
 
     @Test
