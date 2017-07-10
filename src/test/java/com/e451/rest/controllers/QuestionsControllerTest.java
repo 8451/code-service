@@ -1,5 +1,6 @@
 package com.e451.rest.controllers;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.services.QuestionService;
@@ -31,6 +32,7 @@ public class QuestionsControllerTest {
     private QuestionService questionService;
 
     private List<Question> questions;
+    private List<String> languages;
 
     @Before
     public void setup() {
@@ -40,6 +42,8 @@ public class QuestionsControllerTest {
                 new Question("1", "q1", "a1", "t1", 1),
                 new Question("2", "q2", "a2", "t2", 2),
                 new Question("3", "q3", "a3", "t3", 3));
+
+        languages = Arrays.asList("Java", "Python", "SQL");
     }
 
     @Test
@@ -57,6 +61,25 @@ public class QuestionsControllerTest {
         when(questionService.getQuestions()).thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<QuestionResponse> response = questionsController.getQuestions();
+
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void whenGetLanguages_returnListOfLanguages() {
+        when(questionService.getLanguages()).thenReturn(languages);
+
+        ResponseEntity<LanguageResponse> response = questionsController.getLanguages();
+
+        Assert.assertEquals(3, response.getBody().getLanguages().size());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetLanguagesException_QuestionServiceThrowsException_returnsInternalServerError() {
+        when(questionService.getLanguages()).thenThrow(new RecoverableDataAccessException("error"));
+
+        ResponseEntity<LanguageResponse> response = questionsController.getLanguages();
 
         Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

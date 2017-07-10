@@ -13,4 +13,5 @@ public interface QuestionService {
     Question createQuestion(Question question);
     Question updateQuestion(Question question);
     void deleteQuestion(String id);
+    List<String> getLanguages();
 }
