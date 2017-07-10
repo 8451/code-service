@@ -21,7 +21,7 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionRepository questionRepository;
     private AuthService authService;
 
-    private static final List<String> languages = Arrays.asList("Java", "Python", "SQL", "C#", "C", "C++",
+    private static final List<String> languages = Arrays.asList("Java", "Python2", "Python3", "SQL", "C#", "C", "C++",
             "Powershell", "Bash", "Javascript", "Typescript", "Ruby", "PHP");
 
     @Autowired
