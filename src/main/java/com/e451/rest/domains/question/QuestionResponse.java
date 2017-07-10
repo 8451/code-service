@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class QuestionResponse {
     private List<Question> questions;
-    private Integer totalElements = 0;
+    private Long totalElements = (long) 0;
 
     public List<Question> getQuestions() {
         return questions;
@@ -17,11 +17,11 @@ public class QuestionResponse {
         this.questions = questions;
     }
 
-    public Integer getTotalElements() {
+    public Long getTotalElements() {
         return totalElements;
     }
 
-    public void setTotalElements(Integer totalElements) {
+    public void setTotalElements(Long totalElements) {
         this.totalElements = totalElements;
     }
 }

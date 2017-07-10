@@ -50,14 +50,25 @@ public class QuestionsController {
         return ResponseEntity.ok(questionResponse);
     }
 
-    @GetMapping(params = {"page", "size"})
-    public Page<Question>
-        getQuestions(@RequestParam("page") int page, @RequestParam("size") int size) {
+    @GetMapping(params = {"page", "size", "property"})
+    public ResponseEntity<QuestionResponse>
+        getQuestions(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("property") String property) {
 
-        Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, "title")));
+        QuestionResponse questionResponse = new QuestionResponse();
         logger.info("getQuestions() request received");
 
-        return questionService.getQuestions(pageable);
+        try {
+            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
+            logger.info("getQuestions request processed");
+            Page<Question> questions = questionService.getQuestions(pageable);
+            questionResponse.setQuestions(questions.getContent());
+            questionResponse.setTotalElements(questions.getTotalElements());
+        } catch (Exception e) {
+            logger.error("getQuestions encountered error ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(questionResponse);
     }
 
     @GetMapping("/{id}")
