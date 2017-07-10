@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class QuestionResponse {
     private List<Question> questions;
+    private Integer totalElements = 0;
 
     public List<Question> getQuestions() {
         return questions;
@@ -14,5 +15,13 @@ public class QuestionResponse {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public Integer getTotalElements() {
+        return totalElements;
+    }
+
+    public void setTotalElements(Integer totalElements) {
+        this.totalElements = totalElements;
     }
 }
