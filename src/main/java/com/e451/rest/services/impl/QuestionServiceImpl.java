@@ -22,7 +22,7 @@ public class QuestionServiceImpl implements QuestionService {
     private AuthService authService;
 
     private static final List<String> languages = Arrays.asList("Java", "Python2", "Python3", "SQL", "C#", "C", "C++",
-            "Powershell", "Bash", "Javascript", "Typescript", "Ruby", "PHP");
+            "Powershell", "Bash", "Javascript", "Typescript", "Ruby", "PHP", "Scala");
 
     @Autowired
     public QuestionServiceImpl(QuestionRepository questionRepository, AuthService authService) {

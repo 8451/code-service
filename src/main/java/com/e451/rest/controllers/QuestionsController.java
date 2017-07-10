@@ -68,13 +68,13 @@ public class QuestionsController {
     @GetMapping("/languages")
     public ResponseEntity<LanguageResponse> getLanguages() {
         LanguageResponse languageResponse = new LanguageResponse();
-        logger.info("getBody request received");
+        logger.info("languages request received");
 
         try {
             languageResponse.setLanguages(questionService.getLanguages());
-            logger.info("getBody request processed");
+            logger.info("languages request processed");
         } catch (Exception ex) {
-            logger.error("getBody encountered error", ex);
+            logger.error("languages encountered error", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
