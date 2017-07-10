@@ -7,6 +7,8 @@ import com.e451.rest.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +20,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     private QuestionRepository questionRepository;
     private AuthService authService;
+
+    private static final List<String> languages = Arrays.asList("Java", "Python", "SQL", "C#", "C", "C++",
+            "Powershell", "Bash", "Javascript", "Typescript", "Ruby", "PHP");
 
     @Autowired
     public QuestionServiceImpl(QuestionRepository questionRepository, AuthService authService) {
@@ -57,5 +62,11 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void deleteQuestion(String id) {
         questionRepository.delete(id);
+    }
+
+    @Override
+    public List<String> getLanguages() {
+        Collections.sort(languages);
+        return languages;
     }
 }

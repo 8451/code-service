@@ -1,5 +1,6 @@
 package com.e451.rest.controllers;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.services.QuestionService;
@@ -62,6 +63,22 @@ public class QuestionsController {
         }
 
         return q != null ? ResponseEntity.ok(questionResponse) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/languages")
+    public ResponseEntity<LanguageResponse> getLanguages() {
+        LanguageResponse languageResponse = new LanguageResponse();
+        logger.info("getBody request received");
+
+        try {
+            languageResponse.setLanguages(questionService.getLanguages());
+            logger.info("getBody request processed");
+        } catch (Exception ex) {
+            logger.error("getBody encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(languageResponse);
     }
 
     @PostMapping()
