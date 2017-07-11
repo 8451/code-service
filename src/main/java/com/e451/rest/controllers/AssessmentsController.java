@@ -61,7 +61,7 @@ public class AssessmentsController {
         logger.info("getAssessments pageable request received");
 
         try {
-            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
+            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, property)));
             Page<Assessment> assessments = assessmentService.getAssessments(pageable);
             response.setAssessments(assessments.getContent());
             response.setPaginationTotalElements(assessments.getTotalElements());
