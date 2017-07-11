@@ -7,6 +7,10 @@ import com.e451.rest.services.QuestionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +45,27 @@ public class QuestionsController {
             logger.info("getQuestions request processed");
         } catch(Exception ex) {
             logger.error("getQuestions encountered ", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(questionResponse);
+    }
+
+    @GetMapping(params = {"page", "size", "property"})
+    public ResponseEntity<QuestionResponse>
+        getQuestions(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("property") String property) {
+
+        QuestionResponse questionResponse = new QuestionResponse();
+        logger.info("getQuestions() request received");
+
+        try {
+            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
+            logger.info("getQuestions request processed");
+            Page<Question> questions = questionService.getQuestions(pageable);
+            questionResponse.setQuestions(questions.getContent());
+            questionResponse.setPaginationTotalElements(questions.getTotalElements());
+        } catch (Exception e) {
+            logger.error("getQuestions encountered error ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 

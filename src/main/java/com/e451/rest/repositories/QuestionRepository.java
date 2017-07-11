@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * Created by e384873 on 6/9/2017.
  */
 @Repository
-public interface QuestionRepository extends MongoRepository<Question, String>{
+public interface QuestionRepository extends MongoRepository<Question, String> {
 
 }

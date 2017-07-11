@@ -5,6 +5,8 @@ import com.e451.rest.repositories.QuestionRepository;
 import com.e451.rest.services.AuthService;
 import com.e451.rest.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -33,6 +35,11 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Question> getQuestions() {
         return questionRepository.findAll();
+    }
+
+    @Override
+    public Page<Question> getQuestions(Pageable pageable) {
+        return questionRepository.findAll(pageable);
     }
 
     @Override
