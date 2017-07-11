@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class QuestionResponse {
     private List<Question> questions;
-    private Long paginationTotalElements = (long) 0;
+    private Long paginationTotalElements = 0L;
 
     public List<Question> getQuestions() {
         return questions;
