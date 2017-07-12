@@ -108,6 +108,20 @@ public class UsersControllerTest {
     }
 
     @Test
+    public void whenGetUserById_returnUser() {
+        User user = users.get(0);
+
+        try {
+            when(userService.getUserById(user.getId())).thenReturn(user);
+        } catch (Exception ex) {
+            Assert.assertTrue(false);
+        }
+        ResponseEntity<UserResponse> userResponse = usersController.getUserById(user.getId());
+        Assert.assertEquals(HttpStatus.OK, userResponse.getStatusCode());
+        Assert.assertEquals(user, userResponse.getBody().getUsers().get(0));
+    }
+
+    @Test
     public void whenActivateUser_returnOK() {
         User user = users.get(0);
 
@@ -135,5 +149,22 @@ public class UsersControllerTest {
         ResponseEntity responseEntity = usersController.activateUser(user.getActivationGuid());
 
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void whenUpdateUser_returnsUpdatedUser() {
+        User user = users.get(0);
+        user.setFirstName("newFirstName");
+
+        try {
+            when(userService.updateUser(user)).thenReturn(user);
+        } catch (Exception ex) {
+            Assert.assertTrue(false);
+        }
+
+        ResponseEntity<UserResponse> responseEntity = usersController.updateUser(user);
+
+        Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        Assert.assertEquals(user, responseEntity.getBody().getUsers().get(0));
     }
 }

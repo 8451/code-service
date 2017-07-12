@@ -62,4 +62,30 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getUserById(@PathVariable("id") String id) {
+        UserResponse userResponse = new UserResponse();
+        logger.info("get user by id request was received");
+        try {
+            userResponse.setUsers(Arrays.asList(userService.getUserById(id)));
+            logger.info("get user by id request processed");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
+    @PutMapping()
+    public ResponseEntity<UserResponse> updateUser (@RequestBody User user) {
+        UserResponse userResponse = new UserResponse();
+        logger.info("update user request received");
+
+        try {
+            userResponse.setUsers(Arrays.asList(userService.updateUser(user)));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
 }

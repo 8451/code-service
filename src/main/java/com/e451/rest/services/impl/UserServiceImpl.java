@@ -54,6 +54,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserById(String id) throws Exception {
+        return userRepository.findOne(id);
+    }
+
+    @Override
+    public User updateUser(User user) throws Exception {
+        if (!isPasswordValid(user.getPassword()))
+            throw new Exception();
+        user.setPassword(passwordEncoder().encode(user.getPassword()));
+
+        return userRepository.save(user);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if(user == null) {
