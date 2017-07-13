@@ -54,11 +54,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(String id) throws Exception {
-        return userRepository.findOne(id);
-    }
-
-    @Override
     public User updateUser(User user) throws Exception {
         if (!isPasswordValid(user.getPassword()))
             throw new Exception();

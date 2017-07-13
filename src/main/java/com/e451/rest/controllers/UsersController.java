@@ -2,6 +2,7 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.services.AuthService;
 import com.e451.rest.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +23,12 @@ import java.util.UUID;
 @CrossOrigin
 public class UsersController {
     private UserService userService;
+    private AuthService authService;
 
     @Autowired
-    public UsersController(UserService userService) {
+    public UsersController(UserService userService, AuthService authService) {
         this.userService = userService;
+        this.authService = authService;
     }
 
     private final Logger logger = LoggerFactory.getLogger(UsersController.class);
@@ -62,12 +65,12 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity getUserById(@PathVariable("id") String id) {
+    @GetMapping("/activeUser")
+    public ResponseEntity getActiveUser() {
         UserResponse userResponse = new UserResponse();
         logger.info("get user by id request was received");
         try {
-            userResponse.setUsers(Arrays.asList(userService.getUserById(id)));
+            userResponse.setUsers(Arrays.asList(authService.getActiveUser()));
             logger.info("get user by id request processed");
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

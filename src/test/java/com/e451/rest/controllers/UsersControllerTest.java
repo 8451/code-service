@@ -3,6 +3,7 @@ package com.e451.rest.controllers;
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.services.AuthService;
 import com.e451.rest.services.UserService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,12 +36,15 @@ public class UsersControllerTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private AuthService authService;
+
 
     private List<User> users;
 
     @Before
     public void setup() {
-        this.usersController = new UsersController(userService);
+        this.usersController = new UsersController(userService, authService);
 
         users = Arrays.asList(
                 new User("id1","Liz", "Conrad", "liz@conrad.com", "passw0rd"),
@@ -108,15 +112,15 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void whenGetUserById_returnUser() {
+    public void whenGetActiveUser_returnUser() {
         User user = users.get(0);
 
         try {
-            when(userService.getUserById(user.getId())).thenReturn(user);
+            when(authService.getActiveUser()).thenReturn(user);
         } catch (Exception ex) {
             Assert.assertTrue(false);
         }
-        ResponseEntity<UserResponse> userResponse = usersController.getUserById(user.getId());
+        ResponseEntity<UserResponse> userResponse = usersController.getActiveUser();
         Assert.assertEquals(HttpStatus.OK, userResponse.getStatusCode());
         Assert.assertEquals(user, userResponse.getBody().getUsers().get(0));
     }
