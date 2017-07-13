@@ -66,7 +66,7 @@ public class UsersController {
     }
 
     @GetMapping("/activeUser")
-    public ResponseEntity getActiveUser() {
+    public ResponseEntity<UserResponse> getActiveUser() {
         UserResponse userResponse = new UserResponse();
         logger.info("get user by id request was received");
         try {
