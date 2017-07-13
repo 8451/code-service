@@ -1,5 +1,6 @@
 package com.e451.rest.controllers;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.services.QuestionService;
@@ -11,12 +12,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.RecoverableDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -31,6 +37,7 @@ public class QuestionsControllerTest {
     private QuestionService questionService;
 
     private List<Question> questions;
+    private List<String> languages;
 
     @Before
     public void setup() {
@@ -40,6 +47,8 @@ public class QuestionsControllerTest {
                 new Question("1", "q1", "a1", "t1", 1),
                 new Question("2", "q2", "a2", "t2", 2),
                 new Question("3", "q3", "a3", "t3", 3));
+
+        languages = Arrays.asList("Java", "Python", "SQL");
     }
 
     @Test
@@ -53,10 +62,41 @@ public class QuestionsControllerTest {
     }
 
     @Test
+    public void whenGetQuestionsPageable_returnListOfQuestions() {
+        Pageable page = new PageRequest(0, 20);
+        Page pageResponse = new PageImpl<Question>(this.questions);
+        when(questionService.getQuestions(any())).thenReturn(pageResponse);
+
+        ResponseEntity<QuestionResponse> response = questionsController.getQuestions(0, 20, "title");
+
+        Assert.assertEquals(this.questions.size(), response.getBody().getQuestions().size());
+        Assert.assertEquals(pageResponse.getTotalElements(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
     public void whenGetQuestionException_QuestionServiceThrowsException_returnsInternalServerError() {
         when(questionService.getQuestions()).thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<QuestionResponse> response = questionsController.getQuestions();
+
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void whenGetLanguages_returnListOfLanguages() {
+        when(questionService.getLanguages()).thenReturn(languages);
+
+        ResponseEntity<LanguageResponse> response = questionsController.getLanguages();
+
+        Assert.assertEquals(3, response.getBody().getLanguages().size());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetLanguagesException_QuestionServiceThrowsException_returnsInternalServerError() {
+        when(questionService.getLanguages()).thenThrow(new RecoverableDataAccessException("error"));
+
+        ResponseEntity<LanguageResponse> response = questionsController.getLanguages();
 
         Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

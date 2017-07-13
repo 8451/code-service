@@ -5,8 +5,12 @@ import com.e451.rest.repositories.QuestionRepository;
 import com.e451.rest.services.AuthService;
 import com.e451.rest.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +23,9 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionRepository questionRepository;
     private AuthService authService;
 
+    private static final List<String> languages = Arrays.asList("Java", "Python2", "Python3", "SQL", "C#", "C", "C++",
+            "Powershell", "Bash", "Javascript", "Typescript", "Ruby", "PHP", "Scala");
+
     @Autowired
     public QuestionServiceImpl(QuestionRepository questionRepository, AuthService authService) {
         this.questionRepository = questionRepository;
@@ -28,6 +35,11 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Question> getQuestions() {
         return questionRepository.findAll();
+    }
+
+    @Override
+    public Page<Question> getQuestions(Pageable pageable) {
+        return questionRepository.findAll(pageable);
     }
 
     @Override
@@ -57,5 +69,11 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void deleteQuestion(String id) {
         questionRepository.delete(id);
+    }
+
+    @Override
+    public List<String> getLanguages() {
+        Collections.sort(languages);
+        return languages;
     }
 }

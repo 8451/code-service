@@ -1,11 +1,12 @@
 package com.e451.rest.domains.assessment;
 
-import com.e451.rest.domains.user.User;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,14 +20,17 @@ public class Assessment {
     private String firstName;
     private String lastName;
     private String email;
+    private String notes;
     private String modifiedBy;
     private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
-    private Boolean active;
+    private AssessmentState state;
+    private List<QuestionAnswer> questionAnswers;
 
     public Assessment() {
         this.interviewGuid = UUID.randomUUID().toString();
+        this.state = AssessmentState.NOT_STARTED;
     }
 
     public Assessment(String id, String firstName, String lastName, String email) {
@@ -35,6 +39,7 @@ public class Assessment {
         this.lastName = lastName;
         this.email = email;
         this.interviewGuid = UUID.randomUUID().toString();
+        this.state =  AssessmentState.NOT_STARTED;
     }
 
     @Indexed
@@ -112,12 +117,29 @@ public class Assessment {
         this.interviewGuid = interviewGuid;
     }
 
-    public Boolean getActive() {
-        return active;
+    public AssessmentState getState() {
+        return state;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setState(AssessmentState state) {
+        this.state = state;
+    }
+
+    public List<QuestionAnswer> getQuestionAnswers() {
+        if(questionAnswers == null) questionAnswers = new ArrayList<>();
+        return questionAnswers;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public void setQuestionAnswers(List<QuestionAnswer> questionAnswers) {
+        this.questionAnswers = questionAnswers;
     }
 
     @Override

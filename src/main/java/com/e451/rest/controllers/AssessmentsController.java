@@ -2,10 +2,16 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
+import com.e451.rest.domains.assessment.AssessmentState;
+import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import com.e451.rest.services.AssessmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,7 +47,27 @@ public class AssessmentsController {
             response.setAssessments(assessmentService.getAssessments());
             logger.info("getAssessments request processed");
         } catch (Exception ex) {
-            logger.error("getAssessments encountered error", error);
+            logger.error("getAssessments encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(params = {"page", "size", "property"})
+    public ResponseEntity<AssessmentResponse> getAssessments(int page, int size, String property) {
+        AssessmentResponse response = new AssessmentResponse();
+
+        logger.info("getAssessments pageable request received");
+
+        try {
+            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, property)));
+            Page<Assessment> assessments = assessmentService.getAssessments(pageable);
+            response.setAssessments(assessments.getContent());
+            response.setPaginationTotalElements(assessments.getTotalElements());
+            logger.info("getAsessments pageable request processed");
+        } catch (Exception ex) {
+            logger.error("getAssessments pageable encountered error", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -52,18 +78,36 @@ public class AssessmentsController {
     public ResponseEntity<AssessmentResponse> getAssessmentByGuid(@PathVariable String guid) {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         Assessment assessment = null;
-        logger.info("getBody request received");
+        logger.info("getAssessment request received");
 
         try {
             assessment = assessmentService.getAssessmentByGuid(guid);
-            assessmentResponse.setAssessments(Arrays.asList(assessmentService.getAssessmentByGuid(guid)));
-            logger.info("getBody request processed");
+            assessmentResponse.setAssessments(Arrays.asList(assessment));
+            logger.info("getAssessment request processed");
         } catch (Exception ex) {
-            logger.error("getBody encountered error", ex);
+            logger.error("getAssessment encountered error", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
         return assessment != null ? ResponseEntity.ok(assessmentResponse) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{guid}/status")
+    public ResponseEntity<AssessmentStateResponse> getAssessmentStateByGuid(@PathVariable String guid) {
+        AssessmentStateResponse assessmentStateResponse = new AssessmentStateResponse();
+        AssessmentState assessmentState = null;
+        logger.info("getAssessmentState request received");
+
+        try {
+            assessmentState = assessmentService.getAssessmentStateByGuid(guid);
+            assessmentStateResponse.setState(assessmentState);
+            logger.info("getAssessmentState request processed");
+        } catch (Exception e){
+            logger.error("getAssessmentState encountered error", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return assessmentState != null ? ResponseEntity.ok(assessmentStateResponse) : ResponseEntity.notFound().build();
     }
 
     @PostMapping

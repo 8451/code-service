@@ -7,4 +7,5 @@ import com.e451.rest.domains.user.User;
  */
 public interface AuthService {
     User getActiveUser();
+    boolean isAuthenticated();
 }

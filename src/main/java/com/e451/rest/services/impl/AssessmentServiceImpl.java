@@ -1,11 +1,16 @@
 package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.assessment.Assessment;
+import com.e451.rest.domains.assessment.AssessmentState;
+import com.e451.rest.domains.email.AssessmentStartEmailMessage;
 import com.e451.rest.repositories.AssessmentRepository;
 import com.e451.rest.services.AssessmentService;
 import com.e451.rest.services.AuthService;
-import com.e451.rest.services.UserService;
+import com.e451.rest.services.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,11 +24,16 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     private AssessmentRepository assessmentRepository;
     private AuthService authService;
+    private MailService mailService;
+    private String codeWebAddress;
 
     @Autowired
-    public AssessmentServiceImpl(AssessmentRepository assessmentRepository, AuthService authService) {
+    public AssessmentServiceImpl(AssessmentRepository assessmentRepository, AuthService authService,
+                                 MailService mailService, @Value("${code.web-ui-address}") String codeWebAddress) {
         this.assessmentRepository = assessmentRepository;
         this.authService = authService;
+        this.mailService = mailService;
+        this.codeWebAddress = codeWebAddress;
     }
 
     @Override
@@ -32,9 +42,15 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public Page<Assessment> getAssessments(Pageable pageable) { return assessmentRepository.findAll(pageable); }
+
+    @Override
     public Assessment getAssessmentByGuid(String guid) {
         return assessmentRepository.findByInterviewGuid(guid);
     }
+
+    @Override
+    public AssessmentState getAssessmentStateByGuid(String guid) { return getAssessmentByGuid(guid).getState(); }
 
     @Override
     @SuppressWarnings("Duplicates")
@@ -52,7 +68,15 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public Assessment updateAssessment(Assessment assessment) {
         assessment.setModifiedDate(new Date());
-        assessment.setModifiedBy(authService.getActiveUser().getUsername());
+
+        if(authService.isAuthenticated()) {
+            assessment.setModifiedBy(authService.getActiveUser().getUsername());
+        }
+
+        if(assessment.getState() == AssessmentState.AWAIT_EMAIL) {
+            mailService.sendEmail(new AssessmentStartEmailMessage(assessment, codeWebAddress));
+            assessment.setState(AssessmentState.IN_PROGRESS);
+        }
 
         return assessmentRepository.save(assessment);
     }

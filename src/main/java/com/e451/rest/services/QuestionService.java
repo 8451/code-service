@@ -1,6 +1,8 @@
 package com.e451.rest.services;
 
 import com.e451.rest.domains.question.Question;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -9,8 +11,10 @@ import java.util.List;
  */
 public interface QuestionService {
     List<Question> getQuestions();
+    Page<Question> getQuestions(Pageable pageable);
     Question getQuestion(String id);
     Question createQuestion(Question question);
     Question updateQuestion(Question question);
     void deleteQuestion(String id);
+    List<String> getLanguages();
 }
