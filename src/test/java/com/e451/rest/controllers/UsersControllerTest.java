@@ -12,6 +12,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.RecoverableDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +24,7 @@ import javax.validation.constraints.AssertTrue;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,6 +61,18 @@ public class UsersControllerTest {
 
         Assert.assertEquals(users.size(), response.getBody().getUsers().size());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetQuestionsPageable_returnListOfQuestions() throws Exception {
+        Pageable page = new PageRequest(0, 20);
+        Page pageResponse = new PageImpl<User>(this.users);
+        when(userService.getUsers(any())).thenReturn(pageResponse);
+
+        ResponseEntity<UserResponse> response = usersController.getUsers(0, 20, "title");
+
+        Assert.assertEquals(this.users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(pageResponse.getTotalElements(), (long) response.getBody().getPaginationTotalElements());
     }
 
     @Test

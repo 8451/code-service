@@ -7,6 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +70,29 @@ public class UsersController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
+    @GetMapping(params = {"page", "size", "property"})
+    public ResponseEntity<UserResponse>
+        getUsers(@RequestParam("page") int page,
+                 @RequestParam("size") int size,
+                 @RequestParam("property") String property) {
+
+        UserResponse questionResponse = new UserResponse();
+        logger.info("getQuestions() request received");
+
+        try {
+            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
+            logger.info("getQuestions request processed");
+            Page<User> users = userService.getUsers(pageable);
+            questionResponse.setUsers(users.getContent());
+            questionResponse.setPaginationTotalElements(users.getTotalElements());
+        } catch (Exception e) {
+            logger.error("getQuestions encountered error ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(questionResponse);
     }
 
     @GetMapping("/activate/{guid}")
