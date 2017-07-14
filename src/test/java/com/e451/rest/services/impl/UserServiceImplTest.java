@@ -52,6 +52,15 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void whenGetUsers_returnAllUsers() throws Exception {
+        when(userRepository.findAll()).thenReturn(users);
+
+        List<User> serviceResponse = userService.getUsers();
+
+        Assert.assertEquals(users.size(), serviceResponse.size());
+    }
+
+    @Test
     public void whenCreateUser_returnNewUser() {
         User user = users.get(0);
         User result = null;

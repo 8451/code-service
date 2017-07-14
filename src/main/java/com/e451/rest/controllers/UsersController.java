@@ -51,6 +51,23 @@ public class UsersController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
+    @GetMapping
+    public ResponseEntity<UserResponse> getUsers() {
+        UserResponse userResponse = new UserResponse();
+
+        logger.info("getUsers request received");
+
+        try {
+            userResponse.setUsers(userService.getUsers());
+            logger.info("getUsers request processed");
+        } catch (Exception ex) {
+            logger.error("getUsers encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
     @GetMapping("/activate/{guid}")
     public ResponseEntity activateUser(@PathVariable("guid") String guid) {
         try {

@@ -49,6 +49,16 @@ public class UsersControllerTest {
     }
 
     @Test
+    public void whenGetUsers_returnListOfUsers() throws Exception {
+        when(userService.getUsers()).thenReturn(users);
+
+        ResponseEntity<UserResponse> response = usersController.getUsers();
+
+        Assert.assertEquals(users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
     public void whenCreateUser_returnsListOfSingleUser() {
         User user = users.get(0);
 

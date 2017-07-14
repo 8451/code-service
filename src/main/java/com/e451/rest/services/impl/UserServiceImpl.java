@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -41,6 +42,11 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.mailService = mailService;
         this.codeWebAddress = codeWebAddress;
+    }
+
+    @Override
+    public List<User> getUsers() throws Exception {
+        return userRepository.findAll();
     }
 
     @Override
