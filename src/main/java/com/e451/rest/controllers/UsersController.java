@@ -79,4 +79,19 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(@PathVariable("id") String id) {
+        logger.info("deleteUser request received");
+
+        try {
+            userService.deleteUser(id);
+            logger.info("deleteUser request processed");
+        } catch (Exception ex) {
+            logger.error("deleteUser encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }

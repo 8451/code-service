@@ -12,6 +12,7 @@ import java.util.UUID;
 public interface UserService extends UserDetailsService {
     List<User> getUsers() throws Exception;
     User createUser(User user) throws Exception;
+    void deleteUser(String id);
     void activateUser(String guid) throws Exception;
     void notifyUser(User user);
 }

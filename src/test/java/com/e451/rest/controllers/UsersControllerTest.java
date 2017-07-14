@@ -146,4 +146,23 @@ public class UsersControllerTest {
 
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
     }
+    @Test
+    public void whenDeleteQuestion_returnSuccess()  {
+
+        Mockito.doNothing().when(userService).deleteUser("1");
+
+        ResponseEntity response = usersController.deleteUser("1");
+
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void whenDeleteQuestion_QuestionServiceThrowsException_returnsInternalServerError() {
+        Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).deleteUser("1");
+
+        ResponseEntity response = usersController.deleteUser("1");
+
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
 }

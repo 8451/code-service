@@ -110,4 +110,13 @@ public class UserServiceImplTest {
         verify(mailService).sendEmail(any());
     }
 
+    @Test
+    public void whenDeleteUser_verifyDeleteIsCalled() {
+        Mockito.doNothing().when(userRepository).delete("1");
+
+        userService.deleteUser("1");
+
+        verify(userRepository).delete("1");
+    }
+
 }
