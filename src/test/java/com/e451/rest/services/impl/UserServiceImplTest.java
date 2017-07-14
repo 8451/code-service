@@ -75,6 +75,22 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void whenLoadByUsername_returnUser() {
+        User user = users.get(0);
+
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(user);
+
+        User result = new User();
+        try {
+            result = (User) userService.loadUserByUsername(user.getUsername());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Assert.assertEquals(user, result);
+    }
+
+    @Test
     public void whenActivateUser_enabledIsTrue() {
         User user = users.get(0);
 
@@ -99,6 +115,25 @@ public class UserServiceImplTest {
         userService.notifyUser(user);
 
         verify(mailService).sendEmail(any());
+    }
+
+    @Test
+    public void whenUpdateUser_returnsUpdatedUser() {
+        User user = users.get(0);
+        User result = new User();
+        String originalFirstName = user.getFirstName();
+        user.setFirstName("newFirstName");
+        when(userRepository.save(user)).thenReturn(user);
+        when(encoder.encode(user.getPassword())).thenReturn(user.getPassword());
+        try {
+            result = userService.updateUser(user);
+        } catch (Exception ex) {
+            Assert.assertTrue(false);
+        }
+
+        verify(userRepository).save(user);
+        Assert.assertEquals(user, result);
+        Assert.assertNotEquals(originalFirstName, result.getFirstName());
     }
 
 }

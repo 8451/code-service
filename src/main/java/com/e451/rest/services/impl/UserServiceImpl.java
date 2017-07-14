@@ -1,5 +1,6 @@
 package com.e451.rest.services.impl;
 
+import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.email.DirectEmailMessage;
 import com.e451.rest.domains.email.RegistrationEmailMessage;
 import com.e451.rest.domains.user.User;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) throws Exception {
         if (!isPasswordValid(user.getPassword()))
-            throw new Exception();
+            throw new InvalidPasswordException();
 
         user.setPassword(passwordEncoder().encode(user.getPassword()));
 
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) throws Exception {
         if (!isPasswordValid(user.getPassword()))
-            throw new Exception();
+            throw new InvalidPasswordException();
         user.setPassword(passwordEncoder().encode(user.getPassword()));
 
         return userRepository.save(user);
@@ -73,7 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void activateUser(String guid) {
+    public void activateUser(String guid) throws Exception {
         User user = userRepository.findByActivationGuid(guid);
 
         user.setEnabled(true);

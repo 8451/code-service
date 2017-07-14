@@ -114,12 +114,7 @@ public class UsersControllerTest {
     @Test
     public void whenGetActiveUser_returnUser() {
         User user = users.get(0);
-
-        try {
-            when(authService.getActiveUser()).thenReturn(user);
-        } catch (Exception ex) {
-            Assert.assertTrue(false);
-        }
+        when(authService.getActiveUser()).thenReturn(user);
         ResponseEntity<UserResponse> userResponse = usersController.getActiveUser();
         Assert.assertEquals(HttpStatus.OK, userResponse.getStatusCode());
         Assert.assertEquals(user, userResponse.getBody().getUsers().get(0));
