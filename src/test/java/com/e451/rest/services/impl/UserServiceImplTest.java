@@ -146,7 +146,7 @@ public class UserServiceImplTest {
     @Test
     public void whenUpdateUser_returnsUpdatedUser() throws Exception {
         User user = users.get(0);
-        User result = new User();
+        User result;
 
         when(userRepository.findOne(user.getId())).thenReturn(user);
 
