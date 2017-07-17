@@ -78,21 +78,21 @@ public class UsersController {
                  @RequestParam("size") int size,
                  @RequestParam("property") String property) {
 
-        UserResponse questionResponse = new UserResponse();
-        logger.info("getQuestions() request received");
+        UserResponse userResponse = new UserResponse();
+        logger.info("getUsers() request received");
 
         try {
             Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
-            logger.info("getQuestions request processed");
+            logger.info("getUsers() request processed");
             Page<User> users = userService.getUsers(pageable);
-            questionResponse.setUsers(users.getContent());
-            questionResponse.setPaginationTotalElements(users.getTotalElements());
+            userResponse.setUsers(users.getContent());
+            userResponse.setPaginationTotalElements(users.getTotalElements());
         } catch (Exception e) {
-            logger.error("getQuestions encountered error ", e);
+            logger.error("getUsers() encountered error ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        return ResponseEntity.ok(questionResponse);
+        return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("/activate/{guid}")
