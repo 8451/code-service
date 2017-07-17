@@ -4,6 +4,7 @@ import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.email.DirectEmailMessage;
 import com.e451.rest.domains.email.RegistrationEmailMessage;
 import com.e451.rest.domains.user.User;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.repositories.UserRepository;
 import com.e451.rest.services.MailService;
 import com.e451.rest.services.UserService;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.websocket.OnOpen;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -29,10 +31,11 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private MailService mailService;
     private String codeWebAddress;
+    private PasswordEncoder encoder;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        if(this.encoder == null) this.encoder = new BCryptPasswordEncoder();
         return encoder;
     }
 
@@ -49,18 +52,39 @@ public class UserServiceImpl implements UserService {
         if (!isPasswordValid(user.getPassword()))
             throw new InvalidPasswordException();
 
-        user.setPassword(passwordEncoder().encode(user.getPassword()));
+        user.setPassword(encoder.encode(user.getPassword()));
 
         return userRepository.insert(user);
     }
 
     @Override
     public User updateUser(User user) throws Exception {
-        if (!isPasswordValid(user.getPassword()))
-            throw new InvalidPasswordException();
-        user.setPassword(passwordEncoder().encode(user.getPassword()));
+        user.setFirstName(user.getFirstName());
+        user.setLastName(user.getLastName());
+        user.setUsername(user.getUsername());
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(UserVerification userVerification) throws Exception {
+        User user = userRepository.findOne(userVerification.getUser().getId());
+
+        if (!encoder.matches(userVerification.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        if (!isPasswordValid(userVerification.getUser().getPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        user.setFirstName(userVerification.getUser().getFirstName());
+        user.setLastName(userVerification.getUser().getLastName());
+        user.setUsername(userVerification.getUser().getUsername());
+        user.setPassword(encoder.encode(userVerification.getUser().getPassword()));
+
+        return userRepository.save(user);
+
     }
 
     @Override

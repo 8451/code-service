@@ -2,6 +2,7 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.services.AuthService;
 import com.e451.rest.services.UserService;
 import org.slf4j.Logger;
@@ -86,6 +87,21 @@ public class UsersController {
         try {
             userResponse.setUsers(Arrays.asList(userService.updateUser(user)));
         } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<UserResponse> updateUser(@RequestBody UserVerification userVerification) {
+        UserResponse userResponse = new UserResponse();
+        logger.info("update user password request received");
+
+        try {
+            userResponse.setUsers(Arrays.asList(userService.updateUser(userVerification)));
+            logger.info("update user password request processed");
+        } catch (Exception ex) {
+            logger.info("update user password encountered error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
