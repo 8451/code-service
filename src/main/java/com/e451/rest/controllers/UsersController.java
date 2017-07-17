@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +57,46 @@ public class UsersController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<UserResponse> getUsers() {
+        UserResponse userResponse = new UserResponse();
+
+        logger.info("getUsers request received");
+
+        try {
+            userResponse.setUsers(userService.getUsers());
+            logger.info("getUsers request processed");
+        } catch (Exception ex) {
+            logger.error("getUsers encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
+    @GetMapping(params = {"page", "size", "property"})
+    public ResponseEntity<UserResponse>
+        getUsers(@RequestParam("page") int page,
+                 @RequestParam("size") int size,
+                 @RequestParam("property") String property) {
+
+        UserResponse userResponse = new UserResponse();
+        logger.info("getUsers() request received");
+
+        try {
+            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
+            logger.info("getUsers() request processed");
+            Page<User> users = userService.getUsers(pageable);
+            userResponse.setUsers(users.getContent());
+            userResponse.setPaginationTotalElements(users.getTotalElements());
+        } catch (Exception e) {
+            logger.error("getUsers() encountered error ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("/activate/{guid}")
@@ -105,6 +149,22 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(@PathVariable("id") String id) {
+        logger.info("deleteUser request received");
+
+        try {
+            userService.deleteUser(id);
+            logger.info("deleteUser request processed");
+        } catch (Exception ex) {
+            logger.error("deleteUser encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
