@@ -9,6 +9,8 @@ import com.e451.rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -44,6 +47,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getUsers() throws Exception {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public Page<User> getUsers(Pageable pageable) throws Exception {
+        return userRepository.findAll(pageable);
+    }
+
+    @Override
     public User createUser(User user) throws Exception {
         if (!isPasswordValid(user.getPassword()))
             throw new Exception();
@@ -51,6 +64,11 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder().encode(user.getPassword()));
 
         return userRepository.insert(user);
+    }
+
+    @Override
+    public void deleteUser(String id) {
+        userRepository.delete(id);
     }
 
     @Override

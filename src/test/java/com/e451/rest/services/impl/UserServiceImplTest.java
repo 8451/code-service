@@ -13,6 +13,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -50,6 +54,26 @@ public class UserServiceImplTest {
                 new User("id2", "Jacob", "Tucker", "jacob@tucker.com", "dr0wssap!")
         );
     }
+
+    @Test
+    public void whenGetUsers_returnAllUsers() throws Exception {
+        when(userRepository.findAll()).thenReturn(users);
+
+        List<User> serviceResponse = userService.getUsers();
+
+        Assert.assertEquals(users.size(), serviceResponse.size());
+    }
+
+    @Test
+    public void whenGetUsers_returnPageOfUsers() throws Exception {
+        Pageable page = new PageRequest(0, 20);
+        when(userRepository.findAll(page)).thenReturn(new PageImpl(this.users));
+
+        Page<User> serviceResponse = userService.getUsers(page);
+
+        Assert.assertEquals(users.size(), serviceResponse.getContent().size());
+    }
+
 
     @Test
     public void whenCreateUser_returnNewUser() {
@@ -99,6 +123,15 @@ public class UserServiceImplTest {
         userService.notifyUser(user);
 
         verify(mailService).sendEmail(any());
+    }
+
+    @Test
+    public void whenDeleteUser_verifyDeleteIsCalled() {
+        Mockito.doNothing().when(userRepository).delete("1");
+
+        userService.deleteUser("1");
+
+        verify(userRepository).delete("1");
     }
 
 }
