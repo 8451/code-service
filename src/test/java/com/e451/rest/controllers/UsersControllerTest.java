@@ -64,7 +64,7 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void whenGetQuestionsPageable_returnListOfQuestions() throws Exception {
+    public void whenGetUsersPageable_returnListOfUsers() throws Exception {
         Pageable page = new PageRequest(0, 20);
         Page pageResponse = new PageImpl<User>(this.users);
         when(userService.getUsers(any())).thenReturn(pageResponse);
@@ -164,7 +164,7 @@ public class UsersControllerTest {
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
     }
     @Test
-    public void whenDeleteQuestion_returnSuccess()  {
+    public void whenDeleteUser_returnSuccess()  {
 
         Mockito.doNothing().when(userService).deleteUser("1");
 
@@ -174,7 +174,7 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void whenDeleteQuestion_QuestionServiceThrowsException_returnsInternalServerError() {
+    public void whenDeleteUser_UserServiceThrowsException_returnsInternalServerError() {
         Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).deleteUser("1");
 
         ResponseEntity response = usersController.deleteUser("1");
