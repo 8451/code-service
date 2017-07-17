@@ -68,11 +68,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) throws Exception {
-        user.setFirstName(user.getFirstName());
-        user.setLastName(user.getLastName());
-        user.setUsername(user.getUsername());
+        User curUser = userRepository.findOne(user.getId());
 
-        return userRepository.save(user);
+        curUser.setFirstName(user.getFirstName());
+        curUser.setLastName(user.getLastName());
+        curUser.setUsername(user.getUsername());
+
+        return userRepository.save(curUser);
     }
 
     @Override

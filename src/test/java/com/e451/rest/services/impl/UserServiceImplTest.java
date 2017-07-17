@@ -147,6 +147,9 @@ public class UserServiceImplTest {
     public void whenUpdateUser_returnsUpdatedUser() throws Exception {
         User user = users.get(0);
         User result = new User();
+
+        when(userRepository.findOne(user.getId())).thenReturn(user);
+
         String originalFirstName = user.getFirstName();
         user.setFirstName("newFirstName");
         when(userRepository.save(any(User.class))).thenReturn(user);
