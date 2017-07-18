@@ -3,6 +3,8 @@ package com.e451.rest.controllers;
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
+import com.e451.rest.services.AuthService;
 import com.e451.rest.services.UserService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,6 +14,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.RecoverableDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +26,7 @@ import javax.validation.constraints.AssertTrue;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,12 +42,15 @@ public class UsersControllerTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private AuthService authService;
+
 
     private List<User> users;
 
     @Before
     public void setup() {
-        this.usersController = new UsersController(userService);
+        this.usersController = new UsersController(userService, authService);
 
         users = Arrays.asList(
                 new User("id1","Liz", "Conrad", "liz@conrad.com", "passw0rd"),
@@ -49,16 +59,32 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void whenCreateUser_returnsListOfSingleUser() {
+    public void whenGetUsers_returnListOfUsers() throws Exception {
+        when(userService.getUsers()).thenReturn(users);
+
+        ResponseEntity<UserResponse> response = usersController.getUsers();
+
+        Assert.assertEquals(users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetUsersPageable_returnListOfUsers() throws Exception {
+        Pageable page = new PageRequest(0, 20);
+        Page pageResponse = new PageImpl<User>(this.users);
+        when(userService.getUsers(any())).thenReturn(pageResponse);
+
+        ResponseEntity<UserResponse> response = usersController.getUsers(0, 20, "title");
+
+        Assert.assertEquals(this.users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(pageResponse.getTotalElements(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
+    public void whenCreateUser_returnsListOfSingleUser() throws Exception {
         User user = users.get(0);
 
-        try {
-            when(userService.createUser(user)).thenReturn(user);
-        }
-        catch (Exception ex) {
-            Assert.assertTrue(false);
-        }
-
+        when(userService.createUser(user)).thenReturn(user);
 
         ResponseEntity<UserResponse> response = usersController.createUser(user);
 
@@ -80,15 +106,10 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void whenCreateUser_UserServiceThrowsException_returnInternalServerError() {
+    public void whenCreateUser_UserServiceThrowsException_returnInternalServerError() throws Exception {
         User user = users.get(1);
 
-        try {
-            when(userService.createUser(user)).thenThrow(new RecoverableDataAccessException("error"));
-        } catch (Exception ex) {
-            Assert.assertTrue(false);
-        }
-
+        when(userService.createUser(user)).thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<UserResponse> responseEntity = usersController.createUser(user);
 
@@ -108,14 +129,19 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void whenActivateUser_returnOK() {
+    public void whenGetActiveUser_returnUser() throws Exception {
+        User user = users.get(0);
+        when(authService.getActiveUser()).thenReturn(user);
+        ResponseEntity<UserResponse> userResponse = usersController.getActiveUser();
+        Assert.assertEquals(HttpStatus.OK, userResponse.getStatusCode());
+        Assert.assertEquals(user, userResponse.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenActivateUser_returnOK() throws Exception {
         User user = users.get(0);
 
-        try {
-            Mockito.doNothing().when(userService).activateUser(user.getActivationGuid());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Mockito.doNothing().when(userService).activateUser(user.getActivationGuid());
 
         ResponseEntity response = usersController.activateUser(user.getActivationGuid());
 
@@ -123,17 +149,86 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void whenActivateUser_UserServiceThrowsException_returnInternalServerError() {
+    public void whenActivateUser_UserServiceThrowsException_returnInternalServerError() throws Exception {
         User user = users.get(0);
 
-        try {
-            Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).activateUser(user.getActivationGuid());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).activateUser(user.getActivationGuid());
 
         ResponseEntity responseEntity = usersController.activateUser(user.getActivationGuid());
 
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
     }
+
+    @Test
+    public void whenUpdateUser_returnsUpdatedUser() throws Exception {
+        User user = users.get(0);
+        user.setFirstName("newFirstName");
+
+        when(userService.updateUser(user)).thenReturn(user);
+
+        ResponseEntity<UserResponse> responseEntity = usersController.updateUser(user);
+
+        Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        Assert.assertEquals(user, responseEntity.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenUpdateUser_UserServiceThrowsException_returnInternalServerError() throws Exception {
+        User user = users.get(0);
+
+        Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).updateUser(user);
+
+        ResponseEntity responseEntity = usersController.updateUser(user);
+
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void whenUpdateUserVerification_returnsUpdatedUser() throws Exception {
+        User user = users.get(0);
+        UserVerification userVerification = new UserVerification();
+        userVerification.setUser(user);
+        userVerification.setCurrentPassword("Password1");
+
+        when(userService.updateUser(userVerification)).thenReturn(user);
+
+        ResponseEntity<UserResponse> responseEntity = usersController.updateUser(userVerification);
+
+        Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        Assert.assertEquals(user, responseEntity.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenUpdateUserVerification_UserServiceThrowsException_returnInternalServerError() throws Exception {
+        User user = users.get(0);
+        UserVerification userVerification = new UserVerification();
+        userVerification.setUser(user);
+        userVerification.setCurrentPassword("Password1");
+
+        Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).updateUser(userVerification);
+
+        ResponseEntity responseEntity = usersController.updateUser(userVerification);
+
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void whenDeleteUser_returnSuccess()  {
+
+        Mockito.doNothing().when(userService).deleteUser("1");
+
+        ResponseEntity response = usersController.deleteUser("1");
+
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void whenDeleteUser_UserServiceThrowsException_returnsInternalServerError() {
+        Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).deleteUser("1");
+
+        ResponseEntity response = usersController.deleteUser("1");
+
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
 }

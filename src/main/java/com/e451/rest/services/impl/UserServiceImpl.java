@@ -1,22 +1,24 @@
 package com.e451.rest.services.impl;
 
+import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.email.DirectEmailMessage;
 import com.e451.rest.domains.email.RegistrationEmailMessage;
 import com.e451.rest.domains.user.User;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.repositories.UserRepository;
 import com.e451.rest.services.MailService;
 import com.e451.rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -28,10 +30,11 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private MailService mailService;
     private String codeWebAddress;
+    private PasswordEncoder encoder;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        if(this.encoder == null) this.encoder = new BCryptPasswordEncoder();
         return encoder;
     }
 
@@ -44,13 +47,55 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getUsers() throws Exception {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public Page<User> getUsers(Pageable pageable) throws Exception {
+        return userRepository.findAll(pageable);
+    }
+
+    @Override
     public User createUser(User user) throws Exception {
         if (!isPasswordValid(user.getPassword()))
-            throw new Exception();
+            throw new InvalidPasswordException();
 
-        user.setPassword(passwordEncoder().encode(user.getPassword()));
+        user.setPassword(encoder.encode(user.getPassword()));
 
         return userRepository.insert(user);
+    }
+
+    @Override
+    public User updateUser(User user) throws Exception {
+        User curUser = userRepository.findOne(user.getId());
+
+        curUser.setFirstName(user.getFirstName());
+        curUser.setLastName(user.getLastName());
+        curUser.setUsername(user.getUsername());
+
+        return userRepository.save(curUser);
+    }
+
+    @Override
+    public User updateUser(UserVerification userVerification) throws Exception {
+        User user = userRepository.findOne(userVerification.getUser().getId());
+
+        if (!encoder.matches(userVerification.getCurrentPassword(), user.getPassword())
+                || !isPasswordValid(userVerification.getUser().getPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        user.setFirstName(userVerification.getUser().getFirstName());
+        user.setLastName(userVerification.getUser().getLastName());
+        user.setUsername(userVerification.getUser().getUsername());
+        user.setPassword(encoder.encode(userVerification.getUser().getPassword()));
+
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(String id) {
+        userRepository.delete(id);
     }
 
     @Override
@@ -64,7 +109,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void activateUser(String guid) {
+    public void activateUser(String guid) throws Exception {
         User user = userRepository.findByActivationGuid(guid);
 
         user.setEnabled(true);
