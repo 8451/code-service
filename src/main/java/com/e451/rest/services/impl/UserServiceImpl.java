@@ -81,11 +81,8 @@ public class UserServiceImpl implements UserService {
     public User updateUser(UserVerification userVerification) throws Exception {
         User user = userRepository.findOne(userVerification.getUser().getId());
 
-        if (!encoder.matches(userVerification.getCurrentPassword(), user.getPassword())) {
-            throw new InvalidPasswordException();
-        }
-
-        if (!isPasswordValid(userVerification.getUser().getPassword())) {
+        if (!encoder.matches(userVerification.getCurrentPassword(), user.getPassword())
+                || !isPasswordValid(userVerification.getUser().getPassword())) {
             throw new InvalidPasswordException();
         }
 
