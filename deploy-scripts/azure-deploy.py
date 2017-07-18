@@ -23,7 +23,7 @@ def parse_args():
     return parser.parse_args()
 
 def copy_files(args):
-    password = getpass.getpass()
+    password = os.getenv('CODE_DEPLOY_PASSWORD', getpass.getpass())
     file = None
     with FTP_TLS(host=args.host, user=args.user, passwd=password) as ftp:
         ftp.set_debuglevel(args.debug_level)
