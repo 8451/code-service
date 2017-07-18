@@ -2,6 +2,8 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
+import com.e451.rest.services.AuthService;
 import com.e451.rest.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +28,12 @@ import java.util.UUID;
 @CrossOrigin
 public class UsersController {
     private UserService userService;
+    private AuthService authService;
 
     @Autowired
-    public UsersController(UserService userService) {
+    public UsersController(UserService userService, AuthService authService) {
         this.userService = userService;
+        this.authService = authService;
     }
 
     private final Logger logger = LoggerFactory.getLogger(UsersController.class);
@@ -104,6 +108,48 @@ public class UsersController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/activeUser")
+    public ResponseEntity<UserResponse> getActiveUser() {
+        UserResponse userResponse = new UserResponse();
+        logger.info("get user by id request was received");
+        try {
+            userResponse.setUsers(Arrays.asList(authService.getActiveUser()));
+            logger.info("get user by id request processed");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
+    @PutMapping()
+    public ResponseEntity<UserResponse> updateUser (@RequestBody User user) {
+        UserResponse userResponse = new UserResponse();
+        logger.info("update user request received");
+
+        try {
+            userResponse.setUsers(Arrays.asList(userService.updateUser(user)));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<UserResponse> updateUser(@RequestBody UserVerification userVerification) {
+        UserResponse userResponse = new UserResponse();
+        logger.info("update user password request received");
+
+        try {
+            userResponse.setUsers(Arrays.asList(userService.updateUser(userVerification)));
+            logger.info("update user password request processed");
+        } catch (Exception ex) {
+            logger.info("update user password encountered error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+
     }
 
     @DeleteMapping("/{id}")
