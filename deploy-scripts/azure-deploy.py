@@ -42,7 +42,7 @@ def clean_files(ftp):
             ftp.delete(f)
         except:
             ftp.cwd(f)
-            clean_files(ftp, f)
+            clean_files(ftp)
             ftp.cwd('..')
             ftp.rmd(f)
 
