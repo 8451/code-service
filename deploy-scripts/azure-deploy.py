@@ -37,7 +37,7 @@ def copy_files(args):
         ftp.quit()
 
 def clean_files(ftp):
-    for f in ftp.nlist():
+    for f in ftp.nlst():
         try:
             ftp.delete(f)
         except:

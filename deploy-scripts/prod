@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+# Must be run in the deploy-scripts folder
+# assumes that the following folders exist
+
+# ../../code-service
+# ../../code-bff
+# ../../code-web-ui
+
+# $1 is the path to the project
+function build() {
+    function build_java_project() {
+        if ! [ -d "$1" ]; then
+            exit 1
+        fi
+
+        pushd $1
+            mvn package
+            mkdir -p deploy
+            cp web.config deploy/
+            cp target/*.jar deploy
+        popd
+    }
+
+    echo "Connect to 84.51-Corp network"
+    read -p "Press any key to continue..." -n1 -s
+    echo
+
+    build_java_project ../../code-service
+    build_java_project ../../code-bff
+
+    if ! [ -d "../../code-web-ui" ]; then
+        exit 1
+    fi
+
+    pushd ../../code-web-ui
+        ng build --aot -prod
+    popd
+}
+
+function deploy() {
+    echo "Connect to 84.51 Visitor network"
+    read -p "Press any key to continue..." -n1 -s
+    echo
+    read -p "Enter FTP Host: " FTP_HOST
+    read -p "Enter FTP Username (No Domain): " FTP_USERNAME
+    read -p "Enter Service ID: " SERVICE_ID
+    read -p "Enter BFF ID: " BFF_ID
+    read -p "Enter WebUI ID: " WEB_UI_ID
+
+    read -p "Enter FTP Password: " -s CODE_DEPLOY_PASSWORD
+    echo
+
+    export CODE_DEPLOY_PASSWORD
+
+    if which python3 >/dev/null 2>&1; then
+        python3 azure-deploy.py --host ${FTP_HOST} -d ../../code-service/deploy -u ${SERVICE_ID}\\${FTP_USERNAME}
+        python3 azure-deploy.py --host ${FTP_HOST} -d ../../code-bff/deploy -u ${BFF_ID}\\${FTP_USERNAME}
+        python3 azure-deploy.py --host ${FTP_HOST} -d ../../code-web-ui/dist -u ${WEB_UI_ID}\\${FTP_USERNAME} -xdt ../../code-web-ui/applicationHost.xdt
+    else
+        python azure-deploy.py --host ${FTP_HOST} -d ../../code-service/deploy -u ${SERVICE_ID}\\${FTP_USERNAME}
+        python azure-deploy.py --host ${FTP_HOST} -d ../../code-bff/deploy -u ${BFF_ID}\\${FTP_USERNAME}
+        python azure-deploy.py --host ${FTP_HOST} -d ../../code-web-ui/dist -u ${WEB_UI_ID}\\${FTP_USERNAME} -xdt ../../code-web-ui/applicationHost.xdt
+    fi
+}
+
+for cmd in "$@"
+do
+    if [ $cmd = "build" ]; then
+        build
+    fi
+
+    if [ $cmd = "deploy" ]; then
+        deploy
+    fi
+done
