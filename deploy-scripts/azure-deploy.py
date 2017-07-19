@@ -32,8 +32,19 @@ def copy_files(args):
             file = open(args.xdt_transform, 'rb')
             ftp.storbinary('STOR applicationHost.xdt', file)
         ftp.cwd(files_path)
+        clean_files(ftp)
         place_files(ftp, args.deploy_dir)
         ftp.quit()
+
+def clean_files(ftp):
+    for f in ftp.nlist():
+        try:
+            ftp.delete(f)
+        except:
+            ftp.cwd(f)
+            clean_files(ftp, f)
+            ftp.cwd('..')
+            ftp.rmd(f)
 
 # https://stackoverflow.com/questions/32481640/how-do-i-upload-full-directory-on-ftp-in-python
 def place_files(ftp, deploy_path):
