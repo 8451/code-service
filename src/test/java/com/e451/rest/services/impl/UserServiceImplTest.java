@@ -101,6 +101,17 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void whenUnlockUser_returnUser() throws Exception {
+        User user = users.get(0);
+        when(userRepository.findOne(any(String.class))).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        userService.unlockUser(user);
+
+        verify(userRepository).save(any(User.class));
+    }
+
+    @Test
     public void whenLoadByUsername_returnUser() {
         User user = users.get(0);
 

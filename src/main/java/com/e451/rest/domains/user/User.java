@@ -34,6 +34,8 @@ public class User implements UserDetails {
 
     private boolean enabled;
 
+    private boolean locked;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Indexed
     private String activationGuid;
@@ -108,6 +110,14 @@ public class User implements UserDetails {
         this.enabled = enabled;
     }
 
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -115,7 +125,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
