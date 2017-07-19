@@ -48,11 +48,6 @@ function deploy() {
     read -p "Enter BFF ID: " BFF_ID
     read -p "Enter WebUI ID: " WEB_UI_ID
 
-    read -p "Enter FTP Password: " -s CODE_DEPLOY_PASSWORD
-    echo
-
-    export CODE_DEPLOY_PASSWORD
-
     if which python3 >/dev/null 2>&1; then
         python3 azure-deploy.py --host ${FTP_HOST} -d ../../code-service/deploy -u ${SERVICE_ID}\\${FTP_USERNAME}
         python3 azure-deploy.py --host ${FTP_HOST} -d ../../code-bff/deploy -u ${BFF_ID}\\${FTP_USERNAME}
