@@ -145,7 +145,7 @@ public class UsersController {
             userResponse.setUsers(Arrays.asList(userService.unlockUser(user)));
             logger.info("unlock user request processed");
         } catch (Exception ex) {
-            logger.info("unlock user encountered error");
+            logger.error("unlock user encountered error", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(userResponse);
