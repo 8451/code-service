@@ -1,5 +1,6 @@
 package com.e451.rest.controllers;
 
+import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -133,7 +134,7 @@ public class UsersController {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userResponse);
     }
 
     @PutMapping("/password")
@@ -144,11 +145,14 @@ public class UsersController {
         try {
             userResponse.setUsers(Arrays.asList(userService.updateUser(userVerification)));
             logger.info("update user password request processed");
+        } catch (InvalidPasswordException ex) {
+            logger.error("user password was invalid");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } catch (Exception ex) {
-            logger.info("update user password encountered error");
+            logger.error("update user password encountered error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userResponse);
 
     }
 
