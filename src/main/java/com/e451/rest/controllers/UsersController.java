@@ -136,6 +136,21 @@ public class UsersController {
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
+    @PutMapping("/unlock")
+    public ResponseEntity<UserResponse> unlockUser(@RequestBody User user) {
+        UserResponse userResponse = new UserResponse();
+        logger.info("unlock user " + user.getUsername() + " request received");
+
+        try {
+            userResponse.setUsers(Arrays.asList(userService.unlockUser(user)));
+            logger.info("unlock user request processed");
+        } catch (Exception ex) {
+            logger.error("unlock user encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.ok(userResponse);
+    }
+
     @PutMapping("/password")
     public ResponseEntity<UserResponse> updateUser(@RequestBody UserVerification userVerification) {
         UserResponse userResponse = new UserResponse();
