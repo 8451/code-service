@@ -147,7 +147,7 @@ public class UsersController {
             logger.info("update user password request processed");
         } catch (InvalidPasswordException ex) {
             logger.error("user password was invalid");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception ex) {
             logger.error("update user password encountered error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

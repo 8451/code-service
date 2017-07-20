@@ -168,7 +168,7 @@ public class UsersControllerTest {
 
         ResponseEntity<UserResponse> responseEntity = usersController.updateUser(user);
 
-        Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        Assert.assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
         Assert.assertEquals(user, responseEntity.getBody().getUsers().get(0));
     }
 
@@ -194,7 +194,7 @@ public class UsersControllerTest {
 
         ResponseEntity<UserResponse> responseEntity = usersController.updateUser(userVerification);
 
-        Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        Assert.assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
         Assert.assertEquals(user, responseEntity.getBody().getUsers().get(0));
     }
 
