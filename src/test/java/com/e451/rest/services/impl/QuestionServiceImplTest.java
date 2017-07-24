@@ -75,7 +75,7 @@ public class QuestionServiceImplTest {
     @Test
     public void whenSearchQuestions_returnPageOfQuestions() {
         Pageable pageable = new PageRequest(0, 20);
-        when(questionRepository.findQuestionsByTitleContainsOrLanguageContainsOrCreatedByContains(
+        when(questionRepository.findQuestionsByTitleContainsIgnoreCaseOrLanguageContainsIgnoreCaseOrCreatedByContainsIgnoreCase(
                 any(Pageable.class), any(String.class), any(String.class), any(String.class)))
                 .thenReturn(new PageImpl<Question>(this.questions));
 

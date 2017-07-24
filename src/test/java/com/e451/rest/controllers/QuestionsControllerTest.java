@@ -74,6 +74,16 @@ public class QuestionsControllerTest {
     }
 
     @Test
+    public void whenSearchQuestions_ServiceThrowsError_returnInternalServerError() {
+        when(questionService.searchQuestions(any(Pageable.class), any(String.class), any(String.class), any(String.class)))
+                .thenThrow(new RecoverableDataAccessException("error"));
+
+        ResponseEntity<QuestionResponse> response = questionsController.searchQuestions(0, 20, "", "");
+
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
     public void whenGetQuestionsPageable_returnListOfQuestions() {
         Pageable page = new PageRequest(0, 20);
         Page pageResponse = new PageImpl<Question>(this.questions);

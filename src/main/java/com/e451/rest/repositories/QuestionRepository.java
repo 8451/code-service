@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface QuestionRepository extends MongoRepository<Question, String> {
-    Page<Question> findQuestionsByTitleContainsOrLanguageContainsOrCreatedByContains(
+    Page<Question> findQuestionsByTitleContainsIgnoreCaseOrLanguageContainsIgnoreCaseOrCreatedByContainsIgnoreCase(
             Pageable pageable, String title, String language, String createdBy);
 }
