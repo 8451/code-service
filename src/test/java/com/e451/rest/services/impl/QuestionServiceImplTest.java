@@ -87,7 +87,7 @@ public class QuestionServiceImplTest {
     public void whenCreateQuestion_returnNewQuestion()  {
         Question q = new Question("4", "What is agile?", "super fun!", "More Agile", 3);
 
-        when(questionRepository.insert(q)).thenReturn(q);
+        when(questionRepository.save(q)).thenReturn(q);
         when(authService.getActiveUser()).thenReturn(testUser);
 
         Question result = questionService.createQuestion(q);

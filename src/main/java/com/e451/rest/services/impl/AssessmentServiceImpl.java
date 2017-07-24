@@ -42,7 +42,9 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    public Page<Assessment> getAssessments(Pageable pageable) { return assessmentRepository.findAll(pageable); }
+    public Page<Assessment> getAssessments(Pageable pageable) {
+        return assessmentRepository.findAll(pageable);
+    }
 
     @Override
     public Assessment getAssessmentByGuid(String guid) {
@@ -50,7 +52,19 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    public AssessmentState getAssessmentStateByGuid(String guid) { return getAssessmentByGuid(guid).getState(); }
+    public AssessmentState getAssessmentStateByGuid(String guid) {
+        return getAssessmentByGuid(guid).getState();
+    }
+
+    @Override
+    public Page<Assessment> searchAssessments(Pageable pageable, String searchString) {
+        return assessmentRepository.findByFirstNameContainsOrLastNameContainsOrEmailContains(
+                pageable,
+                searchString,
+                searchString,
+                searchString
+        );
+    }
 
     @Override
     @SuppressWarnings("Duplicates")
@@ -62,18 +76,18 @@ public class AssessmentServiceImpl implements AssessmentService {
         assessment.setCreatedBy(authService.getActiveUser().getUsername());
         assessment.setModifiedBy(authService.getActiveUser().getUsername());
 
-        return assessmentRepository.insert(assessment);
+        return assessmentRepository.save(assessment);
     }
 
     @Override
     public Assessment updateAssessment(Assessment assessment) {
         assessment.setModifiedDate(new Date());
 
-        if(authService.isAuthenticated()) {
+        if (authService.isAuthenticated()) {
             assessment.setModifiedBy(authService.getActiveUser().getUsername());
         }
 
-        if(assessment.getState() == AssessmentState.AWAIT_EMAIL) {
+        if (assessment.getState() == AssessmentState.AWAIT_EMAIL) {
             mailService.sendEmail(new AssessmentStartEmailMessage(assessment, codeWebAddress));
             assessment.setState(AssessmentState.IN_PROGRESS);
         }

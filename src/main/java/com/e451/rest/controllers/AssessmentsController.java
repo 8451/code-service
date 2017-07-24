@@ -74,6 +74,26 @@ public class AssessmentsController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(params = {"page", "size", "property", "keyword"})
+    public ResponseEntity<AssessmentResponse> searchAssessments(int page, int size, String property, String keyword) {
+        AssessmentResponse response = new AssessmentResponse();
+
+        logger.info("searchAssessments pageable request received");
+
+        try {
+            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, property)));
+            Page<Assessment> assessments = assessmentService.searchAssessments(pageable, keyword);
+            response.setAssessments(assessments.getContent());
+            response.setPaginationTotalElements(assessments.getTotalElements());
+            logger.info("searchAsessments pageable request processed");
+        } catch (Exception ex) {
+            logger.error("searchAssessments pageable encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{guid}")
     public ResponseEntity<AssessmentResponse> getAssessmentByGuid(@PathVariable String guid) {
         AssessmentResponse assessmentResponse = new AssessmentResponse();

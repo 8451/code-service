@@ -56,7 +56,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.setCreatedBy(authService.getActiveUser().getUsername());
         question.setModifiedBy(authService.getActiveUser().getUsername());
 
-        return questionRepository.insert(question);
+        return questionRepository.save(question);
     }
 
     @Override

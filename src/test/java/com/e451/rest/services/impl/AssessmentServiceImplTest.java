@@ -103,10 +103,27 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
+    public void whenSearchAssessments_returnListOfAssessments() {
+        Pageable pageable = new PageRequest(0, 20);
+        Page<Assessment> assessments = new PageImpl(this.assessments);
+        when(assessmentRepository.findByFirstNameContainsOrLastNameContainsOrEmailContains(
+                any(Pageable.class),
+                any(String.class),
+                any(String.class),
+                any(String.class)
+        )).thenReturn(assessments);
+
+        Page<Assessment> actualAssessments = assessmentService.searchAssessments(pageable, "");
+
+        Assert.assertEquals(assessments.getTotalElements(), actualAssessments.getTotalElements());
+        Assert.assertEquals(assessments.getContent().size(), actualAssessments.getContent().size());
+    }
+
+    @Test
     public void whenCreateAssessment_returnNewAssessment() {
         Assessment assessment = new Assessment("1", "f1", "l1", "test1@test.com");
 
-        when(assessmentRepository.insert(assessment)).thenReturn(assessment);
+        when(assessmentRepository.save(assessment)).thenReturn(assessment);
         when(authService.getActiveUser()).thenReturn(testUser);
 
         Assessment result = assessmentService.createAssessment(assessment);
@@ -120,7 +137,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenUpdateAssessment_returnUpdatedAssessment()  {
+    public void whenUpdateAssessment_returnUpdatedAssessment() {
         Assessment assessment = new Assessment("1", "f11", "l11", "test11@test.com");
 
         when(assessmentRepository.save(assessment)).thenReturn(assessment);
