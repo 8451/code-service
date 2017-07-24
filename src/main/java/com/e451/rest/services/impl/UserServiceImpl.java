@@ -67,6 +67,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User unlockUser(User user) throws Exception {
+        User curUser = userRepository.findOne(user.getId());
+        curUser.setLocked(user.isLocked());
+        return userRepository.save(curUser);
+    }
+
+    @Override
     public User updateUser(User user) throws Exception {
         User curUser = userRepository.findOne(user.getId());
 

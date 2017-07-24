@@ -168,7 +168,7 @@ public class UsersControllerTest {
 
         ResponseEntity<UserResponse> responseEntity = usersController.updateUser(user);
 
-        Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        Assert.assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
         Assert.assertEquals(user, responseEntity.getBody().getUsers().get(0));
     }
 
@@ -194,7 +194,7 @@ public class UsersControllerTest {
 
         ResponseEntity<UserResponse> responseEntity = usersController.updateUser(userVerification);
 
-        Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        Assert.assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
         Assert.assertEquals(user, responseEntity.getBody().getUsers().get(0));
     }
 
@@ -228,6 +228,23 @@ public class UsersControllerTest {
 
         ResponseEntity response = usersController.deleteUser("1");
 
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void whenUnlockUser_returnSuccess() throws Exception {
+        User user = users.get(0);
+        when(userService.unlockUser(any(User.class))).thenReturn(user);
+        ResponseEntity<UserResponse> response = usersController.unlockUser(user);
+
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenUnlockUser_UserSErviceThrowsExcepetion_returnsInternalServerError() throws Exception {
+        Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).unlockUser(any(User.class));
+        ResponseEntity response = usersController.unlockUser(users.get(0));
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 

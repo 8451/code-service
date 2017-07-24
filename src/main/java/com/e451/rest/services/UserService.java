@@ -16,6 +16,7 @@ public interface UserService extends UserDetailsService {
     List<User> getUsers() throws Exception;
     Page<User> getUsers(Pageable pageable) throws Exception;
     User createUser(User user) throws Exception;
+    User unlockUser(User user) throws Exception;
     User updateUser(User user) throws Exception;
     User updateUser(UserVerification userVerification) throws Exception;
     void deleteUser(String id);
