@@ -25,6 +25,7 @@ public class Assessment {
     private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
+    private Date assessmentDate;
     private AssessmentState state;
     private List<QuestionAnswer> questionAnswers;
 
@@ -115,6 +116,14 @@ public class Assessment {
 
     public void setInterviewGuid(String interviewGuid) {
         this.interviewGuid = interviewGuid;
+    }
+
+    public Date getAssessmentDate() {
+        return assessmentDate;
+    }
+
+    public void setAssessmentDate(Date assessmentDate) {
+        this.assessmentDate = assessmentDate;
     }
 
     public AssessmentState getState() {
