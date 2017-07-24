@@ -90,6 +90,7 @@ public class AssessmentServiceImpl implements AssessmentService {
         if (assessment.getState() == AssessmentState.AWAIT_EMAIL) {
             mailService.sendEmail(new AssessmentStartEmailMessage(assessment, codeWebAddress));
             assessment.setState(AssessmentState.IN_PROGRESS);
+            assessment.setAssessmentDate(new Date());
         }
 
         return assessmentRepository.save(assessment);

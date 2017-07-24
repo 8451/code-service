@@ -100,6 +100,14 @@ public class UserServiceImplTest {
         Assert.assertNotNull(user.getActivationGuid());
     }
 
+    @Test(expected = Exception.class)
+    public void whenCreateUserWithSameUsername_throwsException() throws Exception {
+        User user = users.get(0);
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(user);
+
+        userService.createUser(user);
+    }
+
     @Test
     public void whenUnlockUser_UserIsSavedByRepo() throws Exception {
         User user = users.get(0);

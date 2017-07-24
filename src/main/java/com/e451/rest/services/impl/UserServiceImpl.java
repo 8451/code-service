@@ -63,6 +63,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) throws Exception {
+
+        if(userRepository.findByUsername(user.getUsername()) != null) {
+            throw new Exception("Duplicate username found");
+        }
+
         if (!isPasswordValid(user.getPassword()))
             throw new InvalidPasswordException();
 
