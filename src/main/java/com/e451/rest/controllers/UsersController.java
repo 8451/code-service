@@ -100,6 +100,30 @@ public class UsersController {
         return ResponseEntity.ok(userResponse);
     }
 
+    @GetMapping(params = {"page", "size", "property", "searchString"})
+    public ResponseEntity<UserResponse>
+    searchUsers(@RequestParam("page") int page,
+             @RequestParam("size") int size,
+             @RequestParam("property") String property,
+             @RequestParam("searchString") String searchString) {
+
+        UserResponse userResponse = new UserResponse();
+        logger.info("searchUsers() request received");
+
+        try {
+            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
+            logger.info("searchUsers() request processed");
+            Page<User> users = userService.searchUsers(pageable, searchString);
+            userResponse.setUsers(users.getContent());
+            userResponse.setPaginationTotalElements(users.getTotalElements());
+        } catch (Exception e) {
+            logger.error("searchUsers() encountered error ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(userResponse);
+    }
+
     @GetMapping("/activate/{guid}")
     public ResponseEntity activateUser(@PathVariable("guid") String guid) {
         try {

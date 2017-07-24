@@ -20,13 +20,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.AssertTrue;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -242,10 +241,17 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void whenUnlockUser_UserSErviceThrowsExcepetion_returnsInternalServerError() throws Exception {
+    public void whenUnlockUser_UserServiceThrowsExcepetion_returnsInternalServerError() throws Exception {
         Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).unlockUser(any(User.class));
         ResponseEntity response = usersController.unlockUser(users.get(0));
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void whenSearchUsers_returnListOfUsers() throws Exception {
+        when(userService.searchUsers(any(Pageable.class), eq("test"))).thenReturn(new PageImpl<>(this.users));
+        ResponseEntity<UserResponse> response = usersController.searchUsers(0, 20, "lastName", "test");
+        Assert.assertEquals(2L, (long)response.getBody().getPaginationTotalElements());
     }
 
 }
