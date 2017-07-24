@@ -128,18 +128,12 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void whenActivateUser_enabledIsTrue() {
+    public void whenActivateUser_enabledIsTrue() throws Exception {
         User user = users.get(0);
 
         when(userRepository.findByActivationGuid(user.getActivationGuid())).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
-
-        try {
-            userService.activateUser(user.getActivationGuid());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        userService.activateUser(user.getActivationGuid());
         Assert.assertTrue(user.isEnabled());
     }
 
@@ -192,8 +186,8 @@ public class UserServiceImplTest {
         Assert.assertEquals(user, result);
     }
 
-    @Test
-    public void whenUpdateUserVerificationNonMatchingPassword_thenThrowInvalidPasswordException() {
+    @Test(expected = InvalidPasswordException.class)
+    public void whenUpdateUserVerificationNonMatchingPassword_thenThrowInvalidPasswordException() throws Exception {
         User user = users.get(0);
         User newUser = new User("id1", "Liz", "Conrad", "liz@conrad.com", "Passw0rd!");
 
@@ -205,19 +199,11 @@ public class UserServiceImplTest {
 
         when(userRepository.findOne(any(String.class))).thenReturn(user);
 
-        try {
-            userService.updateUser(userVerification);
-            Assert.assertTrue(false);
-        } catch (Exception ex) {
-            Assert.assertTrue(ex instanceof InvalidPasswordException);
-        }
-
-
-
+        userService.updateUser(userVerification);
     }
 
-    @Test
-    public void whenUpdateUserVerificationInvalidNewPassword_thenThrowInvalidPasswordException() {
+    @Test(expected = InvalidPasswordException.class)
+    public void whenUpdateUserVerificationInvalidNewPassword_thenThrowInvalidPasswordException() throws Exception {
         User user = users.get(0);
         User newUser = new User("id1", "Liz", "Conrad", "liz@conrad.com", "invalidPass");
         UserVerification userVerification = new UserVerification();
@@ -228,12 +214,7 @@ public class UserServiceImplTest {
 
         when(userRepository.findOne(any(String.class))).thenReturn(user);
 
-        try {
-            userService.updateUser(userVerification);
-            Assert.assertTrue(false);
-        } catch (Exception ex) {
-            Assert.assertTrue(ex instanceof InvalidPasswordException);
-        }
+        userService.updateUser(userVerification);
     }
 
     public void whenDeleteUser_verifyDeleteIsCalled() {
@@ -242,6 +223,14 @@ public class UserServiceImplTest {
         userService.deleteUser("1");
 
         verify(userRepository).delete("1");
+    }
+
+    public void whenSearchUser_verifySearchUserIsCalled() throws Exception {
+        when(userRepository.findByUsernameContainingIgnoreCase(any(String.class))).thenReturn(new PageImpl<>(this.users));
+
+        userService.searchUsers(new PageRequest(0, 20), "test");
+
+        verify(userRepository).findByUsernameContainingIgnoreCase("test");
     }
 
 }
