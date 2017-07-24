@@ -14,5 +14,5 @@ import org.springframework.stereotype.Repository;
 public interface AssessmentRepository extends MongoRepository<Assessment, String> {
     Assessment findByInterviewGuid(String guid);
 
-    Page<Assessment> findByFirstNameContainsOrLastNameContainsOrEmailContains(Pageable page, String firstName, String lastName, String email);
+    Page<Assessment> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(Pageable page, String firstName, String lastName, String email);
 }

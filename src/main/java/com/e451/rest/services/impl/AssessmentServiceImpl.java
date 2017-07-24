@@ -58,7 +58,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public Page<Assessment> searchAssessments(Pageable pageable, String searchString) {
-        return assessmentRepository.findByFirstNameContainsOrLastNameContainsOrEmailContains(
+        return assessmentRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
                 pageable,
                 searchString,
                 searchString,

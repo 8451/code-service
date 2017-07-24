@@ -72,7 +72,7 @@ public class QuestionsController {
         return ResponseEntity.ok(questionResponse);
     }
 
-    @GetMapping(params = {"page", "size", "property", "searchString"})
+    @GetMapping(value = "/search", params = {"page", "size", "property", "searchString"})
     public ResponseEntity<QuestionResponse>
     searchQuestions(@RequestParam("page") int page, @RequestParam("size") int size,
                     @RequestParam("property") String property, @RequestParam("searchString") String searchString) {

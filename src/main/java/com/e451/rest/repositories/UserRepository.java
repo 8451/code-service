@@ -2,6 +2,7 @@ package com.e451.rest.repositories;
 
 import com.e451.rest.domains.user.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +15,5 @@ import java.util.UUID;
 public interface UserRepository extends MongoRepository<User, String> {
     User findByUsername(String username);
     User findByActivationGuid(String guid);
-    Page<User> findByUsernameContainingIgnoreCase(String searchString);
+    Page<User> findByUsernameContainingIgnoreCase(Pageable pageable, String searchString);
 }

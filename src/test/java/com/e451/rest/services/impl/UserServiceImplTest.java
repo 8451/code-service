@@ -226,11 +226,12 @@ public class UserServiceImplTest {
     }
 
     public void whenSearchUser_verifySearchUserIsCalled() throws Exception {
-        when(userRepository.findByUsernameContainingIgnoreCase(any(String.class))).thenReturn(new PageImpl<>(this.users));
+        when(userRepository.findByUsernameContainingIgnoreCase(any(Pageable.class), any(String.class))).thenReturn(new PageImpl<>(this.users));
 
-        userService.searchUsers(new PageRequest(0, 20), "test");
+        Pageable pageable = new PageRequest(0, 20);
+        userService.searchUsers(pageable, "test");
 
-        verify(userRepository).findByUsernameContainingIgnoreCase("test");
+        verify(userRepository).findByUsernameContainingIgnoreCase(pageable, "test");
     }
 
 }

@@ -106,7 +106,7 @@ public class AssessmentServiceImplTest {
     public void whenSearchAssessments_returnListOfAssessments() {
         Pageable pageable = new PageRequest(0, 20);
         Page<Assessment> assessments = new PageImpl(this.assessments);
-        when(assessmentRepository.findByFirstNameContainsOrLastNameContainsOrEmailContains(
+        when(assessmentRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
                 any(Pageable.class),
                 any(String.class),
                 any(String.class),

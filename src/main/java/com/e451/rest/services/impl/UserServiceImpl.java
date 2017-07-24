@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> searchUsers(Pageable pageable, String searchString) throws Exception {
-        return userRepository.findByUsernameContainingIgnoreCase(searchString);
+        return userRepository.findByUsernameContainingIgnoreCase(pageable, searchString);
     }
 
     @Override
