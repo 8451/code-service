@@ -8,7 +8,6 @@ import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.repositories.UserRepository;
 import com.e451.rest.services.MailService;
 import com.e451.rest.services.UserService;
-import com.mongodb.DuplicateKeyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
