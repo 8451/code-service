@@ -119,7 +119,7 @@ public class Assessment {
     }
 
     public Date getAssessmentDate() {
-        return assessmentDate != null ? assessmentDate : modifiedDate;
+        return assessmentDate;
     }
 
     public void setAssessmentDate(Date assessmentDate) {
