@@ -74,15 +74,15 @@ public class AssessmentsController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(params = {"page", "size", "property", "keyword"})
-    public ResponseEntity<AssessmentResponse> searchAssessments(int page, int size, String property, String keyword) {
+    @GetMapping(value="/search", params = {"page", "size", "property", "searchString"})
+    public ResponseEntity<AssessmentResponse> searchAssessments(int page, int size, String property, String searchString) {
         AssessmentResponse response = new AssessmentResponse();
 
         logger.info("searchAssessments pageable request received");
 
         try {
             Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, property)));
-            Page<Assessment> assessments = assessmentService.searchAssessments(pageable, keyword);
+            Page<Assessment> assessments = assessmentService.searchAssessments(pageable, searchString);
             response.setAssessments(assessments.getContent());
             response.setPaginationTotalElements(assessments.getTotalElements());
             logger.info("searchAsessments pageable request processed");
