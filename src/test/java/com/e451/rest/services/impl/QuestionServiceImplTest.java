@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -69,6 +70,18 @@ public class QuestionServiceImplTest {
         Page<Question> questions = questionService.getQuestions(page);
 
         Assert.assertEquals(questions.getContent().size(), this.questions.size());
+    }
+
+    @Test
+    public void whenSearchQuestions_returnPageOfQuestions() {
+        Pageable pageable = new PageRequest(0, 20);
+        when(questionRepository.findQuestionsByTitleContainsOrLanguageContainsOrCreatedByContains(
+                any(Pageable.class), any(String.class), any(String.class), any(String.class)))
+                .thenReturn(new PageImpl<Question>(this.questions));
+
+        Page<Question> questions = questionService.searchQuestions(pageable, "", "", "");
+
+        Assert.assertEquals(this.questions.size(), questions.getContent().size());
     }
 
     @Test
