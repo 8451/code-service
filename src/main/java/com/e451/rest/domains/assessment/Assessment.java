@@ -27,7 +27,7 @@ public class Assessment {
     private Date modifiedDate;
     private Date assessmentDate;
     private AssessmentState state;
-    private Double rating;
+    private Double rating = 0d;
     private List<QuestionAnswer> questionAnswers;
 
     public Assessment() {
