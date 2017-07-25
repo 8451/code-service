@@ -75,19 +75,22 @@ public class AssessmentsController {
     }
 
     @GetMapping(value="/search", params = {"page", "size", "property", "searchString"})
-    public ResponseEntity<AssessmentResponse> searchAssessments(int page, int size, String property, String searchString) {
+    public ResponseEntity<AssessmentResponse> searchAssessments(@RequestParam("page") int page,
+                                                                @RequestParam("size") int size,
+                                                                @RequestParam("property") String property,
+                                                                @RequestParam("serachString") String searchString) {
         AssessmentResponse response = new AssessmentResponse();
 
-        logger.info("searchAssessments pageable request received");
+        logger.info("searchAssessments() pageable request received");
 
         try {
             Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, property)));
             Page<Assessment> assessments = assessmentService.searchAssessments(pageable, searchString);
             response.setAssessments(assessments.getContent());
             response.setPaginationTotalElements(assessments.getTotalElements());
-            logger.info("searchAsessments pageable request processed");
+            logger.info("searchAsessments() pageable request processed");
         } catch (Exception ex) {
-            logger.error("searchAssessments pageable encountered error", ex);
+            logger.error("searchAssessments() pageable encountered error", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 

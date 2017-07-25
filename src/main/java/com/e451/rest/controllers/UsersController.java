@@ -112,8 +112,8 @@ public class UsersController {
 
         try {
             Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
-            logger.info("searchUsers() request processed");
             Page<User> users = userService.searchUsers(pageable, searchString);
+            logger.info("searchUsers() request processed");
             userResponse.setUsers(users.getContent());
             userResponse.setPaginationTotalElements(users.getTotalElements());
         } catch (Exception e) {

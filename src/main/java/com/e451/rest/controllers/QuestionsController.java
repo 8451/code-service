@@ -82,8 +82,8 @@ public class QuestionsController {
 
         try {
             Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
-            logger.info("searchQuestions() request processed");
             Page<Question> questions = questionService.searchQuestions(pageable, searchString, searchString, searchString);
+            logger.info("searchQuestions() request processed");
             questionResponse.setQuestions(questions.getContent());
             questionResponse.setPaginationTotalElements(questions.getTotalElements());
         } catch (Exception e) {
