@@ -25,7 +25,9 @@ public class Assessment {
     private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
+    private Date assessmentDate;
     private AssessmentState state;
+    private Double rating = 0d;
     private List<QuestionAnswer> questionAnswers;
 
     public Assessment() {
@@ -117,6 +119,14 @@ public class Assessment {
         this.interviewGuid = interviewGuid;
     }
 
+    public Date getAssessmentDate() {
+        return assessmentDate;
+    }
+
+    public void setAssessmentDate(Date assessmentDate) {
+        this.assessmentDate = assessmentDate;
+    }
+
     public AssessmentState getState() {
         return state;
     }
@@ -136,6 +146,14 @@ public class Assessment {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 
     public void setQuestionAnswers(List<QuestionAnswer> questionAnswers) {

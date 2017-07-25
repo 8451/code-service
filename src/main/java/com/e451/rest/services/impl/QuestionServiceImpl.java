@@ -43,6 +43,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public Page<Question> searchQuestions(Pageable pageable, String searchString) {
+        return questionRepository.findQuestionsByTitleContainsIgnoreCaseOrLanguageContainsIgnoreCaseOrCreatedByContainsIgnoreCase(
+                pageable, searchString, searchString, searchString);
+    }
+
+    @Override
     public Question getQuestion(String id) {
         return questionRepository.findOne(id);
     }
@@ -56,7 +62,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.setCreatedBy(authService.getActiveUser().getUsername());
         question.setModifiedBy(authService.getActiveUser().getUsername());
 
-        return questionRepository.insert(question);
+        return questionRepository.save(question);
     }
 
     @Override

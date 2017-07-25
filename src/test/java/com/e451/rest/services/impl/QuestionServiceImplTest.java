@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -72,6 +73,18 @@ public class QuestionServiceImplTest {
     }
 
     @Test
+    public void whenSearchQuestions_returnPageOfQuestions() {
+        Pageable pageable = new PageRequest(0, 20);
+        when(questionRepository.findQuestionsByTitleContainsIgnoreCaseOrLanguageContainsIgnoreCaseOrCreatedByContainsIgnoreCase(
+                any(Pageable.class), any(String.class), any(String.class), any(String.class)))
+                .thenReturn(new PageImpl<Question>(this.questions));
+
+        Page<Question> questions = questionService.searchQuestions(pageable, "");
+
+        Assert.assertEquals(this.questions.size(), questions.getContent().size());
+    }
+
+    @Test
     public void whenGetQuestion_returnListOfSingleQuestion() {
         String id = "1";
 
@@ -87,7 +100,7 @@ public class QuestionServiceImplTest {
     public void whenCreateQuestion_returnNewQuestion()  {
         Question q = new Question("4", "What is agile?", "super fun!", "More Agile", 3);
 
-        when(questionRepository.insert(q)).thenReturn(q);
+        when(questionRepository.save(q)).thenReturn(q);
         when(authService.getActiveUser()).thenReturn(testUser);
 
         Question result = questionService.createQuestion(q);
