@@ -78,7 +78,7 @@ public class AssessmentsController {
     public ResponseEntity<AssessmentResponse> searchAssessments(@RequestParam("page") int page,
                                                                 @RequestParam("size") int size,
                                                                 @RequestParam("property") String property,
-                                                                @RequestParam("serachString") String searchString) {
+                                                                @RequestParam("searchString") String searchString) {
         AssessmentResponse response = new AssessmentResponse();
 
         logger.info("searchAssessments() pageable request received");

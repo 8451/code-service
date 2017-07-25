@@ -12,7 +12,7 @@ import java.util.List;
 public interface QuestionService {
     List<Question> getQuestions();
     Page<Question> getQuestions(Pageable pageable);
-    Page<Question> searchQuestions(Pageable pageable, String title, String language, String createdBy);
+    Page<Question> searchQuestions(Pageable pageable, String searchString);
     Question getQuestion(String id);
     Question createQuestion(Question question);
     Question updateQuestion(Question question);

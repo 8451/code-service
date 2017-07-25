@@ -43,9 +43,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Page<Question> searchQuestions(Pageable pageable, String title, String language, String createdBy) {
+    public Page<Question> searchQuestions(Pageable pageable, String searchString) {
         return questionRepository.findQuestionsByTitleContainsIgnoreCaseOrLanguageContainsIgnoreCaseOrCreatedByContainsIgnoreCase(
-                pageable, title, language, createdBy);
+                pageable, searchString, searchString, searchString);
     }
 
     @Override

@@ -79,7 +79,7 @@ public class QuestionServiceImplTest {
                 any(Pageable.class), any(String.class), any(String.class), any(String.class)))
                 .thenReturn(new PageImpl<Question>(this.questions));
 
-        Page<Question> questions = questionService.searchQuestions(pageable, "", "", "");
+        Page<Question> questions = questionService.searchQuestions(pageable, "");
 
         Assert.assertEquals(this.questions.size(), questions.getContent().size());
     }

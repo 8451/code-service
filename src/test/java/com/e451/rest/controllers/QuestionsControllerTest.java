@@ -64,7 +64,7 @@ public class QuestionsControllerTest {
     @Test
     public void whenSearchQuestions_returnPageOfQuestions() {
         Page page = new PageImpl(this.questions);
-        when(questionService.searchQuestions(any(Pageable.class), any(String.class), any(String.class), any(String.class)))
+        when(questionService.searchQuestions(any(Pageable.class), any(String.class)))
         .thenReturn(page);
 
         ResponseEntity<QuestionResponse> responseEntity = questionsController.searchQuestions(0, 20,"f", "f");
@@ -75,7 +75,7 @@ public class QuestionsControllerTest {
 
     @Test
     public void whenSearchQuestions_ServiceThrowsError_returnInternalServerError() {
-        when(questionService.searchQuestions(any(Pageable.class), any(String.class), any(String.class), any(String.class)))
+        when(questionService.searchQuestions(any(Pageable.class), any(String.class)))
                 .thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<QuestionResponse> response = questionsController.searchQuestions(0, 20, "", "");
