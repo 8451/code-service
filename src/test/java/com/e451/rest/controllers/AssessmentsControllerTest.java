@@ -58,7 +58,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenGetQuestionsPageable_returnListOfQuestions() {
+    public void whenGetAssessmentsPageable_returnListOfAssessments() {
         Pageable page = new PageRequest(0, 20);
         Page pageResponse = new PageImpl<Assessment>(this.assessments);
         when(assessmentService.getAssessments(any())).thenReturn(pageResponse);
@@ -67,6 +67,27 @@ public class AssessmentsControllerTest {
 
         Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
         Assert.assertEquals(pageResponse.getTotalElements(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
+    public void whenSearchAssessments_returnListOfAssessments() {
+        Pageable page = new PageRequest(0, 20);
+        Page pageResponse = new PageImpl<Assessment>(this.assessments);
+        when(assessmentService.searchAssessments(any(Pageable.class), any(String.class))).thenReturn(pageResponse);
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.searchAssessments(0, 20, "lastName", "keyword");
+
+        Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
+        Assert.assertEquals(pageResponse.getTotalElements(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
+    public void whenSearchAssessments_AssessmentServiceThrowsException_returnsInternalServerError() {
+        when(assessmentService.searchAssessments(any(Pageable.class), any(String.class))).thenThrow(new RecoverableDataAccessException("error"));
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.searchAssessments(0, 20, "lastName", "keyword");
+
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test

@@ -72,6 +72,28 @@ public class QuestionsController {
         return ResponseEntity.ok(questionResponse);
     }
 
+    @GetMapping(value = "/search", params = {"page", "size", "property", "searchString"})
+    public ResponseEntity<QuestionResponse>
+    searchQuestions(@RequestParam("page") int page, @RequestParam("size") int size,
+                    @RequestParam("property") String property, @RequestParam("searchString") String searchString) {
+
+        QuestionResponse questionResponse = new QuestionResponse();
+        logger.info("searchQuestions() request received");
+
+        try {
+            Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.ASC, property)));
+            Page<Question> questions = questionService.searchQuestions(pageable, searchString);
+            logger.info("searchQuestions() request processed");
+            questionResponse.setQuestions(questions.getContent());
+            questionResponse.setPaginationTotalElements(questions.getTotalElements());
+        } catch (Exception e) {
+            logger.error("searchQuestions() encountered error ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok(questionResponse);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<QuestionResponse> getQuestion(@PathVariable String id) {
         QuestionResponse questionResponse = new QuestionResponse();

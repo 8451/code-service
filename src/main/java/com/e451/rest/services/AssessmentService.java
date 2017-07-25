@@ -15,6 +15,7 @@ public interface AssessmentService {
     Page<Assessment> getAssessments(Pageable pageable);
     Assessment getAssessmentByGuid(String guid);
     AssessmentState getAssessmentStateByGuid(String guid);
+    Page<Assessment> searchAssessments(Pageable pageable, String searchString);
     Assessment createAssessment(Assessment assessment);
     Assessment updateAssessment(Assessment assessment);
 }

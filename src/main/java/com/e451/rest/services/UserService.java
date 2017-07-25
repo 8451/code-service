@@ -15,6 +15,7 @@ import java.util.UUID;
 public interface UserService extends UserDetailsService {
     List<User> getUsers() throws Exception;
     Page<User> getUsers(Pageable pageable) throws Exception;
+    Page<User> searchUsers(Pageable pageable, String searchString) throws Exception;
     User createUser(User user) throws Exception;
     User unlockUser(User user) throws Exception;
     User updateUser(User user) throws Exception;
