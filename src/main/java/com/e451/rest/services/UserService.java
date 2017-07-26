@@ -1,9 +1,12 @@
 package com.e451.rest.services;
 
+import com.e451.rest.domains.InvalidPasswordException;
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserVerification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -23,5 +26,6 @@ public interface UserService extends UserDetailsService {
     void deleteUser(String id);
     void activateUser(String guid) throws Exception;
     void userForgotPassword(String username) throws Exception;
+    void resetForgottenPassword(ResetForgottenPasswordRequest request) throws BadCredentialsException, InvalidPasswordException;
     void notifyUser(User user);
 }

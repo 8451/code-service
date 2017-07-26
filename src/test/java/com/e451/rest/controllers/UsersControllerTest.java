@@ -1,6 +1,8 @@
 package com.e451.rest.controllers;
 
+import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.assessment.Assessment;
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -266,6 +268,36 @@ public class UsersControllerTest {
         Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).userForgotPassword("test@user.com");
         ResponseEntity responseEntity = usersController.forgotPassword("test@user.com");
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void whenResetForgottenPassword_returnsOK() throws Exception {
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("first", "last", "username", "guid");
+        Mockito.doNothing().when(userService).resetForgottenPassword(request);
+
+        ResponseEntity response = usersController.resetForgottenPassword(request);
+
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenResetForgottenPassword_userServiceThrowsInvalidException_returnsUnauthorized() throws Exception {
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("first", "last", "username", "guid");
+        Mockito.doThrow(new InvalidPasswordException()).when(userService).resetForgottenPassword(request);
+
+        ResponseEntity response = usersController.resetForgottenPassword(request);
+
+        Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void whenResetForgottenPassword_userServiceThrowsException_returnsInternalServerError() throws Exception {
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("first", "last", "username", "guid");
+        Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).resetForgottenPassword(request);
+
+        ResponseEntity response = usersController.resetForgottenPassword(request);
+
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
 }

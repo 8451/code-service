@@ -4,6 +4,7 @@ import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.email.DirectEmailMessage;
 import com.e451.rest.domains.email.ForgotPasswordEmailMessage;
 import com.e451.rest.domains.email.RegistrationEmailMessage;
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.repositories.UserRepository;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -154,6 +157,28 @@ public class UserServiceImpl implements UserService {
     public void notifyUser(User user) {
         DirectEmailMessage message = new RegistrationEmailMessage(user, codeWebAddress);
         mailService.sendEmail(message);
+    }
+
+    @Override
+    public void resetForgottenPassword(ResetForgottenPasswordRequest request) throws BadCredentialsException, InvalidPasswordException {
+        User user = userRepository.findByResetPasswordGuid(request.getResetGuid());
+
+        boolean expired = new Date().getTime() - user.getResetPasswordSentDate().getTime() >= 20 * 60 * 1000;
+
+        if (!user.getUsername().equals(request.getUsername()) || !user.getFirstName().equals(request.getFirstName())
+                || !user.getLastName().equals(request.getLastName()) || expired) {
+            throw new BadCredentialsException("One of the required fields does not match");
+        }
+
+        if(!isPasswordValid(request.getNewPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        user.setPassword(passwordEncoder().encode(request.getNewPassword()));
+        user.setResetPasswordSentDate(null);
+        user.setResetPasswordGuid(null);
+
+        userRepository.save(user);
     }
 
     private boolean isPasswordValid(String password) {

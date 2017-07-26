@@ -4,6 +4,7 @@ import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.email.DirectEmailMessage;
 import com.e451.rest.domains.email.ForgotPasswordEmailMessage;
 import com.e451.rest.domains.email.RegistrationEmailMessage;
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.repositories.UserRepository;
@@ -20,10 +21,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
@@ -267,6 +270,58 @@ public class UserServiceImplTest {
         Assert.assertNotNull(user.getResetPasswordGuid());
         Assert.assertNotNull(user.getResetPasswordSentDate());
         verify(userRepository).save(user);
+    }
+
+    @Test
+    public void whenUserResetsForgottenPasswordSuccess_verifyUserHasUpdatedPasswordAndResetFieldsAreNull() throws Exception {
+        User user = users.get(0);
+        user.setResetPasswordGuid("1234");
+        user.setResetPasswordSentDate(new Date());
+        when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
+
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName(), user.getUsername(), user.getResetPasswordGuid());
+        request.setNewPassword("Password1!");
+        userService.resetForgottenPassword(request);
+
+        Assert.assertNull(user.getResetPasswordSentDate());
+        Assert.assertNull(user.getResetPasswordGuid());
+        Assert.assertTrue(encoder.matches(request.getNewPassword(), user.getPassword()));
+    }
+
+    @Test(expected = BadCredentialsException.class)
+    public void whenUserResetsForgottenPasswordExpired_verifyBadCredentialsExceptionThrown() throws Exception {
+        User user = users.get(0);
+        user.setResetPasswordGuid("1234");
+        user.setResetPasswordSentDate(new Date(0L));
+        when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
+
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName(), user.getUsername(), user.getResetPasswordGuid());
+        request.setNewPassword("Password1!");
+        userService.resetForgottenPassword(request);
+    }
+
+    @Test(expected = BadCredentialsException.class)
+    public void whenUserResetsForgottenPasswordInfoDoesntMatch_verifyBadCredentialExceptionThrown() throws  Exception {
+        User user = users.get(0);
+        user.setResetPasswordGuid("1234");
+        user.setResetPasswordSentDate(new Date());
+        when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
+
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName() + "1", user.getUsername(), user.getResetPasswordGuid());
+        request.setNewPassword("Password1!");
+        userService.resetForgottenPassword(request);
+    }
+
+    @Test(expected = InvalidPasswordException.class)
+    public void whenUserResetsPasswordPasswordInvalid_verifyInvalidPasswordException() throws Exception {
+        User user = users.get(0);
+        user.setResetPasswordGuid("1234");
+        user.setResetPasswordSentDate(new Date());
+        when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
+
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName(), user.getUsername(), user.getResetPasswordGuid());
+        request.setNewPassword("password");
+        userService.resetForgottenPassword(request);
     }
 
 }
