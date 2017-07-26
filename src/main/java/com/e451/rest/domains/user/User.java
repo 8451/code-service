@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -23,7 +24,6 @@ public class User implements UserDetails {
     private String id;
 
     private String firstName;
-
     private String lastName;
 
     @Indexed(unique = true)
@@ -39,6 +39,13 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Indexed
     private String activationGuid;
+
+    @JsonIgnore
+    @Indexed
+    private String resetPasswordGuid;
+
+    @JsonIgnore
+    private Date resetPasswordSentDate;
 
     public User() {
         this.activationGuid = UUID.randomUUID().toString();
@@ -116,6 +123,22 @@ public class User implements UserDetails {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public String getResetPasswordGuid() {
+        return resetPasswordGuid;
+    }
+
+    public void setResetPasswordGuid(String resetPasswordGuid) {
+        this.resetPasswordGuid = resetPasswordGuid;
+    }
+
+    public Date getResetPasswordSentDate() {
+        return resetPasswordSentDate;
+    }
+
+    public void setResetPasswordSentDate(Date resetPasswordSentDate) {
+        this.resetPasswordSentDate = resetPasswordSentDate;
     }
 
     @Override

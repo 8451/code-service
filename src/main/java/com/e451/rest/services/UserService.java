@@ -22,5 +22,6 @@ public interface UserService extends UserDetailsService {
     User updateUser(UserVerification userVerification) throws Exception;
     void deleteUser(String id);
     void activateUser(String guid) throws Exception;
+    void userForgotPassword(String username) throws Exception;
     void notifyUser(User user);
 }

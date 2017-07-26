@@ -2,6 +2,7 @@ package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.email.DirectEmailMessage;
+import com.e451.rest.domains.email.ForgotPasswordEmailMessage;
 import com.e451.rest.domains.email.RegistrationEmailMessage;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserVerification;
@@ -18,7 +19,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -116,7 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if(user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
@@ -130,6 +134,18 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByActivationGuid(guid);
 
         user.setEnabled(true);
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void userForgotPassword(String username) throws UsernameNotFoundException {
+        User user = loadUserByUsername(username);
+
+        user.setResetPasswordGuid(UUID.randomUUID().toString());
+        user.setResetPasswordSentDate(new Date());
+
+        mailService.sendEmail(new ForgotPasswordEmailMessage(user, codeWebAddress));
 
         userRepository.save(user);
     }

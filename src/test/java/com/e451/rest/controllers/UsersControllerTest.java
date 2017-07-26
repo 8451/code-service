@@ -254,4 +254,18 @@ public class UsersControllerTest {
         Assert.assertEquals(2L, (long)response.getBody().getPaginationTotalElements());
     }
 
+    @Test
+    public void whenForgotPassword_returnSuccess() throws Exception {
+        Mockito.doNothing().when(userService).userForgotPassword("test@user.com");
+        ResponseEntity responseEntity = usersController.forgotPassword("test@user.com");
+        Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void whenForgotPassword_UserServiceThrowsException_returnsInternalServerError() throws Exception {
+        Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).userForgotPassword("test@user.com");
+        ResponseEntity responseEntity = usersController.forgotPassword("test@user.com");
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+
 }

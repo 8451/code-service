@@ -195,6 +195,20 @@ public class UsersController {
 
     }
 
+    @GetMapping(value = "/forgot-password", params = {"username"})
+    public ResponseEntity forgotPassword(String username) {
+        logger.info("forgotPassword request received");
+        try {
+            userService.userForgotPassword(username);
+            logger.info("forgotPassword request processed successfully");
+        } catch (Exception ex) {
+            logger.error("forgotPassword encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUser(@PathVariable("id") String id) {
         logger.info("deleteUser request received");

@@ -2,6 +2,7 @@ package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.email.DirectEmailMessage;
+import com.e451.rest.domains.email.ForgotPasswordEmailMessage;
 import com.e451.rest.domains.email.RegistrationEmailMessage;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserVerification;
@@ -225,6 +226,7 @@ public class UserServiceImplTest {
         userService.updateUser(userVerification);
     }
 
+    @Test
     public void whenDeleteUser_verifyDeleteIsCalled() {
         Mockito.doNothing().when(userRepository).delete("1");
 
@@ -233,6 +235,7 @@ public class UserServiceImplTest {
         verify(userRepository).delete("1");
     }
 
+    @Test
     public void whenSearchUser_verifySearchUserIsCalled() throws Exception {
         when(userRepository.findByUsernameContainingIgnoreCase(any(Pageable.class), any(String.class))).thenReturn(new PageImpl<>(this.users));
 
@@ -240,6 +243,30 @@ public class UserServiceImplTest {
         userService.searchUsers(pageable, "test");
 
         verify(userRepository).findByUsernameContainingIgnoreCase(pageable, "test");
+    }
+
+    @Test
+    public void whenUserForgotPassword_verifySendEmailIsCalled() throws Exception {
+        Mockito.doNothing().when(mailService).sendEmail(any(DirectEmailMessage.class));
+        when(userRepository.save(any(User.class))).thenReturn(users.get(0));
+        when(userRepository.findByUsername("username")).thenReturn(users.get(0));
+
+        userService.userForgotPassword("username");
+
+        verify(mailService).sendEmail(any(ForgotPasswordEmailMessage.class));
+    }
+
+    @Test
+    public void whenUserForgotPassword_verifyUserHasResetGuidAndDate() throws Exception {
+        User user = users.get(0);
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        userService.userForgotPassword(user.getUsername());
+
+        Assert.assertNotNull(user.getResetPasswordGuid());
+        Assert.assertNotNull(user.getResetPasswordSentDate());
+        verify(userRepository).save(user);
     }
 
 }
