@@ -25,7 +25,7 @@ public class JwtTokenUtilTest {
     @Before
     public void setup() {
         user = new User("1", "f1", "l1", "email@test.com", "password");
-        tokenUtil = new JwtTokenUtil("codePassword", 604800L, null, null);
+        tokenUtil = new JwtTokenUtil("codePassword", 604800L, "", "");
         token = tokenUtil.generateToken(user);
     }
 
