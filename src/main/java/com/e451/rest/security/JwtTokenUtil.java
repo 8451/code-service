@@ -84,7 +84,7 @@ public class JwtTokenUtil implements Serializable {
         try {
             JwtParser parser = Jwts.parser();
 
-            if(privateKeyEncoded == null || publicKeyEncoded == null) {
+            if(privateKeyEncoded.isEmpty() || publicKeyEncoded.isEmpty()) {
                 parser.setSigningKey("secret");
             } else {
                 parser.setSigningKey(getPublicKey());
@@ -124,7 +124,7 @@ public class JwtTokenUtil implements Serializable {
                     .setClaims(claims)
                     .setExpiration(generateExpirationDate());
 
-            if(privateKeyEncoded == null || publicKeyEncoded == null) {
+            if(privateKeyEncoded.isEmpty() || publicKeyEncoded.isEmpty()) {
                 builder.signWith(SignatureAlgorithm.HS256, "secret");
             } else {
                 builder.signWith(SignatureAlgorithm.RS256, getPrivateKey());
