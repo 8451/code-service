@@ -15,5 +15,6 @@ import java.util.UUID;
 public interface UserRepository extends MongoRepository<User, String> {
     User findByUsername(String username);
     User findByActivationGuid(String guid);
+    User findByResetPasswordGuid(String guid);
     Page<User> findByUsernameContainingIgnoreCase(Pageable pageable, String searchString);
 }

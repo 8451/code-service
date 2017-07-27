@@ -2,7 +2,9 @@ package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.email.DirectEmailMessage;
+import com.e451.rest.domains.email.ForgotPasswordEmailMessage;
 import com.e451.rest.domains.email.RegistrationEmailMessage;
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.repositories.UserRepository;
@@ -13,12 +15,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -31,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private MailService mailService;
     private String codeWebAddress;
     private PasswordEncoder encoder;
+    private Long resetPasswordExpiration;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -40,10 +48,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, MailService mailService,
-                           @Value("${code.web-ui-address}") String codeWebAddress) {
+                           @Value("${code.web-ui-address}") String codeWebAddress,
+                           @Value("${reset-password.expiration}") Long resetPasswordExpiration) {
         this.userRepository = userRepository;
         this.mailService = mailService;
         this.codeWebAddress = codeWebAddress;
+        this.resetPasswordExpiration = resetPasswordExpiration;
     }
 
     @Override
@@ -116,7 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if(user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
@@ -135,9 +145,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void userForgotPassword(String username) throws UsernameNotFoundException {
+        User user = loadUserByUsername(username);
+
+        user.setResetPasswordGuid(UUID.randomUUID().toString());
+        user.setResetPasswordSentDate(new Date());
+
+        mailService.sendEmail(new ForgotPasswordEmailMessage(user, codeWebAddress));
+
+        userRepository.save(user);
+    }
+
+    @Override
     public void notifyUser(User user) {
         DirectEmailMessage message = new RegistrationEmailMessage(user, codeWebAddress);
         mailService.sendEmail(message);
+    }
+
+    @Override
+    public void resetForgottenPassword(ResetForgottenPasswordRequest request) throws BadCredentialsException, InvalidPasswordException {
+        User user = userRepository.findByResetPasswordGuid(request.getResetGuid());
+
+        boolean expired = new Date().getTime() - user.getResetPasswordSentDate().getTime() >= resetPasswordExpiration * 1000;
+
+        if (!user.getUsername().equals(request.getUsername()) || !user.getFirstName().equals(request.getFirstName())
+                || !user.getLastName().equals(request.getLastName()) || expired) {
+            throw new BadCredentialsException("One of the required fields does not match");
+        }
+
+        if(!isPasswordValid(request.getNewPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        user.setPassword(passwordEncoder().encode(request.getNewPassword()));
+        user.setResetPasswordSentDate(null);
+        user.setResetPasswordGuid(null);
+
+        userRepository.save(user);
     }
 
     private boolean isPasswordValid(String password) {

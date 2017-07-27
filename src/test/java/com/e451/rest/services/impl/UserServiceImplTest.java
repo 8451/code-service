@@ -2,7 +2,9 @@ package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.InvalidPasswordException;
 import com.e451.rest.domains.email.DirectEmailMessage;
+import com.e451.rest.domains.email.ForgotPasswordEmailMessage;
 import com.e451.rest.domains.email.RegistrationEmailMessage;
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.repositories.UserRepository;
@@ -19,10 +21,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
@@ -49,7 +53,7 @@ public class UserServiceImplTest {
 
     @Before
     public void setup() {
-        this.userService = new UserServiceImpl(userRepository, mailService, "test/api/v1");
+        this.userService = new UserServiceImpl(userRepository, mailService, "test/api/v1", 600L);
         this.encoder = ((UserServiceImpl)userService).passwordEncoder();
 
         users = Arrays.asList(
@@ -225,6 +229,7 @@ public class UserServiceImplTest {
         userService.updateUser(userVerification);
     }
 
+    @Test
     public void whenDeleteUser_verifyDeleteIsCalled() {
         Mockito.doNothing().when(userRepository).delete("1");
 
@@ -233,6 +238,7 @@ public class UserServiceImplTest {
         verify(userRepository).delete("1");
     }
 
+    @Test
     public void whenSearchUser_verifySearchUserIsCalled() throws Exception {
         when(userRepository.findByUsernameContainingIgnoreCase(any(Pageable.class), any(String.class))).thenReturn(new PageImpl<>(this.users));
 
@@ -240,6 +246,82 @@ public class UserServiceImplTest {
         userService.searchUsers(pageable, "test");
 
         verify(userRepository).findByUsernameContainingIgnoreCase(pageable, "test");
+    }
+
+    @Test
+    public void whenUserForgotPassword_verifySendEmailIsCalled() throws Exception {
+        Mockito.doNothing().when(mailService).sendEmail(any(DirectEmailMessage.class));
+        when(userRepository.save(any(User.class))).thenReturn(users.get(0));
+        when(userRepository.findByUsername("username")).thenReturn(users.get(0));
+
+        userService.userForgotPassword("username");
+
+        verify(mailService).sendEmail(any(ForgotPasswordEmailMessage.class));
+    }
+
+    @Test
+    public void whenUserForgotPassword_verifyUserHasResetGuidAndDate() throws Exception {
+        User user = users.get(0);
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        userService.userForgotPassword(user.getUsername());
+
+        Assert.assertNotNull(user.getResetPasswordGuid());
+        Assert.assertNotNull(user.getResetPasswordSentDate());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    public void whenUserResetsForgottenPasswordSuccess_verifyUserHasUpdatedPasswordAndResetFieldsAreNull() throws Exception {
+        User user = users.get(0);
+        user.setResetPasswordGuid("1234");
+        user.setResetPasswordSentDate(new Date());
+        when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
+
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName(), user.getUsername(), user.getResetPasswordGuid());
+        request.setNewPassword("Password1!");
+        userService.resetForgottenPassword(request);
+
+        Assert.assertNull(user.getResetPasswordSentDate());
+        Assert.assertNull(user.getResetPasswordGuid());
+        Assert.assertTrue(encoder.matches(request.getNewPassword(), user.getPassword()));
+    }
+
+    @Test(expected = BadCredentialsException.class)
+    public void whenUserResetsForgottenPasswordExpired_verifyBadCredentialsExceptionThrown() throws Exception {
+        User user = users.get(0);
+        user.setResetPasswordGuid("1234");
+        user.setResetPasswordSentDate(new Date(0L));
+        when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
+
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName(), user.getUsername(), user.getResetPasswordGuid());
+        request.setNewPassword("Password1!");
+        userService.resetForgottenPassword(request);
+    }
+
+    @Test(expected = BadCredentialsException.class)
+    public void whenUserResetsForgottenPasswordInfoDoesntMatch_verifyBadCredentialExceptionThrown() throws  Exception {
+        User user = users.get(0);
+        user.setResetPasswordGuid("1234");
+        user.setResetPasswordSentDate(new Date());
+        when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
+
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName() + "1", user.getUsername(), user.getResetPasswordGuid());
+        request.setNewPassword("Password1!");
+        userService.resetForgottenPassword(request);
+    }
+
+    @Test(expected = InvalidPasswordException.class)
+    public void whenUserResetsPasswordPasswordInvalid_verifyInvalidPasswordException() throws Exception {
+        User user = users.get(0);
+        user.setResetPasswordGuid("1234");
+        user.setResetPasswordSentDate(new Date());
+        when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
+
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName(), user.getUsername(), user.getResetPasswordGuid());
+        request.setNewPassword("password");
+        userService.resetForgottenPassword(request);
     }
 
 }

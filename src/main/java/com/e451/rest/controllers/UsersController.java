@@ -1,6 +1,7 @@
 package com.e451.rest.controllers;
 
 import com.e451.rest.domains.InvalidPasswordException;
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -193,6 +195,37 @@ public class UsersController {
         }
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userResponse);
 
+    }
+
+    @GetMapping(value = "/forgot-password", params = {"username"})
+    public ResponseEntity forgotPassword(String username) {
+        logger.info("forgotPassword request received");
+        try {
+            userService.userForgotPassword(username);
+            logger.info("forgotPassword request processed successfully");
+        } catch (Exception ex) {
+            logger.error("forgotPassword encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value="/forgot-password")
+    public ResponseEntity resetForgottenPassword(@RequestBody ResetForgottenPasswordRequest request) {
+        logger.info("resetForgottenPassword request received");
+        try {
+            userService.resetForgottenPassword(request);
+            logger.info("resetForgottenPassword request processed");
+        } catch (InvalidPasswordException | BadCredentialsException ex) {
+            logger.info("resetForgottenPassword encountered error", ex);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception ex) {
+            logger.info("resetForgottenPassword encountered error", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
