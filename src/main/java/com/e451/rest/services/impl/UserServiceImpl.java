@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private MailService mailService;
     private String codeWebAddress;
     private PasswordEncoder encoder;
+    private Long resetPasswordExpiration;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -47,10 +48,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, MailService mailService,
-                           @Value("${code.web-ui-address}") String codeWebAddress) {
+                           @Value("${code.web-ui-address}") String codeWebAddress,
+                           @Value("${reset-password.expiration}") Long resetPasswordExpiration) {
         this.userRepository = userRepository;
         this.mailService = mailService;
         this.codeWebAddress = codeWebAddress;
+        this.resetPasswordExpiration = resetPasswordExpiration;
     }
 
     @Override
@@ -163,7 +166,7 @@ public class UserServiceImpl implements UserService {
     public void resetForgottenPassword(ResetForgottenPasswordRequest request) throws BadCredentialsException, InvalidPasswordException {
         User user = userRepository.findByResetPasswordGuid(request.getResetGuid());
 
-        boolean expired = new Date().getTime() - user.getResetPasswordSentDate().getTime() >= 20 * 60 * 1000;
+        boolean expired = new Date().getTime() - user.getResetPasswordSentDate().getTime() >= resetPasswordExpiration * 1000;
 
         if (!user.getUsername().equals(request.getUsername()) || !user.getFirstName().equals(request.getFirstName())
                 || !user.getLastName().equals(request.getLastName()) || expired) {

@@ -53,7 +53,7 @@ public class UserServiceImplTest {
 
     @Before
     public void setup() {
-        this.userService = new UserServiceImpl(userRepository, mailService, "test/api/v1");
+        this.userService = new UserServiceImpl(userRepository, mailService, "test/api/v1", 600L);
         this.encoder = ((UserServiceImpl)userService).passwordEncoder();
 
         users = Arrays.asList(
