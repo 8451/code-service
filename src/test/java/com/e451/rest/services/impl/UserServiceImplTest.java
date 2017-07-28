@@ -279,7 +279,7 @@ public class UserServiceImplTest {
         user.setResetPasswordSentDate(new Date());
         when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
 
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName(), user.getUsername(), user.getResetPasswordGuid());
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getUsername(), user.getResetPasswordGuid());
         request.setNewPassword("Password1!");
         userService.resetForgottenPassword(request);
 
@@ -295,7 +295,7 @@ public class UserServiceImplTest {
         user.setResetPasswordSentDate(new Date(0L));
         when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
 
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName(), user.getUsername(), user.getResetPasswordGuid());
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getUsername(), user.getResetPasswordGuid());
         request.setNewPassword("Password1!");
         userService.resetForgottenPassword(request);
     }
@@ -307,7 +307,7 @@ public class UserServiceImplTest {
         user.setResetPasswordSentDate(new Date());
         when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
 
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName() + "1", user.getUsername(), user.getResetPasswordGuid());
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getUsername() + "!", user.getResetPasswordGuid());
         request.setNewPassword("Password1!");
         userService.resetForgottenPassword(request);
     }
@@ -319,7 +319,7 @@ public class UserServiceImplTest {
         user.setResetPasswordSentDate(new Date());
         when(userRepository.findByResetPasswordGuid("1234")).thenReturn(user);
 
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getFirstName(), user.getLastName(), user.getUsername(), user.getResetPasswordGuid());
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest(user.getUsername(), user.getResetPasswordGuid());
         request.setNewPassword("password");
         userService.resetForgottenPassword(request);
     }

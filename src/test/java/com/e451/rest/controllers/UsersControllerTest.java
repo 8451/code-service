@@ -272,7 +272,7 @@ public class UsersControllerTest {
 
     @Test
     public void whenResetForgottenPassword_returnsOK() throws Exception {
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("first", "last", "username", "guid");
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("username", "guid");
         Mockito.doNothing().when(userService).resetForgottenPassword(request);
 
         ResponseEntity response = usersController.resetForgottenPassword(request);
@@ -282,7 +282,7 @@ public class UsersControllerTest {
 
     @Test
     public void whenResetForgottenPassword_userServiceThrowsInvalidException_returnsUnauthorized() throws Exception {
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("first", "last", "username", "guid");
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("username", "guid");
         Mockito.doThrow(new InvalidPasswordException()).when(userService).resetForgottenPassword(request);
 
         ResponseEntity response = usersController.resetForgottenPassword(request);
@@ -292,7 +292,7 @@ public class UsersControllerTest {
 
     @Test
     public void whenResetForgottenPassword_userServiceThrowsException_returnsInternalServerError() throws Exception {
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("first", "last", "username", "guid");
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("username", "guid");
         Mockito.doThrow(new RecoverableDataAccessException("error")).when(userService).resetForgottenPassword(request);
 
         ResponseEntity response = usersController.resetForgottenPassword(request);

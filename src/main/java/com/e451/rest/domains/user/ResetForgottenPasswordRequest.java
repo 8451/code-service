@@ -4,33 +4,13 @@ package com.e451.rest.domains.user;
  * Created by j747951 on 7/26/2017.
  */
 public class ResetForgottenPasswordRequest {
-    private String firstName;
-    private String lastName;
     private String username;
     private String resetGuid;
     private String newPassword;
 
-    public ResetForgottenPasswordRequest(String firstName, String lastName, String username, String resetGuid) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public ResetForgottenPasswordRequest(String username, String resetGuid) {
         this.username = username;
         this.resetGuid = resetGuid;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getUsername() {
