@@ -168,8 +168,7 @@ public class UserServiceImpl implements UserService {
 
         boolean expired = new Date().getTime() - user.getResetPasswordSentDate().getTime() >= resetPasswordExpiration * 1000;
 
-        if (!user.getUsername().equals(request.getUsername()) || !user.getFirstName().equals(request.getFirstName())
-                || !user.getLastName().equals(request.getLastName()) || expired) {
+        if (!user.getUsername().equals(request.getUsername()) || expired) {
             throw new BadCredentialsException("One of the required fields does not match");
         }
 
