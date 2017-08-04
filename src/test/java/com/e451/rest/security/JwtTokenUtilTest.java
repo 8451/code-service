@@ -71,7 +71,9 @@ public class JwtTokenUtilTest {
     }
 
     @Test
-    public void refreshToken_returnsUpdatedValidToken() {
+    public void refreshToken_returnsUpdatedValidToken() throws Exception {
+        // Need enough of a time buffer to make sure the tokens dates will be different.
+        Thread.sleep(1000);
         String newToken = tokenUtil.refreshToken(token);
 
         Assert.assertNotNull(newToken);
