@@ -7,10 +7,10 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
 
-/**
- * Created by j747951 on 6/15/2017.
- */
+
+@TestPropertySource("application-test.properties")
 @RunWith(MockitoJUnitRunner.class)
 public class HealthControllerTest {
 

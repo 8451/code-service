@@ -12,9 +12,12 @@ import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
+
+@TestPropertySource("application-test.properties")
 public class DomainPojoTest {
     private List<PojoClass> pojoClasses;
     private final PojoClassFilter filterTestClasses = new FilterTestClasses();

@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,9 +33,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by l659598 on 6/19/2017.
- */
+
+@TestPropertySource("application-test.properties")
 @RunWith(MockitoJUnitRunner.class)
 public class UsersControllerTest {
 
