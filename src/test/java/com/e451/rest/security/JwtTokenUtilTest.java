@@ -8,13 +8,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.Calendar;
 import java.util.Date;
 
-
-@TestPropertySource("application-test.properties")
+/**
+ * Created by j747951 on 6/21/2017.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class JwtTokenUtilTest {
 

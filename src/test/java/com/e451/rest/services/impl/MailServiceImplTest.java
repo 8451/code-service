@@ -9,15 +9,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.test.context.TestPropertySource;
 
 import javax.mail.internet.MimeMessage;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-
-@TestPropertySource("application-test.properties")
+/**
+ * Created by j747951 on 6/20/2017.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class MailServiceImplTest {
     @SuppressWarnings("CanBeFinal")

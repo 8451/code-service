@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.test.context.TestPropertySource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,8 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import static org.mockito.Mockito.verify;
 
 
-
-@TestPropertySource("application-test.properties")
+/**
+ * Created by j747951 on 6/21/2017.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class AuthEntryPointTest {
 

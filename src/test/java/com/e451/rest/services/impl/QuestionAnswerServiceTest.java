@@ -12,14 +12,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-
-@TestPropertySource("application-test.properties")
+/**
+ * Created by j747951 on 6/29/2017.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionAnswerServiceTest {
 

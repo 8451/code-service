@@ -13,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,8 +20,9 @@ import java.util.List;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-
-@TestPropertySource("application-test.properties")
+/**
+ * Created by j747951 on 6/29/2017.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionAnswerControllerTest {
     private QuestionAnswerController questionAnswerController;
