@@ -20,6 +20,7 @@ deploy
 
 application-*.properties
 !application-local.properties
+!application-test.properties
 
 # Ignore any user created dictionaries, but include the 'shared' dictionary
 .idea/dictionaries/*

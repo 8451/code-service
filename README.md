@@ -1,4 +1,7 @@
+
 # code-service
+[![Build Status](https://travis-ci.org/8451/code-service.svg?branch=feature%2Fci-config)](https://travis-ci.org/8451/code-service)
+[![forthebadge](http://forthebadge.com/images/badges/60-percent-of-the-time-works-every-time.svg)](http://forthebadge.com)
 
 ## Environment Variables
 

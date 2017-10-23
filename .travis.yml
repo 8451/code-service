@@ -1,0 +1,7 @@
+language: java
+jdk:
+  - oraclejdk8
+services:
+  - mongodb
+env:
+  - DB=mongodb://127.0.0.1/code_service_local

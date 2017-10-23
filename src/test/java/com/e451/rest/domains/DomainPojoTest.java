@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+
 public class DomainPojoTest {
     private List<PojoClass> pojoClasses;
     private final PojoClassFilter filterTestClasses = new FilterTestClasses();
