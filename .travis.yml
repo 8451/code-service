@@ -4,4 +4,8 @@ jdk:
 services:
   - mongodb
 env:
-  - DB=mongodb://127.0.0.1/code
+  - DB=mongodb://127.0.0.1/code_service_local
+  - CODE_DATABASE_NAME=code
+  - CODE_DB_CONNSTR=mongodb://127.0.0.1/code_service_local
+  - CODE_DATABASE_NAME=code_service_local
+  - CODE_ENV=local
