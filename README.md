@@ -1,7 +1,8 @@
 
 # code-service
 [![Build Status](https://travis-ci.org/8451/code-service.svg?branch=develop)](https://travis-ci.org/8451/code-service)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/08fb6c0d89704c1793bacaf237c112ef)](https://www.codacy.com/app/tomd8451/code-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=8451/code-service&amp;utm_campaign=Badge_Grade)  
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/08fb6c0d89704c1793bacaf237c112ef)](https://www.codacy.com/app/tomd8451/code-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=8451/code-service&amp;utm_campaign=Badge_Grade)
+[![Coverage Status](https://coveralls.io/repos/github/8451/code-service/badge.svg?branch=develop)](https://coveralls.io/github/8451/code-service?branch=develop)  
 [![forthebadge](http://forthebadge.com/images/badges/60-percent-of-the-time-works-every-time.svg)](http://forthebadge.com)
 
 ## Environment Variables
