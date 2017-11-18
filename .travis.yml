@@ -6,4 +6,4 @@ services:
 env:
   - DB=mongodb://127.0.0.1/code_service_local
 after_success:
-  - ./mvnw coveralls:report
+  - ./mvnw jacoco:report coveralls:report
