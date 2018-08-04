@@ -40,7 +40,7 @@ public class SwaggerConfig {
             .securitySchemes(Arrays.asList(apiKey()))
             .enableUrlTemplating(true)
             .apiInfo(metadata())
-            .tags(new Tag("CoDE Service", "All apis relating to CoDE BFF"));
+            .tags(new Tag("CoDE Service", "All apis relating to CoDE Service"));
     }
 
     private ApiKey apiKey() {
@@ -53,7 +53,7 @@ public class SwaggerConfig {
                 .description("The CoDE API")
                 .version("1.0")
                 .contact(new Contact("84.51", "http://8451.com", "Engineering-OwenTeam@8451.com"))
-                .license("Proprietary")
+                .license("GPLv3")
                 .build();
     }
 }

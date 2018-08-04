@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -55,6 +56,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthFilter(userDetailsService, jwtTokenUtil, header);
     }
 
+    @Bean
+    public DefaultAuthenticationEventPublisher defaultAuthenticationEventPublisher() {
+        return new DefaultAuthenticationEventPublisher();
+    }
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -65,6 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/auth").permitAll()
+                .antMatchers("/socket/**").permitAll()
                 // Allows anonymous users (candidates) to answer questions.
                 .antMatchers("/assessments/*/answers").permitAll()
                 .antMatchers("/assessments/*/status").permitAll()

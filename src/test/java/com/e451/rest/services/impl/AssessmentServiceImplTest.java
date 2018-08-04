@@ -1,6 +1,7 @@
 package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.assessment.Assessment;
+import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.assessment.AssessmentState;
 import com.e451.rest.domains.email.AssessmentStartEmailMessage;
 import com.e451.rest.domains.email.DirectEmailMessage;
@@ -19,9 +20,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
@@ -169,6 +175,21 @@ public class AssessmentServiceImplTest {
         Assessment result = assessmentService.updateAssessment(assessment);
 
         verify(mailService, times(1)).sendEmail(any(AssessmentStartEmailMessage.class));
+    }
+
+    @Test
+    public void whenGetAssessmentCsv_returnAssessmentStream() {
+        Assessment assessment = new Assessment("1", "fn1", "ln1", "test@test.com");
+
+        when(assessmentService.getAssessments()).thenReturn(Arrays.asList(assessment));
+
+        Stream<String> stream = assessmentService.getAssessmentsCsv();
+
+        List<String> strings = stream.collect(Collectors.toList());
+
+        Assert.assertEquals(2, strings.size());
+        Assert.assertEquals(Assessment.CSV_HEADERS, strings.get(0));
+        Assert.assertEquals(assessment.toCsvRow(), strings.get(1));
     }
 
 }

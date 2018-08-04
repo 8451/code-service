@@ -38,7 +38,7 @@ public class QuestionAnswerServiceTest {
 
     @Test
     public void whenCreateQuestionAnswer_returnNewQuestionAnswer() {
-        QuestionAnswer questionAnswer = new QuestionAnswer("t1", "b1", null, "qId1");
+        QuestionAnswer questionAnswer = new QuestionAnswer("t1", "b1", null, "qId1", "java");
 
         when(assessmentService.getAssessmentByGuid("guid1")).thenReturn(assessment);
         when(assessmentService.updateAssessment(assessment)).thenReturn(assessment);
@@ -51,8 +51,8 @@ public class QuestionAnswerServiceTest {
 
     @Test
     public void whenUpdateQuestionAnswer_returnUpdatedQuestionAnswer() {
-        QuestionAnswer questionAnswer = new QuestionAnswer("t1", "b1", null, "qId1");
-        QuestionAnswer updatedQuestionAnswer = new QuestionAnswer("t1", "b1", "a1", "qId1");
+        QuestionAnswer questionAnswer = new QuestionAnswer("t1", "b1", null, "qId1", "java");
+        QuestionAnswer updatedQuestionAnswer = new QuestionAnswer("t1", "b1", "a1", "qId1", "java");
 
         when(assessmentService.getAssessmentByGuid("guid1")).thenReturn(assessment);
         when(assessmentService.updateAssessment(assessment)).thenReturn(assessment);
