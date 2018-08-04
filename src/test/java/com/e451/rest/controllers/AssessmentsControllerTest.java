@@ -56,7 +56,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenGetAssessments_returnListOfAssessments() {
+    public void whenGetAssessmentsReturnListOfAssessments() {
         when(assessmentService.getAssessments()).thenReturn(assessments);
 
         ResponseEntity<AssessmentResponse> response = assessmentsController.getAssessments();
@@ -66,7 +66,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenGetAssessmentsPageable_returnListOfAssessments() {
+    public void whenGetAssessmentsPageableReturnListOfAssessments() {
         Pageable page = new PageRequest(0, 20);
         Page pageResponse = new PageImpl<Assessment>(this.assessments);
         when(assessmentService.getAssessments(any())).thenReturn(pageResponse);
@@ -78,7 +78,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenSearchAssessments_returnListOfAssessments() {
+    public void whenSearchAssessmentsReturnListOfAssessments() {
         Pageable page = new PageRequest(0, 20);
         Page pageResponse = new PageImpl<Assessment>(this.assessments);
         when(assessmentService.searchAssessments(any(Pageable.class), any(String.class))).thenReturn(pageResponse);
@@ -90,7 +90,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenSearchAssessments_AssessmentServiceThrowsException_returnsInternalServerError() {
+    public void whenSearchAssessmentsAssessmentServiceThrowsExceptionReturnsInternalServerError() {
         when(assessmentService.searchAssessments(any(Pageable.class), any(String.class))).thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<AssessmentResponse> response = assessmentsController.searchAssessments(0, 20, "lastName", "keyword");
@@ -99,7 +99,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenGetSingleAssessment_AssessmentServiceThrowsException_returnsInternalServerError() {
+    public void whenGetSingleAssessmentAssessmentServiceThrowsExceptionReturnsInternalServerError() {
         when(assessmentService.getAssessmentByGuid("1")).thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<AssessmentResponse> response = assessmentsController.getAssessmentByGuid("1");
@@ -108,7 +108,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenGetAssessments_AssessmentServiceThrowsException_returnInternalServerError() {
+    public void whenGetAssessmentsAssessmentServiceThrowsExceptionReturnInternalServerError() {
         when(assessmentService.getAssessments()).thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<AssessmentResponse> response = assessmentsController.getAssessments();
@@ -117,7 +117,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenCreateAssessment_returnsListOfSingleAssessment() {
+    public void whenCreateAssessmentReturnsListOfSingleAssessment() {
         Assessment assessment = assessments.get(0);
 
         when(assessmentService.createAssessment(assessment)).thenReturn(assessment);
@@ -129,7 +129,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenCreateAssessment_AssessmentServiceThrowsException_returnInternalServerError() {
+    public void whenCreateAssessmentAssessmentServiceThrowsExceptionReturnInternalServerError() {
         Assessment assessment = assessments.get(1);
 
         when(assessmentService.createAssessment(assessment)).thenThrow(new RecoverableDataAccessException("error"));
@@ -140,7 +140,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenUpdateAssessment_returnUpdatedAssessment() {
+    public void whenUpdateAssessmentReturnUpdatedAssessment() {
         Assessment updatedAssessment = assessments.get(0);
         updatedAssessment.setFirstName("FirstName");
 
@@ -154,7 +154,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenUpdateAssessment_AssessmentServiceThrowsException_returnsInternalServerError() {
+    public void whenUpdateAssessmentAssessmentServiceThrowsExceptionReturnsInternalServerError() {
         when(assessmentService.updateAssessment(null)).thenThrow(new RecoverableDataAccessException("error"));
 
         ResponseEntity<AssessmentResponse> response = assessmentsController.updateAssessment(null);
@@ -163,7 +163,7 @@ public class AssessmentsControllerTest {
     }
 
     @Test
-    public void whenGetCsv_BuildsCsvResponse() throws IOException {
+    public void whenGetCsvBuildsCsvResponse() throws IOException {
         ServletOutputStream outputStream = Mockito.spy(ServletOutputStream.class);
         when(servletResponse.getOutputStream()).thenReturn(outputStream);
         when(assessmentService.getAssessmentsCsv()).thenReturn(Stream.of("1,2,3,4,5", "1,2,3,4,5"));

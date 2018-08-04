@@ -3,7 +3,6 @@ package com.e451.rest.controllers;
 import com.e451.rest.domains.assessment.QuestionAnswer;
 import com.e451.rest.domains.assessment.events.AnswerQuestionEvent;
 import com.e451.rest.domains.assessment.events.NewQuestionEvent;
-import com.e451.rest.services.AssessmentService;
 import com.e451.rest.services.QuestionAnswerService;
 import org.junit.Assert;
 import org.junit.Before;

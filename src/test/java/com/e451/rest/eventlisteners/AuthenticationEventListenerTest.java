@@ -8,16 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
