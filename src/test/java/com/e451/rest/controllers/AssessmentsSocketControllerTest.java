@@ -1,10 +1,8 @@
 package com.e451.rest.controllers;
 
 import com.e451.rest.domains.assessment.QuestionAnswer;
-import com.e451.rest.domains.assessment.QuestionAnswerResponse;
 import com.e451.rest.domains.assessment.events.AnswerQuestionEvent;
 import com.e451.rest.domains.assessment.events.NewQuestionEvent;
-import com.e451.rest.domains.question.Question;
 import com.e451.rest.services.AssessmentService;
 import com.e451.rest.services.QuestionAnswerService;
 import org.junit.Assert;
@@ -13,11 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -33,23 +26,13 @@ public class AssessmentsSocketControllerTest {
     @Mock
     private QuestionAnswerService questionAnswerService;
 
-    @Mock
-    private AssessmentService assessmentService;
-
-    private List<QuestionAnswer> questionAnswerList;
-
     @Before
-    public void setup() {
-        assessmentsSocketController = new AssessmentsSocketController(questionAnswerService, assessmentService);
-        questionAnswerList = Arrays.asList(
-                new QuestionAnswer("Q1", "body1", "answer1", "1", "java"),
-                new QuestionAnswer("Q2", "body2", "answer2", "2", "java"),
-                new QuestionAnswer("Q3", "body3", "answer3", "3", "java")
-        );
+    public void setUp() {
+        assessmentsSocketController = new AssessmentsSocketController(questionAnswerService);
     }
 
     @Test
-    public void whenCreateQuestionAnswer_returnNewQuestionAnswer() {
+    public void whenCreateQuestionAnswerReturnNewQuestionAnswer() {
         QuestionAnswer questionAnswer = new QuestionAnswer();
 
         NewQuestionEvent newQuestionEvent = new NewQuestionEvent("Q1", "body1", null);
@@ -65,7 +48,7 @@ public class AssessmentsSocketControllerTest {
     }
 
     @Test
-    public void whenUpdateQuestionAnswer_returnUpdatedQuestionAnswer() {
+    public void whenUpdateQuestionAnswerReturnUpdatedQuestionAnswer() {
         QuestionAnswer questionAnswer = new QuestionAnswer();
 
 

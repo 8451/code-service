@@ -49,7 +49,7 @@ public class AuthControllerTest {
     private User user;
 
     @Before
-    public void setup() {
+    public void setUp() {
         tokenHeader = "header";
         authController = new AuthController(tokenHeader, userDetailsService, authenticationManager, jwtTokenUtil);
         when(servletRequest.getHeader(tokenHeader)).thenReturn("imatoken");
@@ -59,7 +59,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void whenCreateAuthenticationToken_ReturnsValidToken() {
+    public void whenCreateAuthenticationTokenReturnsValidToken() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         ResponseEntity<AuthenticationResponse> response = authController.createAuthenticationToken(servletRequest, authenticationRequest);
@@ -68,14 +68,14 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void whenRefreshAndGetAuthenticationToken_returnsRefreshedToken() {
+    public void whenRefreshAndGetAuthenticationTokenReturnsRefreshedToken() {
         when(jwtTokenUtil.canTokenBeRefreshed("imatoken")).thenReturn(true);
         ResponseEntity<AuthenticationResponse> response = authController.refreshAndGetAuthenticationToken(servletRequest);
         Assert.assertEquals("newtoken", response.getBody().getToken());
     }
 
     @Test
-    public void whenRefreshAndGetAuthenticationTokenBeforeTokenCanBeRefreshed_returnsBadRequest() {
+    public void whenRefreshAndGetAuthenticationTokenBeforeTokenCanBeRefreshedReturnsBadRequest() {
         when(jwtTokenUtil.canTokenBeRefreshed("imatoken")).thenReturn(false);
         ResponseEntity<AuthenticationResponse> response = authController.refreshAndGetAuthenticationToken(servletRequest);
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

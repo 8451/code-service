@@ -1,7 +1,6 @@
 package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.assessment.Assessment;
-import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.assessment.AssessmentState;
 import com.e451.rest.domains.email.AssessmentStartEmailMessage;
 import com.e451.rest.domains.email.DirectEmailMessage;
@@ -20,11 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -54,7 +50,7 @@ public class AssessmentServiceImplTest {
     private MailService mailService;
 
     @Before
-    public void setup() {
+    public void setUp() {
         this.assessmentService = new AssessmentServiceImpl(assessmentRepository, authService, mailService,
                 "code/web/ui");
         assessments = Arrays.asList(
@@ -69,7 +65,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenGetAssessments_returnListOfAssessments() {
+    public void whenGetAssessmentsReturnListOfAssessments() {
         when(assessmentRepository.findAll()).thenReturn(assessments);
 
         List<Assessment> result = assessmentService.getAssessments();
@@ -78,7 +74,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenGetAssessmentsPageable_returnListOfAssessments() {
+    public void whenGetAssessmentsPageableReturnListOfAssessments() {
         Pageable pageable = new PageRequest(0, 20);
         Page<Assessment> assessments = new PageImpl(this.assessments);
         when(assessmentRepository.findAll(pageable)).thenReturn(assessments);
@@ -90,7 +86,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenGetAssessment_returnListOfSingleAssessment() {
+    public void whenGetAssessmentReturnListOfSingleAssessment() {
         when(assessmentRepository.findByInterviewGuid(assessments.get(0).getInterviewGuid())).thenReturn(this.assessments.get(0));
 
         Assessment result = assessmentService.getAssessmentByGuid(assessments.get(0).getInterviewGuid());
@@ -100,7 +96,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenGetAssessmentState_returnAssessmentState() {
+    public void whenGetAssessmentStateReturnAssessmentState() {
         when(assessmentRepository.findByInterviewGuid(assessments.get(0).getInterviewGuid())).thenReturn(this.assessments.get(0));
 
         AssessmentState result = assessmentService.getAssessmentStateByGuid(assessments.get(0).getInterviewGuid());
@@ -109,7 +105,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenSearchAssessments_returnListOfAssessments() {
+    public void whenSearchAssessmentsReturnListOfAssessments() {
         Pageable pageable = new PageRequest(0, 20);
         Page<Assessment> assessments = new PageImpl(this.assessments);
         when(assessmentRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
@@ -126,7 +122,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenCreateAssessment_returnNewAssessment() {
+    public void whenCreateAssessmentReturnNewAssessment() {
         Assessment assessment = new Assessment("1", "f1", "l1", "test1@test.com");
 
         when(assessmentRepository.save(assessment)).thenReturn(assessment);
@@ -143,7 +139,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenUpdateAssessment_returnUpdatedAssessment() {
+    public void whenUpdateAssessmentReturnUpdatedAssessment() {
         Assessment assessment = new Assessment("1", "f11", "l11", "test11@test.com");
 
         when(assessmentRepository.save(assessment)).thenReturn(assessment);
@@ -158,7 +154,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenUpdateAssessmentNotActive_DoesNotCallMailService() {
+    public void whenUpdateAssessmentNotActiveDoesNotCallMailService() {
         Assessment assessment = new Assessment("1", "f1", "l1", "test@test.com");
         assessment.setState(AssessmentState.IN_PROGRESS);
 
@@ -168,7 +164,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenUpdateAssessmentActive_CallsMailServiceWithAssessmentStartEmail() {
+    public void whenUpdateAssessmentActiveCallsMailServiceWithAssessmentStartEmail() {
         Assessment assessment = new Assessment("1", "f1", "f2", "test@test.com");
         assessment.setState(AssessmentState.AWAIT_EMAIL);
 
@@ -178,7 +174,7 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void whenGetAssessmentCsv_returnAssessmentStream() {
+    public void whenGetAssessmentCsvReturnAssessmentStream() {
         Assessment assessment = new Assessment("1", "fn1", "ln1", "test@test.com");
 
         when(assessmentService.getAssessments()).thenReturn(Arrays.asList(assessment));

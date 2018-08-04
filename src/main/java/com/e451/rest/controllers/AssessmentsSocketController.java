@@ -20,15 +20,12 @@ import org.springframework.stereotype.Controller;
 public class AssessmentsSocketController {
 
     private QuestionAnswerService questionAnswerService;
-    private AssessmentService assessmentService;
 
     private static final Logger LOG = LoggerFactory.getLogger(AssessmentsSocketController.class);
 
     @Autowired
-    public AssessmentsSocketController(QuestionAnswerService questionAnswerService,
-                                       AssessmentService assessmentService) {
+    public AssessmentsSocketController(QuestionAnswerService questionAnswerService) {
         this.questionAnswerService = questionAnswerService;
-        this.assessmentService = assessmentService;
     }
 
 
