@@ -29,19 +29,10 @@ import static org.mockito.Mockito.*;
 public class AuthenticationEventListenerTest {
 
     @Mock
-    private AuthenticationManager authenticationManager;
-
-    @Mock
-    private SecurityContext securityContext;
-
-    @Mock
     private Authentication authentication;
 
     @Mock
     private WebAuthenticationDetails webAuthenticationDetails;
-
-    @Mock
-    private HttpServletRequest servletRequest;
 
     @Mock
     private FailedLoginService failedLoginService;
@@ -60,29 +51,29 @@ public class AuthenticationEventListenerTest {
     private AuthenticationEventListener authenticationEventListenerSpy;
 
     @Before
-    public void setup() {
+    public void setUp() {
         AuthenticationEventListener authenticationEventListener = new AuthenticationEventListener(failedLoginService, accountLockoutService);
-        this.authenticationEventListenerSpy = Mockito.spy(authenticationEventListener);
+        this.authenticationEventListenerSpy = spy(authenticationEventListener);
         this.user = new User("id1", "test", "testName", "test@test.com", "Password1");
 
     }
 
     @Test
-    public void whenOnApplicationEventAuthenticationSuccess_thenCallOnAuthenticationSuccess() {
+    public void whenOnApplicationEventAuthenticationSuccessThenCallOnAuthenticationSuccess() {
         doNothing().when(authenticationEventListenerSpy).onAuthenticationSuccess(any());
         authenticationEventListenerSpy.onApplicationEvent(authenticationSuccessEvent);
         verify(authenticationEventListenerSpy).onAuthenticationSuccess(any());
     }
 
     @Test
-    public void whenOnApplicationEventAuthenticationFailure_thenCallOnAuthenticationFailure() {
+    public void whenOnApplicationEventAuthenticationFailureThenCallOnAuthenticationFailure() {
         doNothing().when(authenticationEventListenerSpy).onAuthenticationFailure(any());
         authenticationEventListenerSpy.onApplicationEvent(abstractAuthenticationFailureEvent);
         verify(authenticationEventListenerSpy).onAuthenticationFailure(any());
     }
 
     @Test
-    public void whenOnAuthenticationSuccess_processLoginSuccessIsCalled() {
+    public void whenOnAuthenticationSuccessProcessLoginSuccessIsCalled() {
         when(authenticationSuccessEvent.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(user);
 
@@ -92,7 +83,7 @@ public class AuthenticationEventListenerTest {
     }
 
     @Test
-    public void whenOnAuthenticationFailure_CreateFailedLoginAndProcessLoginFailure() {
+    public void whenOnAuthenticationFailureCreateFailedLoginAndProcessLoginFailure() {
         when(abstractAuthenticationFailureEvent.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(user.getUsername());
         when(authentication.getDetails()).thenReturn(webAuthenticationDetails);

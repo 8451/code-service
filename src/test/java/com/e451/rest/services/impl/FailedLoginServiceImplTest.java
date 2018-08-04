@@ -32,7 +32,7 @@ public class FailedLoginServiceImplTest {
     private List<FailedLoginAttempt> attempts;
 
     @Before
-    public void setup() {
+    public void setUp() {
         this.failedLoginService = new FailedLoginServiceImpl(failedLoginRepository);
         attempts = Arrays.asList(
                 new FailedLoginAttempt("username", "127.0.0.1", new Date()),
@@ -41,7 +41,7 @@ public class FailedLoginServiceImplTest {
     }
 
     @Test
-    public void whenFindDateBetweenAndUser_returnListOfFailedLoginAttempts() {
+    public void whenFindDateBetweenAndUserReturnListOfFailedLoginAttempts() {
         when(failedLoginRepository.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
                 .thenReturn(attempts);
 
@@ -56,7 +56,7 @@ public class FailedLoginServiceImplTest {
     }
 
     @Test
-    public void whenCreateFailedLoginAttempt_returnFailedLoginAttempt() {
+    public void whenCreateFailedLoginAttemptReturnFailedLoginAttempt() {
         when(failedLoginRepository.save(any(FailedLoginAttempt.class))).thenReturn(attempts.get(0));
 
         FailedLoginAttempt actual = failedLoginService.createFailedLoginAttempt(new FailedLoginAttempt());
@@ -66,7 +66,7 @@ public class FailedLoginServiceImplTest {
     }
 
     @Test
-    public void whenUpdateFailedLoginAttempts_returnFailedLoginAttempts() {
+    public void whenUpdateFailedLoginAttemptsReturnFailedLoginAttempts() {
         when(failedLoginRepository.save(any(Iterable.class))).thenReturn(attempts);
 
         List<FailedLoginAttempt> actual = failedLoginService.updateFailedLoginAttempts(attempts);

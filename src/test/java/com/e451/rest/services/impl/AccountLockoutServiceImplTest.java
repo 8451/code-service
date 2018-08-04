@@ -41,7 +41,7 @@ public class AccountLockoutServiceImplTest {
     private List<FailedLoginAttempt> failedLoginAttempts;
 
     @Before
-    public void setup() {
+    public void setUp() {
         this.accountLockoutService = new AccountLockoutServiceImpl(userRepository, failedLoginService, 600, 5);
         this.mockUser = new User("id1", "Test", "TestName", "Test@Test.com", "TestWord");
         this.failedLoginAttempts = Arrays.asList(
@@ -57,7 +57,7 @@ public class AccountLockoutServiceImplTest {
     }
 
     @Test
-    public void whenProcessFailedLoginLessThanLimit_doNothing() {
+    public void whenProcessFailedLoginLessThanLimitDoesNothing() {
         for (int i = 0; i < 4; i++) {
             failedLoginAttempts.get(i).setActive(false);
         }
@@ -71,7 +71,7 @@ public class AccountLockoutServiceImplTest {
     }
 
     @Test
-    public void whenProcessFailedLoginGreaterThanLimit_updateUser() {
+    public void whenProcessFailedLoginGreaterThanLimitUpdatesUser() {
         when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
                 .thenReturn(this.failedLoginAttempts);
         when(userRepository.findByUsername(any(String.class))).thenReturn(mockUser);
@@ -83,7 +83,7 @@ public class AccountLockoutServiceImplTest {
     }
 
     @Test
-    public void whenAccountCanLoginAndIsLocked_updateUser() {
+    public void whenAccountCanLoginAndIsLockedUpdatesUser() {
         when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
                 .thenReturn(new ArrayList<FailedLoginAttempt>());
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
@@ -97,7 +97,7 @@ public class AccountLockoutServiceImplTest {
     }
 
     @Test
-    public void whenAccountCannotLoginAndIsLocked_doNothing() {
+    public void whenAccountCannotLoginAndIsLockedDoesNothing() {
         when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
                 .thenReturn(failedLoginAttempts);
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
@@ -111,7 +111,7 @@ public class AccountLockoutServiceImplTest {
     }
 
     @Test
-    public void whenProcessLoginSuccess_updateFailedLoginAttempts() {
+    public void whenProcessLoginSuccessUpdatesFailedLoginAttempts() {
         when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
                 .thenReturn(failedLoginAttempts);
 
@@ -122,7 +122,7 @@ public class AccountLockoutServiceImplTest {
     }
 
     @Test
-    public void whenGetRecentLoginAttempts_returnListOfAttempts() {
+    public void whenGetRecentLoginAttemptsReturnListOfAttempts() {
         when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
                 .thenReturn(failedLoginAttempts);
 

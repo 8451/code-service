@@ -22,8 +22,6 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
     private FailedLoginService failedLoginService;
     private Integer timeout;
     private Integer attemptLimit;
-    private Date currentDate;
-    private Date timeoutDate;
 
     @Autowired
     public AccountLockoutServiceImpl(
@@ -39,14 +37,14 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
     }
 
     @Override
-    public Boolean canAccountLogin(User user) {
+    public Boolean canAccountLogin(final User user) {
         if (!user.isAccountNonLocked()) {
             String username = user.getUsername();
             List<FailedLoginAttempt> attempts = getRecentLoginAttempts(username);
 
             if(attempts.size() == 0 || attempts.stream().allMatch(attempt -> !attempt.isActive())) {
                user.setLocked(false);
-               user = userRepository.save(user);
+               userRepository.save(user);
             }
         }
 
