@@ -2,7 +2,6 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.assessment.QuestionAnswer;
 import com.e451.rest.domains.assessment.events.*;
-import com.e451.rest.services.AssessmentService;
 import com.e451.rest.services.QuestionAnswerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

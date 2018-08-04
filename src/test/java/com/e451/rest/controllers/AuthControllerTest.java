@@ -2,7 +2,6 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.auth.AuthenticationRequest;
 import com.e451.rest.domains.auth.AuthenticationResponse;
-import com.e451.rest.domains.user.User;
 import com.e451.rest.security.JwtTokenUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,18 +43,12 @@ public class AuthControllerTest {
     @Mock
     private HttpServletRequest servletRequest;
 
-
-    private String tokenHeader;
-    private User user;
-
     @Before
     public void setUp() {
-        tokenHeader = "header";
-        authController = new AuthController(tokenHeader, userDetailsService, authenticationManager, jwtTokenUtil);
-        when(servletRequest.getHeader(tokenHeader)).thenReturn("imatoken");
+        authController = new AuthController("header", userDetailsService, authenticationManager, jwtTokenUtil);
+        when(servletRequest.getHeader("header")).thenReturn("imatoken");
         when(jwtTokenUtil.generateToken(null)).thenReturn("imatoken");
         when(jwtTokenUtil.refreshToken("imatoken")).thenReturn("newtoken");
-        user = new User("id1", "fname", "lname", "email@gmail.com", "Password1");
     }
 
     @Test
