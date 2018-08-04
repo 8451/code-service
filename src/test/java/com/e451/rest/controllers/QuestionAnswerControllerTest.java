@@ -37,9 +37,9 @@ public class QuestionAnswerControllerTest {
         this.questionAnswerController = new QuestionAnswerController(questionAnswerService);
 
         this.questionAnswers = Arrays.asList(
-                new QuestionAnswer("q1", "b1", "a1", "1"),
-                new QuestionAnswer("q2", "b2", "a2", "2"),
-                new QuestionAnswer("q3", "b3", "a3", "3")
+                new QuestionAnswer("q1", "b1", "a1", "1", "java"),
+                new QuestionAnswer("q2", "b2", "a2", "2", "java"),
+                new QuestionAnswer("q3", "b3", "a3", "3", "java")
         );
     }
 

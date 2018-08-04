@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Arrays;
 
 import static com.sun.org.apache.xalan.internal.xsltc.compiler.sym.error;
@@ -53,6 +56,24 @@ public class AssessmentsController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/csv")
+    public void getAssessmentsCsv(HttpServletResponse response) throws IOException {
+        response.setContentType("text/csv;charset=utf-8");
+        response.setHeader("Content-Disposition","attachment; filename=\"assessments.csv\"");
+        ServletOutputStream writer = response.getOutputStream();
+        assessmentService.getAssessmentsCsv().forEach(row -> {
+            try {
+                writer.print(row);
+                writer.print(System.getProperty("line.separator"));
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        writer.flush();
+        writer.close();
+    }
+
 
     @GetMapping(params = {"page", "size", "property"})
     public ResponseEntity<AssessmentResponse> getAssessments(int page, int size, String property) {

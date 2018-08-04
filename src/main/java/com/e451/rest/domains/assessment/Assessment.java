@@ -1,5 +1,7 @@
 package com.e451.rest.domains.assessment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -8,12 +10,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by j747951 on 6/15/2017.
  */
 @Document
 public class Assessment {
+
+    public static final String CSV_HEADERS = "first_name,last_name,email,notes,rating,assessment_date";
 
     @Id
     private String id;
@@ -26,6 +32,7 @@ public class Assessment {
     private Date createdDate;
     private Date modifiedDate;
     private Date assessmentDate;
+    @JsonInclude(value=JsonInclude.Include.ALWAYS)
     private AssessmentState state;
     private Double rating = 0d;
     private List<QuestionAnswer> questionAnswers;
@@ -180,5 +187,15 @@ public class Assessment {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
+    }
+
+    @JsonIgnore
+    public String toCsvRow() {
+        return Stream.of(firstName, lastName, email, notes, rating.toString(), assessmentDate != null ? assessmentDate.toString() : "")
+                .map(value -> null == value ? "" : value)
+                .map(value -> value.replaceAll("\"", "\"\""))
+                .map(value -> value.replaceAll("\n", "  "))
+                .map(value -> Stream.of("\"", ",").anyMatch(value::contains) ? "\"" + value + "\"" : value)
+                .collect(Collectors.joining(","));
     }
 }

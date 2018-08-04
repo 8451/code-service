@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.data.domain.Page;
@@ -17,8 +18,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -33,6 +38,9 @@ public class AssessmentsControllerTest {
 
     @Mock
     private AssessmentService assessmentService;
+
+    @Mock
+    private HttpServletResponse servletResponse;
 
     private List<Assessment> assessments;
 
@@ -152,5 +160,14 @@ public class AssessmentsControllerTest {
         ResponseEntity<AssessmentResponse> response = assessmentsController.updateAssessment(null);
 
         Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void whenGetCsv_BuildsCsvResponse() throws IOException {
+        ServletOutputStream outputStream = Mockito.spy(ServletOutputStream.class);
+        when(servletResponse.getOutputStream()).thenReturn(outputStream);
+        when(assessmentService.getAssessmentsCsv()).thenReturn(Stream.of("1,2,3,4,5", "1,2,3,4,5"));
+        assessmentsController.getAssessmentsCsv(servletResponse);
+        Mockito.verify(outputStream, Mockito.times(4)).print(any());
     }
 }

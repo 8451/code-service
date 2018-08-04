@@ -1,30 +1,25 @@
-package com.e451.rest.domains.assessment;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.UUID;
+package com.e451.rest.domains.assessment.events;
 
 /**
  * Created by j747951 on 6/29/2017.
  */
-public class QuestionAnswer {
+public class AnswerQuestionEvent extends WebSocketEvent {
     private String title;
     private String body;
     private String answer;
-    private String language;
     private String questionResponseId;
+    private String language;
 
-    public QuestionAnswer() {
-        this.questionResponseId = UUID.randomUUID().toString();
+    public AnswerQuestionEvent() {
+        super();
     }
 
-
-    public QuestionAnswer(String title, String body, String answer, String questionResponseId, String language) {
+    public AnswerQuestionEvent(String title, String body, String answer, String questionResponseId) {
+        super();
         this.title = title;
         this.body = body;
         this.answer = answer;
         this.questionResponseId = questionResponseId;
-        this.language = language;
     }
 
     public String getTitle() {
@@ -51,19 +46,19 @@ public class QuestionAnswer {
         this.answer = answer;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     public String getQuestionResponseId() {
         return questionResponseId;
     }
 
     public void setQuestionResponseId(String questionResponseId) {
         this.questionResponseId = questionResponseId;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

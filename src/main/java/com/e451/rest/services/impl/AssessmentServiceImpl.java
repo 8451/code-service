@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by j747951 on 6/15/2017.
@@ -94,5 +95,13 @@ public class AssessmentServiceImpl implements AssessmentService {
         }
 
         return assessmentRepository.save(assessment);
+    }
+
+    @Override
+    public Stream<String> getAssessmentsCsv() {
+        List<Assessment> assessments = getAssessments();
+
+        return Stream.concat(Stream.of(Assessment.CSV_HEADERS),
+                assessments.stream().map(Assessment::toCsvRow));
     }
 }

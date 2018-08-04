@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by j747951 on 6/15/2017.
@@ -18,4 +19,5 @@ public interface AssessmentService {
     Page<Assessment> searchAssessments(Pageable pageable, String searchString);
     Assessment createAssessment(Assessment assessment);
     Assessment updateAssessment(Assessment assessment);
+    Stream<String> getAssessmentsCsv();
 }
